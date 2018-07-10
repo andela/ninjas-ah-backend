@@ -1,0 +1,32 @@
+{
+  "name": "express-authorshaven",
+  "version": "1.0.0",
+  "description": "A Social platform for the creative at heart",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Andela Simulations Programme",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
+    "dotenv": "^6.0.0",
+    "ejs": "^2.6.1",
+    "errorhandler": "^1.5.0",
+    "express": "^4.16.3",
+    "express-jwt": "^5.3.1",
+    "express-session": "^1.15.6",
+    "jsonwebtoken": "^8.3.0",
+    "method-override": "^2.3.10",
+    "methods": "^1.1.2",
+    "mongoose": "^5.2.2",
+    "mongoose-unique-validator": "^2.0.1",
+    "morgan": "^1.9.0",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "request": "^2.87.0",
+    "slug": "^0.9.1",
+    "underscore": "^1.9.1"
+  }
+}
