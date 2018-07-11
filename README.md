@@ -5,6 +5,7 @@ Authors Haven - A Social platform for the creative at heart.
 Create a community of like minded authors to foster inspiration and innovation
 by leveraging the modern web.
 
+---
 
 ## API Spec
 The preferred JSON object to be returned by the API should be structured as follows:
@@ -126,7 +127,8 @@ The preferred JSON object to be returned by the API should be structured as foll
       "image": "https://i.stack.imgur.com/xHWG8.jpg",
       "following": false
     }
-  }]
+  }],
+  "commentsCount": 1
 }
 ```
 ### List of Tags
@@ -139,7 +141,7 @@ The preferred JSON object to be returned by the API should be structured as foll
 }
 ```
 ### Errors and Status Codes
-If a request fails any validations, expect a 422 and errors in the following format:
+If a request fails any validations, expect errors in the following format:
 
 ```source-json
 {
@@ -177,6 +179,7 @@ Example request body:
 ```
 
 No authentication required, returns a User
+
 Required fields: `email`, `password`
 
 ### Registration:
@@ -387,10 +390,3 @@ No additional parameters required
 ### Get Tags
 
 `GET /api/tags`
-
-`\
-`
-
-
-
-
