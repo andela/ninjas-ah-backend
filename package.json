@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "babel-node src/index.js",
-    "dev": "nodemon src/index.js --exec babel-node --presets @babel/preset-env"
+    "dev": "nodemon src/index.js --exec babel-node --presets @babel/preset-env",
+    "scss": "npm-sass templates/sass/style.scss  templates/css/style.css"
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",
@@ -35,6 +36,7 @@
     "mongoose-unique-validator": "^2.0.1",
     "morgan": "^1.9.1",
     "mpath": "^0.5.1",
+    "npm-sass": "^2.3.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "request": "^2.87.0",
