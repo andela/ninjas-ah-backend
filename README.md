@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/andela/ninjas-ah-backend.svg?branch=develop)](https://travis-ci.org/andela/ninjas-ah-backend)
+[![Build Status](https://travis-ci.org/andela/ninjas-ah-backend.svg?branch=develop)](https://travis-ci.org/andela/ninjas-ah-backend) [![Maintainability](https://api.codeclimate.com/v1/badges/4635ecd43e1b06546534/maintainability)](https://codeclimate.com/github/andela/ninjas-ah-backend/maintainability)
 
 Authors Haven - A Social platform for the creative at heart.
 =======
