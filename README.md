@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/andela/ninjas-ah-backend.svg?branch=develop)](https://travis-ci.org/andela/ninjas-ah-backend)
+[![Coverage Status](https://coveralls.io/repos/github/andela/ninjas-ah-backend/badge.svg?branch=develop)](https://coveralls.io/github/andela/ninjas-ah-backend?branch=develop) [![Build Status](https://travis-ci.org/andela/ninjas-ah-backend.svg?branch=develop)](https://travis-ci.org/andela/ninjas-ah-backend) [![Test Coverage](https://api.codeclimate.com/v1/badges/4635ecd43e1b06546534/test_coverage)](https://codeclimate.com/github/andela/ninjas-ah-backend/test_coverage) 
 
 Authors Haven - A Social platform for the creative at heart.
 =======

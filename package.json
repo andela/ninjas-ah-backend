@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "babel-node src/index.js",
-    "dev": "nodemon src/index.js --exec babel-node --presets @babel/preset-env"
+    "dev": "nodemon src/index.js --exec babel-node --presets @babel/preset-env",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "show-coverage": "xdg-open coverage/index.html"
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",
