@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/andela/ninjas-ah-backend.svg?branch=develop)](https://travis-ci.org/andela/ninjas-ah-backend)
+[![Build Status](https://travis-ci.org/andela/ninjas-ah-backend.svg?branch=ch-create-db-models-165663486)](https://travis-ci.org/andela/ninjas-ah-backend) [![Coverage Status](https://coveralls.io/repos/github/andela/ninjas-ah-backend/badge.svg?branch=ch-create-db-models-165663486)](https://coveralls.io/github/andela/ninjas-ah-backend?branch=ch-create-db-models-165663486)
 
 Authors Haven - A Social platform for the creative at heart.
 =======
