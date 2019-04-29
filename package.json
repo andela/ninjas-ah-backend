@@ -2,12 +2,15 @@
   "name": "express-authorshaven",
   "version": "1.0.0",
   "description": "A Social platform for the creative at heart",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "NODE_ENV=test nyc mocha --require @babel/register src/tests/index.js",
+    "cover": "npm test && nyc report --reporter=text-lcov | coveralls",
+    "coveralls": "cat coverage/lcov.info | coveralls",
     "start": "babel-node src/index.js",
     "dev": "nodemon src/index.js --exec babel-node --presets @babel/preset-env",
-    "scss": "npm-sass templates/sass/style.scss  templates/css/style.css"
+    "scss": "npm-sass templates/sass/style.scss  templates/css/style.css",
+    "db:migrate": "sequelize db:migrate"
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",
@@ -41,6 +44,7 @@
     "pg-hstore": "^2.3.2",
     "request": "^2.87.0",
     "sequelize": "^5.7.5",
+    "sequelize-test-helpers": "^1.1.0",
     "slug": "^1.1.0",
     "underscore": "^1.9.1"
   },
@@ -54,6 +58,8 @@
     "mocha": "^6.1.4",
     "mocha-lcov-reporter": "^1.3.0",
     "nodemon": "^1.18.11",
-    "nyc": "^14.0.0"
+    "nyc": "^14.0.0",
+    "sinon": "^7.3.2",
+    "sinon-chai": "^3.3.0"
   }
 }
