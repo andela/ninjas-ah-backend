@@ -4,6 +4,7 @@ import logger from 'morgan';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import session from 'express-session';
+import routes from './routes';
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
 // api version 1
+app.use('/api/v1/', routes);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
