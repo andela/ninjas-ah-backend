@@ -1,0 +1,87 @@
+$full-width: 100%;
+
+/* row */
+.row {margin-left:0rem;margin-right:0rem;}
+/* container */
+.container {margin: 0 auto;max-width: 1100px;width:($full-width - 2)}
+
+/* grid */
+.small-screen-1,.medium-screen-1,.large-screen-1,.small-screen-2,.medium-screen-2,.large-screen-2,.small-screen-3,.medium-screen-3,.large-screen-3,.small-screen-4,.medium-screen-4,.large-screen-4{margin: 0 0.5%;float:left}
+.small-screen-4,.medium-screen-4,.large-screen-4{
+    width:($full-width - 1)
+}
+.small-screen-3,.medium-screen-3,.large-screen-3{
+    width:($full-width - 26) // 74%
+}
+.small-screen-2,.medium-screen-2,.large-screen-2{
+    width:($full-width - 51) // 49%
+}
+.small-screen-1,.medium-screen-1,.large-screen-1{
+    width:($full-width - 76) // 24 %
+}
+
+// responsiveness
+/* media query */
+@media screen and (min-width: 1000px)  {
+    .hide-on-large{display: none}
+    .small-screen-1{
+        width:auto
+    }
+    .medium-screen-1{
+        width:auto
+    }
+    .large-screen-1{
+        width:($full-width - 76)!important // 24%
+    }
+    .large-screen-2{
+        width:($full-width - 51)!important // 49%
+    }
+    .large-screen-3{
+        width:($full-width - 26)!important // 74%
+    }
+    .large-screen-4{
+        width:($full-width - 1)!important // 99%
+    }
+}
+@media screen and (min-width: 761px) and (max-width: 999px){
+    .hide-on-medium{display: none}
+    .small-screen-1{
+        width:auto
+    }
+    .medium-screen-1{
+        width:($full-width - 76)!important // 24%
+    }
+    .medium-screen-2{
+        width:($full-width - 51)!important // 49%
+    }
+    .medium-screen-3{
+        width:($full-width - 26)!important // 74%
+    }
+    .medium-screen-4{
+        width:($full-width - 1)!important // 99%
+    }   
+    .large-screen-1{
+        width:auto
+    } 
+}
+@media screen and (max-width: 760px){
+    .hide-on-small{display: none}
+    .small-screen-1{
+        width:($full-width - 76)!important // 24%
+    }
+    .small-screen-2{
+        width:($full-width - 51)!important // 49%
+    }
+    .small-screen-3{
+        width:($full-width - 26)!important // 74%
+    }
+    .small-screen-4{
+        width:($full-width - 1)!important // 99%
+    }
+    .medium-screen-1{
+        width:auto
+    }   
+    .large-screen-1{
+        width:auto
+    }     
+}
