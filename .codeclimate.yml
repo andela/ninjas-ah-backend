@@ -5,9 +5,10 @@ plugins:
  eslint:
   enabled: true
 exclude_patterns:
-- "config/"
-- "models/"
-- "dist/"
+- "src/config/"
+- "src/models/"
+- "src/migrations/"
+- "src/dist/"
 - "features/"
 - "**/node_modules/"
 - "script/"
