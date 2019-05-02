@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
  "reporter": [
    "lcov",
    "text"
@@ -7,4 +8,14 @@
    "src/migartions",
    "src/helpers"
  ]
+=======
+  "reporter": [
+    "lcov",
+    "text"
+  ],
+  "exclude": [
+    "src/migrations",
+    "src/tests"
+  ]
+>>>>>>> [Feature #165412912] send validation error messages
 }
