@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+
+dotenv.config();
 export default (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     id: {
@@ -21,6 +24,7 @@ export default (sequelize, DataTypes) => {
     email: {
       type: DataTypes.STRING,
       allowNull: true,
+      unique: true
     },
     password: {
       type: DataTypes.STRING,
