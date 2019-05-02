@@ -3,9 +3,9 @@ import comments from '../../controllers/Comments';
 
 const app = Router();
 
-app.post('/:id', comments.createComment);
-app.get('/:id', comments.getAllComments);
-app.put('/:id', comments.editComment);
-app.delete('/:id', comments.deleteComment);
+app.post('/:id/comments', comments.createComment);
+app.get('/:id/comments', comments.getAllComments);
+app.put('/:articleId/comments/:commentId', comments.editComment);
+app.delete('/:articleId/comments/:commentId', comments.deleteComment);
 
 export default app;

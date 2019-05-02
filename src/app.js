@@ -26,7 +26,7 @@ app.use(cors());
 
 // api version 1
 
-app.use('/api/v1/comments/', commentRouter);
+app.use('/api/v1/articles/', commentRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
