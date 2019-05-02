@@ -2,13 +2,12 @@
 import chai from 'chai';
 import sinonChai from 'sinon-chai';
 
-
 import {
   sequelize,
   dataTypes,
   checkModelName,
   checkUniqueIndex,
-  checkPropertyExists,
+  checkPropertyExists
 } from 'sequelize-test-helpers';
 
 import CommentModel from '../models/comment';
