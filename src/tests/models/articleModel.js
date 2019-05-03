@@ -2,16 +2,11 @@
 import chai from 'chai';
 import sinonChai from 'sinon-chai';
 
-
 import {
-  sequelize,
-  dataTypes,
-  checkModelName,
-  checkUniqueIndex,
-  checkPropertyExists,
+  sequelize, dataTypes, checkModelName, checkPropertyExists
 } from 'sequelize-test-helpers';
 
-import ArticleModel from '../models/article';
+import ArticleModel from '../../models/article';
 
 const { expect } = chai;
 chai.use(sinonChai);
@@ -24,9 +19,19 @@ describe('src/models/Article', () => {
   checkModelName(Article)('Article');
 
   context('properties', () => {
-    ['id', 'userId', 'slug', 'title', 'description', 'body', 'tags', 'readTime', 'status', 'createdAt', 'updatedAt'].forEach(
-      checkPropertyExists(article)
-    );
+    [
+      'id',
+      'userId',
+      'slug',
+      'title',
+      'description',
+      'body',
+      'tags',
+      'readTime',
+      'status',
+      'createdAt',
+      'updatedAt'
+    ].forEach(checkPropertyExists(article));
   });
 
   context('check associations', () => {

@@ -2,16 +2,11 @@
 import chai from 'chai';
 import sinonChai from 'sinon-chai';
 
-
 import {
-  sequelize,
-  dataTypes,
-  checkModelName,
-  checkUniqueIndex,
-  checkPropertyExists,
+  sequelize, dataTypes, checkModelName, checkPropertyExists
 } from 'sequelize-test-helpers';
 
-import CommentModel from '../models/comment';
+import CommentModel from '../../models/comment';
 
 const { expect } = chai;
 chai.use(sinonChai);

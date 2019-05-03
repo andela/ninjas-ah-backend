@@ -4,7 +4,7 @@ import chaiHttp from 'chai-http';
 import express from 'express';
 import * as Factory from '../../helpers/factory';
 import db from '../../models';
-import validateNewUser from '../../middlewares/validate-new-user';
+import validateNewUser from '../../middlewares/validateNewUser';
 
 const { expect } = chai;
 
