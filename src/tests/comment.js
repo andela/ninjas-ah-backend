@@ -93,7 +93,7 @@ describe('COMMENTS', () => {
       };
       chai
         .request(server)
-        .put('/api/v1/articles/1/comments/10')
+        .put('/api/v1/articles/1/comments/16')
         .send(comment)
         .end((err, res) => {
           res.should.have.status(200);
@@ -138,7 +138,7 @@ describe('COMMENTS', () => {
       };
       chai
         .request(server)
-        .delete('/api/v1/articles/1/comments/10')
+        .delete('/api/v1/articles/1/comments/14')
         .send(comment)
         .end((err, res) => {
           res.should.have.status(200);
