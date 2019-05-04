@@ -1,7 +1,6 @@
-
 import db from '../index';
 /**
- * a user class that handles all user queries to the db
+ * a commentQueries that contain all the queries that can be needed to manupilate the comment models
  */
 export default class CommentQueries {
   /**
@@ -14,16 +13,7 @@ export default class CommentQueries {
     });
     return comment;
   }
-  /**
-   * @param {object} condition
-   * @returns {object} an object containing the information of the user or null
-   */
-  static async allComments(condition = {}) {
-    const comment = await db.Comment.findAll({
-      where: condition
-    });
-    return comment;
-  }
+
   /**
    * @param {object} condition
    * @returns {object} an object containing the information of the user or null
@@ -32,6 +22,7 @@ export default class CommentQueries {
     const comment = await db.Comment.create(condition);
     return comment;
   }
+
   /**
    * @param {object} condition1
    * @param {object} condition
@@ -43,6 +34,7 @@ export default class CommentQueries {
     });
     return comment;
   }
+
   /**
    * @param {object} condition
    * @returns {object} an object containing the information of the user or null
