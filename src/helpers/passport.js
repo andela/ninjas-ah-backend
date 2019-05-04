@@ -1,55 +1,13 @@
-/* eslint-disable require-jsdoc */
+import { Strategy as JWTStrategy, ExtractJwt } from 'passport-jwt';
+import dotenv from 'dotenv';
+import Passport from '../config/passportLocalConfig';
 
-class passportStratagy {
-  // find if user exists
-  static async getUser(model, user) {
-    const userExists = await model.findOne({ where: user });
-    return userExists;
-  }
+dotenv.config();
+const opts = {};
+opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+opts.secretOrKey = process.env.SECRET_KEY;
 
-  // verify social network
-  static async socialNetwork(accessToken, refreshToken, profile, done) {
-    let user;
-    console.log(profile);
-    try {
-      // Get a facebook user
-      if (profile.provider === 'facebook') {
-        user = {
-          firstName: profile.displayName,
-          lastName: profile.displayName,
-          username: profile.username,
-          email: profile.email || null,
-          password: profile.id,
-          provider: profile.provider
-        };
-        return done(null, user);
-      } if (profile.provider === 'twitter') {
-        // Get a twitter user
-        user = {
-          firstName: profile.displayName,
-          lastName: profile.displayName,
-          username: profile.username,
-          email: profile.email || null,
-          password: profile.id,
-          provider: profile.provider
-        };
-        done(null, user);
-      } else if (profile.provider === 'google') {
-        // Get a google user
-        user = {
-          username: profile.name.givenName,
-          email: profile.emails[0].value,
-          password: profile.id,
-          provider: profile.provider
-        };
-        done(null, user);
-      } else {
-        done(null);
-      }
-    } catch (error) {
-      done(error, false, error.message);
-    }
-  }
-}
 
-export default passportStratagy;
+export default (passport) => {
+  passport.use('jwt', new JWTStrategy(opts, Passport));
+};
