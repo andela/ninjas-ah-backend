@@ -5,16 +5,20 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import session from 'express-session';
 
+import usersRouter from './routes/api/users';
+
 const app = express();
 
 dotenv.config();
 
-app.use(session({
-  secret: process.env.SECRET_KEY || 'authorshaven',
-  cookie: { maxAge: 60000 },
-  resave: true,
-  saveUninitialized: true,
-}));
+app.use(
+  session({
+    secret: process.env.SECRET_KEY || 'authorshaven',
+    cookie: { maxAge: 60000 },
+    resave: true,
+    saveUninitialized: true
+  })
+);
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -22,6 +26,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
 // api version 1
+app.use('/api/v1/', usersRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -38,7 +43,7 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.send({
     message: err.message,
-    error: err.status,
+    error: err.status
   });
   next();
 });

@@ -51,10 +51,19 @@ export default (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.DATE
     }
-  }, {});
+  }, {
+    newUser: {
+      firstName: 'John',
+      lastName: 'Smith',
+      username: 'josmi',
+      email: 'luctunechi45@gmail.com',
+      password: 'Baaa1234!'
+    }
+  });
   User.associate = (models) => {
     User.hasMany(models.Article, { foreignKey: 'userId', onUpdate: 'CASCADE', onDelete: 'CASCADE' });
     User.hasMany(models.Comment, { foreignKey: 'userId', onUpdate: 'CASCADE', onDelete: 'CASCADE' });
   };
+
   return User;
 };

@@ -1,13 +1,22 @@
 env:
   global:
-  - CC_TEST_REPORTER_ID=d570e2625aaffa20e7828eaddfbec748c525e866b6d413472bc26e188cb2bc6a
+    - SECRET=12345
+    - NODE_ENV=test
+    - CC_TEST_REPORTER_ID=d570e2625aaffa20e7828eaddfbec748c525e866b6d413472bc26e188cb2bc6a
+    - DATABASE_URL_TEST=postgres://postgres@localhost:5432/haven
 language: node_js
 node_js:
   - "stable"
 cache:
   directories:
-  - "node_modules"
+    - "node_modules"
+services:
+  - postgresql
 before_script:
+  - psql -c 'CREATE DATABASE haven;' -U postgres
+  - npm i sequelize-cli -g
+  - sequelize db:migrate
+  - npm i sequelize-cli -g
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
