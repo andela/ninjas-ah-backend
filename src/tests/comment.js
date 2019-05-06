@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable import/no-extraneous-dependencies */
 import chai from 'chai';
 import chaiHttp from 'chai-http';
@@ -6,8 +7,22 @@ import server from '../app';
 chai.use(chaiHttp);
 chai.should();
 
+let commentId;
+
 describe('COMMENTS', () => {
-  it('Should not let the user create a comment with a wrong article Id', async () => {
+  before(async () => {
+    try {
+      const comment = await chai
+        .request(server)
+        .post('/api/v1/articles/1/comments')
+        .set('Content-Type', 'application/json')
+        .send({ body: 'tests are passing' });
+      commentId = comment.body.data.id;
+    } catch (err) {
+      console.log(err);
+    }
+  });
+  it('Should not let the user create a comment with a wrong article Id', async done => {
     const comment = {
       articleId: 2432332,
       userId: 1,
@@ -20,19 +35,18 @@ describe('COMMENTS', () => {
       .end((err, res) => {
         res.should.have.status(400);
       });
+    done();
   });
   it('Should let the user create a comment', async () => {
     const comment = {
-      articleId: 1,
-      userId: 1,
-      body: 'Test of tests'
+      body: 'hahhahahahaha'
     };
     chai
       .request(server)
       .post('/api/v1/articles/1/comments')
       .send(comment)
       .end((err, res) => {
-        res.should.have.status(400);
+        res.should.have.status(201);
       });
   });
 
@@ -60,7 +74,7 @@ describe('COMMENTS', () => {
     };
     chai
       .request(server)
-      .put('/api/v1/articles/23432332/comments/15')
+      .put('/api/v1/articles/23432332/comments/5')
       .send(comment)
       .end((err, res) => {
         res.should.have.status(404);
@@ -88,7 +102,7 @@ describe('COMMENTS', () => {
     };
     chai
       .request(server)
-      .put('/api/v1/articles/1/comments/15')
+      .put(`/api/v1/articles/1/comments/${commentId}`)
       .send(comment)
       .end((err, res) => {
         res.should.have.status(200);
@@ -123,15 +137,10 @@ describe('COMMENTS', () => {
       });
   });
   it('Should let the user delete a comment', async () => {
-    const comment = {
-      articleId: 1,
-      user_id: 1,
-      body: 'Take test'
-    };
     chai
       .request(server)
-      .delete('/api/v1/articles/1/comments/6')
-      .send(comment)
+      // eslint-disable-next-line no-undef
+      .delete(`/api/v1/articles/1/comments/${commentId}`)
       .end((err, res) => {
         res.should.have.status(200);
       });
