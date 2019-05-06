@@ -22,7 +22,7 @@ describe('COMMENTS', () => {
       console.log(err);
     }
   });
-  it('Should not let the user create a comment with a wrong article Id', async done => {
+  it('Should not let the user create a comment with a wrong article Id', async (done) => {
     const comment = {
       articleId: 2432332,
       userId: 1,

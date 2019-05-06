@@ -1,6 +1,8 @@
-import commentQueries from '../models/queries/commentQueries';
-import ArticleQueries from '../models/queries/articleQueries';
-
+import createComment from '../queries/comments/createComment';
+import oneArticle from '../queries/articles/oneArticle';
+import allComments from '../queries/comments/allComments';
+import updateComment from '../queries/comments/updateComment';
+import deleteComment from '../queries/comments/deleteComments';
 // eslint-disable-next-line require-jsdoc
 class Comment {
   /**
@@ -12,7 +14,7 @@ class Comment {
   static async createComment(req, res) {
     try {
       const userid = 1;
-      const article = await ArticleQueries.oneArticle({
+      const article = await oneArticle.getOne({
         id: req.params.id
       });
       if (!article) {
@@ -21,7 +23,7 @@ class Comment {
           message: 'That article does not exist'
         });
       }
-      const comment = await commentQueries.createComment({
+      const comment = await createComment.create({
         articleId: req.params.id,
         userId: userid,
         body: req.body.body
@@ -48,7 +50,7 @@ class Comment {
    */
   static async getComments(req, res) {
     try {
-      const article = await ArticleQueries.oneArticle({
+      const article = await oneArticle.getOne({
         id: req.params.id
       });
       if (!article) {
@@ -57,7 +59,7 @@ class Comment {
           message: 'The article does not exist'
         });
       }
-      const comment = await commentQueries.allComments({
+      const comment = await allComments.getAll({
         articleId: req.params.id
       });
       if (comment.length === 0) {
@@ -68,7 +70,7 @@ class Comment {
       }
       return res.status(200).send({
         status: 200,
-        message: 'Message fetched successfully',
+        message: 'Comments fetched successfully',
         data: comment
       });
     } catch (error) {
@@ -87,7 +89,7 @@ class Comment {
    */
   static async editComment(req, res) {
     try {
-      const article = await ArticleQueries.oneArticle({
+      const article = await oneArticle.getOne({
         id: req.params.articleId
       });
       if (!article) {
@@ -96,17 +98,17 @@ class Comment {
           message: 'The article does not exist'
         });
       }
-      const comment = await commentQueries.allComments({
+      const comment = await allComments.getAll({
         id: req.params.commentId
       });
 
       if (comment.length === 0) {
         return res.status(404).send({
           status: 404,
-          message: 'No comments for this article so far'
+          message: 'The comment'
         });
       }
-      await commentQueries.updateComment(
+      await updateComment.update(
         { body: req.body.text },
         {
           id: req.params.commentId
@@ -132,7 +134,7 @@ class Comment {
    */
   static async deleteComment(req, res) {
     try {
-      const article = await ArticleQueries.oneArticle({
+      const article = await oneArticle.getOne({
         id: req.params.articleId
       });
       if (!article) {
@@ -142,7 +144,7 @@ class Comment {
         });
       }
 
-      const comment = await commentQueries.allComments({
+      const comment = await allComments.getAll({
         id: req.params.commentId
       });
 
@@ -152,7 +154,7 @@ class Comment {
           message: 'That comment does not exist'
         });
       }
-      await commentQueries.deleteComment({ id: req.params.commentId });
+      await deleteComment.delete({ id: req.params.commentId });
       return res.status(200).send({
         status: 200,
         message: 'Comment successfully deleted'
