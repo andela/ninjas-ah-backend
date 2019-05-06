@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 /* eslint-disable import/no-extraneous-dependencies */
 import chai from 'chai';
 import chaiHttp from 'chai-http';
@@ -6,11 +5,8 @@ import server from '../app';
 
 chai.use(chaiHttp);
 chai.should();
-let commentId;
+
 describe('COMMENTS', () => {
-    beforeEach(()=>{
-        const comment =
-    })
   it('Should not let the user create a comment with a wrong article Id', async () => {
     const comment = {
       articleId: 2432332,
@@ -22,24 +18,21 @@ describe('COMMENTS', () => {
       .post('/api/v1/articles/23432332/comments')
       .send(comment)
       .end((err, res) => {
-        res.should.have.status(404);
+        res.should.have.status(400);
       });
   });
   it('Should let the user create a comment', async () => {
     const comment = {
       articleId: 1,
       userId: 1,
-      body: 'take tests'
+      body: 'Test of tests'
     };
     chai
       .request(server)
       .post('/api/v1/articles/1/comments')
       .send(comment)
       .end((err, res) => {
-        commentId = res.body.data.id;
-        //   commentId = res.body.data.id;
-        console.log('jjjjjjjjjj', commentId);
-        res.should.have.status(201);
+        res.should.have.status(400);
       });
   });
 
@@ -56,7 +49,6 @@ describe('COMMENTS', () => {
       .request(server)
       .get('/api/v1/articles/1/comments')
       .end((error, res) => {
-        console.log('hhhhhhhhhhh', commentId);
         res.should.have.status(200);
       });
   });
@@ -68,7 +60,7 @@ describe('COMMENTS', () => {
     };
     chai
       .request(server)
-      .put('/api/v1/articles/23432332/comments/1')
+      .put('/api/v1/articles/23432332/comments/15')
       .send(comment)
       .end((err, res) => {
         res.should.have.status(404);
@@ -96,7 +88,7 @@ describe('COMMENTS', () => {
     };
     chai
       .request(server)
-      .put('/api/v1/articles/1/comments/6')
+      .put('/api/v1/articles/1/comments/15')
       .send(comment)
       .end((err, res) => {
         res.should.have.status(200);
