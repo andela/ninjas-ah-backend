@@ -30,6 +30,8 @@ describe('src/models/User', () => {
       'image',
       'role',
       'permissions',
+      'accountProvider',
+      'accountProviderUserId',
       'createdAt',
       'updatedAt'
     ].forEach(checkPropertyExists(user));

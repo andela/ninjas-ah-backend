@@ -1,4 +1,4 @@
+import createUser from './createUser';
 import findOne from './findOneUser';
 
-// eslint-disable-next-line import/prefer-default-export
-export { findOne };
+export { createUser, findOne };

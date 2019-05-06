@@ -4,6 +4,13 @@ env:
     - NODE_ENV=test
     - CC_TEST_REPORTER_ID=d570e2625aaffa20e7828eaddfbec748c525e866b6d413472bc26e188cb2bc6a
     - DATABASE_URL_TEST=postgres://postgres@localhost:5432/authorhavens_test
+    - APP_URL=http://localhost:3000
+    - FACEBOOK_APP_ID=FacebookId
+    - FACEBOOK_APP_SECRET=FacebookSecret
+    - TWITTER_CONSUMER_KEY=TwitterKey
+    - TWITTER_CONSUMER_SECRET=TwitterKey
+    - GOOGLE_CONSUMER_KEY=ToogleKey
+    - GOOGLE_CONSUMER_SECRET=GoogleSecret
 language: node_js
 node_js:
   - "stable"

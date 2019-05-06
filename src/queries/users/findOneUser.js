@@ -6,13 +6,12 @@ import db from '../../models';
  */
 export default async (condition = {}) => {
   try {
-    const user = await db.User.findAll({
-      limit: 1,
+    const user = await db.User.findOne({
       where: condition,
       logging: false
     });
 
-    return user;
+    return user ? user.dataValues : {};
   } catch (error) {
     return {
       errors: error

@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import chai from 'chai';
-import validateEmail from '../../helpers/validation/email';
+import validateEmail from '../../../helpers/validation/email';
 
 const { expect } = chai;
 

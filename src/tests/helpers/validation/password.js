@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import chai from 'chai';
-import validatePassword from '../../helpers/validation/password';
+import validatePassword from '../../../helpers/validation/password';
 
 const { expect } = chai;
 

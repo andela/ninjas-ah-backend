@@ -1,4 +1,7 @@
-import './404';
+import './config';
 import './models';
 import './queries';
-import './validation';
+import './helpers';
+import './middlewares';
+import './controllers';
+import './routes';
