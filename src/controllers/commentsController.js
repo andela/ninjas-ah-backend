@@ -3,7 +3,9 @@ import oneArticle from '../queries/articles/oneArticle';
 import allComments from '../queries/comments/allComments';
 import updateComment from '../queries/comments/updateComment';
 import deleteComment from '../queries/comments/deleteComments';
-// eslint-disable-next-line require-jsdoc
+/**
+ * controller class
+ */
 class Comment {
   /**
    * Adds two numbers together.
@@ -18,8 +20,8 @@ class Comment {
         id: req.params.id
       });
       if (!article) {
-        return res.status(404).send({
-          status: 404,
+        return res.status(400).send({
+          status: 400,
           message: 'That article does not exist'
         });
       }
@@ -63,7 +65,7 @@ class Comment {
         articleId: req.params.id
       });
       if (comment.length === 0) {
-        return res.status(404).send({
+        return res.status(400).send({
           status: 404,
           message: 'No comments for this article so far'
         });

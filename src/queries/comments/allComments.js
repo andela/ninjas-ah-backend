@@ -1,6 +1,6 @@
 import db from '../../models';
 /**
- * a commentQueries that contain all the queries that can be needed to manupilate the comment models
+ * a Getall that contain all the queries that can be needed to manupilate the comment models
  */
 export default class Getall {
   /**
