@@ -61,18 +61,18 @@ describe('COMMENTS', () => {
       });
   });
 
-  it('Should let the user get all comments', async () => {
+  it('Should not let the user get all comments with the wrong article id', async () => {
     chai
       .request(server)
       .get('/api/v1/articles/47726323/comments')
       .end((error, res) => {
-        res.should.have.status(404);
+        res.should.have.status(400);
       });
   });
-  it('Should let the user get all comments', async () => {
+  it('Should not let the user get all comments with the wrong article id', async () => {
     chai
       .request(server)
-      .get('/api/v1/articles/2/comments')
+      .get('/api/v1/articles/1/comments/0')
       .end((error, res) => {
         res.should.have.status(404);
       });
@@ -95,8 +95,6 @@ describe('COMMENTS', () => {
   });
   it('Should not let the user edit a comment with a wrong article Id', async () => {
     const comment = {
-      articleId: 2432332,
-      user_id: 1,
       body: 'Take test'
     };
     chai
@@ -104,13 +102,11 @@ describe('COMMENTS', () => {
       .put('/api/v1/articles/23432332/comments/5')
       .send(comment)
       .end((err, res) => {
-        res.should.have.status(404);
+        res.should.have.status(400);
       });
   });
   it('Should not let the user edit a comment with a wrong comment Id', async () => {
     const comment = {
-      articleId: 2432332,
-      user_id: 1,
       body: 'Take test'
     };
     chai
@@ -118,13 +114,11 @@ describe('COMMENTS', () => {
       .put('/api/v1/articles/1/comments/57647634')
       .send(comment)
       .end((err, res) => {
-        res.should.have.status(404);
+        res.should.have.status(400);
       });
   });
   it('Should let the user edit a comment', async () => {
     const comment = {
-      articleId: 1,
-      user_id: 1,
       body: 'Take test'
     };
     chai
@@ -133,20 +127,6 @@ describe('COMMENTS', () => {
       .send(comment)
       .end((err, res) => {
         res.should.have.status(200);
-      });
-  });
-  it('Should not let the user edit a comment due to wrong article id', async () => {
-    const comment = {
-      articleId: 1,
-      user_id: 1,
-      body: 'Take test'
-    };
-    chai
-      .request(server)
-      .put(`/api/v1/articles/h/comments/${commentId}`)
-      .send(comment)
-      .end((err, res) => {
-        res.should.have.status(500);
       });
   });
 
@@ -161,7 +141,7 @@ describe('COMMENTS', () => {
       .delete('/api/v1/articles/23432332/comments/1')
       .send(comment)
       .end((err, res) => {
-        res.should.have.status(404);
+        res.should.have.status(400);
       });
   });
   it('Should not let the user delete a comment with a wrong comment Id', async () => {
@@ -175,7 +155,7 @@ describe('COMMENTS', () => {
       .delete('/api/v1/articles/1/comments/57647634')
       .send(comment)
       .end((err, res) => {
-        res.should.have.status(404);
+        res.should.have.status(400);
       });
   });
   it('Should let the user delete a comment', async () => {
@@ -184,14 +164,6 @@ describe('COMMENTS', () => {
       .delete(`/api/v1/articles/1/comments/${commentId}`)
       .end((err, res) => {
         res.should.have.status(200);
-      });
-  });
-  it('Should not let the user delete a comment with a wrong comment Id', async () => {
-    chai
-      .request(server)
-      .delete(`/api/v1/articles/gt/comments/${commentId}`)
-      .end((err, res) => {
-        res.should.have.status(500);
       });
   });
 });

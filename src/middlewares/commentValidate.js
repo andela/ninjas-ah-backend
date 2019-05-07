@@ -3,7 +3,7 @@ import validate from '../helpers/commentValidate';
 /**
  * @param { object } req the request
  * @param { object } res the respond
- * @param { function } next the
+ * @param { function } next
  */
 export default function Validation(req, res, next) {
   const { error } = validate.validateComment(req.body);
