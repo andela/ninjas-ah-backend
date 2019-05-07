@@ -4,7 +4,7 @@ import db from '../../models';
  */
 export default class Create {
   /**
-   * @param {object} condition
+   * @param {object} condition condition to create one comment needed
    * @returns {object} object that contains information used to create a comment
    */
   static async create(condition = {}) {

@@ -5,8 +5,8 @@ import db from '../../models';
 export default class Getall {
   /**
    * Get all comments.
-   * @param {objet} condition The first number.
-   * @returns {int} The sum of the two numbers.
+   * @param {objet} condition condition to find comments needed.
+   * @returns { object} object that contains information to get all comments .
    */
   static async getAll(condition = {}) {
     const comment = await db.Comment.findAll({

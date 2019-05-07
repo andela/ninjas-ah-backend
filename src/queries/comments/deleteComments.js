@@ -5,7 +5,7 @@ import db from '../../models';
 export default class DeleteComment {
   /**
    * Delete one comment
-   * @param {object} condition
+   * @param {object} condition condition to delete one comment needed
    * @returns {object} object that contains information used delete one comment
    */
   static async delete(condition = {}) {

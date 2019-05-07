@@ -6,7 +6,7 @@ import db from '../../models';
 export default class ArticleQueries {
   /**
    * Get one Article
-   * @param {object} condition
+   * @param {object} condition condition to fetch one article needed
    * @returns {object} object that contain to information to get one article.
    */
   static async getOne(condition = {}) {

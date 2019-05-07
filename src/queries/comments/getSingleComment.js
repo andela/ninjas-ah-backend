@@ -5,7 +5,7 @@ import db from '../../models';
 export default class GetOne {
   /**
    * Get one comment
-   * @param {object} condition
+   * @param {object} condition condition to fetch one comment needed
    * @returns {object} object that contains information used to get only one comment
    */
   static async getOne(condition = {}) {
