@@ -4,7 +4,6 @@ import db from '../../models';
  */
 export default class Getall {
   /**
-   * Get all comments.
    * @param {objet} articleId Article Id to find comments needed.
    * @returns { object} object that contains information to get all comments .
    */
