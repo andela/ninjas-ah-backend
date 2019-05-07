@@ -4,6 +4,7 @@ import db from '../../models';
  */
 export default class DeleteComment {
   /**
+   * Delete one comment
    * @param {object} condition
    * @returns {object} object that contains information used delete one comment
    */

@@ -1,4 +1,4 @@
-import oneComment from '../../queries/comments/oneComment';
+import oneComment from '../../queries/comments/getSingleComment';
 // eslint-disable-next-line valid-jsdoc
 /**
  * middleware funnction used in create comment controller to make checknif the article exists

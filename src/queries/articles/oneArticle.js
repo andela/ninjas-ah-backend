@@ -5,6 +5,7 @@ import db from '../../models';
  */
 export default class ArticleQueries {
   /**
+   * Get one Article
    * @param {object} condition
    * @returns {object} object that contain to information to get one article.
    */

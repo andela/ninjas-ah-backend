@@ -4,6 +4,7 @@ import db from '../../models';
  */
 export default class GetOne {
   /**
+   * Get one comment
    * @param {object} condition
    * @returns {object} object that contains information used to get only one comment
    */

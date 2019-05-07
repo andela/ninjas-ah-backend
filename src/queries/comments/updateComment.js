@@ -4,6 +4,7 @@ import db from '../../models';
  */
 export default class UpdateComment {
   /**
+   * Update a specific comment.
    * @param {object} condition1
    * @param {object} condition
    * @returns {object} object that contains information used to update only one comment

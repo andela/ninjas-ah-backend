@@ -1,5 +1,5 @@
 import createComment from '../queries/comments/createComment';
-import allComments from '../queries/comments/allComments';
+import allComments from '../queries/comments/getAllComments';
 import updateComment from '../queries/comments/updateComment';
 import deleteComment from '../queries/comments/deleteComments';
 /**
