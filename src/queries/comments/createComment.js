@@ -1,11 +1,11 @@
 import db from '../../models';
 /**
- * a commentQueries that contain all the queries that can be needed to manupilate the comment models
+ * class that is used to create one comment
  */
 export default class Create {
   /**
    * @param {object} condition
-   * @returns {object} an object containing the information of the user or null
+   * @returns {object} return imformation used to create a comment
    */
   static async create(condition = {}) {
     const comment = await db.Comment.create(condition);

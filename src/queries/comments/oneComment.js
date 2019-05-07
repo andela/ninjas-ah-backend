@@ -1,11 +1,11 @@
 import db from '../../models';
 /**
- * a Getall that contain all the queries that can be needed to manupilate the comment models
+ * class used to get only one comment
  */
 export default class GetOne {
   /**
    * @param {object} condition
-   * @returns {object} an object containing the information of the user or null
+   * @returns {object} return an object that contain information used to get only one comment
    */
   static async getOne(condition = {}) {
     const comment = await db.Comment.findOne({

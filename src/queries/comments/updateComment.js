@@ -1,12 +1,12 @@
 import db from '../../models';
 /**
- * a commentQueries that contain all the queries that can be needed to manupilate the comment models
+ * class used to update one comment
  */
 export default class UpdateComment {
   /**
    * @param {object} condition1
    * @param {object} condition
-   * @returns {object} an object containing the information of the user or null
+   * @returns {object} return an object that contain information used to update only one comment
    */
   static async update(condition1 = {}, condition = {}) {
     const comment = await db.Comment.update(condition1, {

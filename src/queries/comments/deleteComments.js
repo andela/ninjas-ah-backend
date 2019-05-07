@@ -1,11 +1,11 @@
 import db from '../../models';
 /**
- * a commentQueries that contain all the queries that can be needed to manupilate the comment models
+ * class that is used to delete a comment
  */
 export default class DeleteComment {
   /**
    * @param {object} condition
-   * @returns {object} an object containing the information of the user or null
+   * @returns {object} return an object that contain information used delete one comment
    */
   static async delete(condition = {}) {
     const comment = await db.Comment.destroy({ where: condition });

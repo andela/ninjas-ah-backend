@@ -5,7 +5,7 @@ import db from '../../models';
 export default class Getall {
   /**
    * @param {object} condition
-   * @returns {object} an object containing the information of the user or null
+   * @returns {object} an object containing information used to get all comments from database or null
    */
   static async getAll(condition = {}) {
     const comment = await db.Comment.findAll({
