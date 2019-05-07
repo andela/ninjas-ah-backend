@@ -5,7 +5,7 @@ import db from '../../models';
 export default class GetOne {
   /**
    * @param {object} condition
-   * @returns {object} return an object that contain information used to get only one comment
+   * @returns {object} object that contains information used to get only one comment
    */
   static async getOne(condition = {}) {
     const comment = await db.Comment.findOne({

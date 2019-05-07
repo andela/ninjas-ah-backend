@@ -5,7 +5,7 @@ import db from '../../models';
 export default class DeleteComment {
   /**
    * @param {object} condition
-   * @returns {object} return an object that contain information used delete one comment
+   * @returns {object} object that contains information used delete one comment
    */
   static async delete(condition = {}) {
     const comment = await db.Comment.destroy({ where: condition });

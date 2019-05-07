@@ -6,7 +6,7 @@ export default class UpdateComment {
   /**
    * @param {object} condition1
    * @param {object} condition
-   * @returns {object} return an object that contain information used to update only one comment
+   * @returns {object} object that contains information used to update only one comment
    */
   static async update(condition1 = {}, condition = {}) {
     const comment = await db.Comment.update(condition1, {
