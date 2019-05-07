@@ -1,4 +1,6 @@
-import oneArticle from '../../queries/articles/oneArticle';
+/* eslint-disable import/named */
+import { getOne } from '../../queries/articles/oneArticle';
+
 // eslint-disable-next-line valid-jsdoc
 /**
  * middleware funnction used in create comment controller to make checknif the article exists
@@ -8,7 +10,7 @@ import oneArticle from '../../queries/articles/oneArticle';
  */
 export default async function checkArticle(req, res, next) {
   try {
-    const article = await oneArticle.getOne({
+    const article = await getOne({
       id: req.params.articleId
     });
     if (!article) {
@@ -17,7 +19,7 @@ export default async function checkArticle(req, res, next) {
         message: 'That article does not exist'
       });
     }
-    next();
+    return next();
   } catch (error) {
     return res.status(500).send({
       status: 500,

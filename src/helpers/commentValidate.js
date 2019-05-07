@@ -1,31 +1,14 @@
 /* eslint-disable require-jsdoc */
 import Joi from 'joi';
+import commentErrors from './commentErrors';
 
-export default class Validate {
-  static validateComment(comment) {
-    const schema = {
-      body: Joi.string()
-        .min(3)
-        .required()
-        .error((errors) => {
-          errors.forEach((err) => {
-            switch (err.type) {
-              case 'any.empty':
-                err.message = 'Please enter your comment';
-                break;
-              case 'string.min':
-                err.message = ` Your comment should have at least ${
-                  err.context.limit
-                } characters!`;
-                break;
-              default:
-                break;
-            }
-          });
-          return errors;
-        })
-    };
+export default (comment) => {
+  const schema = {
+    body: Joi.string()
+      .min(3)
+      .required()
+      .error(commentErrors)
+  };
 
-    return Joi.validate(comment, schema);
-  }
-}
+  return Joi.validate(comment, schema);
+};

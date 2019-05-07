@@ -1,4 +1,5 @@
-import oneComment from '../../queries/comments/getSingleComment';
+/* eslint-disable import/named */
+import { getOne } from '../../queries/comments/getSingleComment';
 // eslint-disable-next-line valid-jsdoc
 /**
  * middleware funnction used in create comment controller to make checknif the article exists
@@ -8,7 +9,7 @@ import oneComment from '../../queries/comments/getSingleComment';
  */
 export default async function checkComment(req, res, next) {
   try {
-    const comment = await oneComment.getOne({
+    const comment = await getOne({
       id: req.params.id,
       articleId: req.params.articleId
     });

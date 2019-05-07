@@ -1,16 +1,5 @@
 import db from '../../models';
-/**
- * Getall that contain all the queries that can be needed to manupilate the comment models
- */
-export default class Getall {
-  /**
-   * @param {objet} articleId Article Id to find comments needed.
-   * @returns { object} object that contains information to get all comments .
-   */
-  static async getAll(articleId = {}) {
-    const comment = await db.Comment.findAll({
-      where: articleId
-    });
-    return comment;
-  }
-}
+import { dbFindAll } from '../helpers/queryHelper';
+
+const getAll = async (condition = {}) => dbFindAll(db.Comment, condition);
+module.exports = { getAll };

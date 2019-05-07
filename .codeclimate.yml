@@ -8,6 +8,7 @@ exclude_patterns:
   - 'src/config/'
   - 'src/models/'
   - 'src/migrations/'
+  - 'src/seeders/'
   - 'src/dist/'
   - 'features/'
   - '**/node_modules/'

@@ -1,4 +1,4 @@
-import validate from '../helpers/commentValidate';
+import commentValidate from '../helpers/commentValidate';
 // eslint-disable-next-line valid-jsdoc
 /**
  * @param { object } req the request
@@ -6,7 +6,7 @@ import validate from '../helpers/commentValidate';
  * @param { function } next
  */
 export default function Validation(req, res, next) {
-  const { error } = validate.validateComment(req.body);
+  const { error } = commentValidate(req.body);
   if (error) {
     return res.status(400).send({
       status: 400,

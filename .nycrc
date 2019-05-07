@@ -5,6 +5,6 @@
  ],
  "exclude": [
    "src/migartions",
-   "src/helpers"
+   "src/tests"
  ]
 }
