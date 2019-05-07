@@ -6,8 +6,8 @@ import db from '../../models';
 export default class ArticleQueries {
   /**
    * Get one Article
-   * @param {object} condition condition to fetch one article needed
-   * @returns {object} object that contain to information to get one article.
+   * @param {object} condition will fetch one article
+   * @returns {object} will return an object.
    */
   static async getOne(condition = {}) {
     const article = await db.Article.findOne({
