@@ -4,11 +4,11 @@ import db from '../../models';
  */
 export default class Create {
   /**
-   * @param {object} condition condition to create one comment needed
+   * @param {object} createCondition createCondition to create one comment needed
    * @returns {object} object that contains information used to create a comment
    */
-  static async create(condition = {}) {
-    const comment = await db.Comment.create(condition);
+  static async create(createCondition = {}) {
+    const comment = await db.Comment.create(createCondition);
     return comment;
   }
 }

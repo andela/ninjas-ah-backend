@@ -5,12 +5,12 @@ import db from '../../models';
 export default class Getall {
   /**
    * Get all comments.
-   * @param {objet} condition condition to find comments needed.
+   * @param {objet} getAllCondition getAllCondition to find comments needed.
    * @returns { object} object that contains information to get all comments .
    */
-  static async getAll(condition = {}) {
+  static async getAll(getAllCondition = {}) {
     const comment = await db.Comment.findAll({
-      where: condition
+      where: getAllCondition
     });
     return comment;
   }
