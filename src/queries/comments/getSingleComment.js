@@ -5,12 +5,12 @@ import db from '../../models';
 export default class GetOne {
   /**
    * Get one comment
-   * @param {object} condition condition to fetch one comment needed
+   * @param {object} getOneCondition getOneCondition to fetch one comment needed
    * @returns {object} object that contains information used to get only one comment
    */
-  static async getOne(condition = {}) {
+  static async getOne(getOneCondition = {}) {
     const comment = await db.Comment.findOne({
-      where: condition
+      where: getOneCondition
     });
     return comment;
   }
