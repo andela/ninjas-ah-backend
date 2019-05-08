@@ -34,7 +34,8 @@ export default class AuthLocalController {
     if (!newUser.errors && newUser && Object.keys(newUser).length > 0) {
       delete newUser.password;
       return res.status(status.CREATED).send({
-        user: newUser, token: helper.token.generate({ email, role: req.body.isAdmin })
+        user: newUser,
+        token: helper.token.generate({ email, role: req.body.isAdmin })
       });
     }
   }
@@ -57,7 +58,9 @@ export default class AuthLocalController {
           });
         }
         const payload = {
-          id: checkUser.id, role: checkUser.role, permissions: checkUser.permissions
+          id: checkUser.id,
+          role: checkUser.role,
+          permissions: checkUser.permissions
         };
         const token = helper.token.generate(payload);
         delete checkUser.password;
@@ -66,7 +69,9 @@ export default class AuthLocalController {
           token
         });
       }
-      return res.status(status.UNAUTHORIZED).send({ error: `User with ${email} email doesn't exist!!!` });
+      return res
+        .status(status.UNAUTHORIZED)
+        .send({ error: `User with ${email} email doesn't exist!!!` });
     } catch (error) {
       return res.status(500).send({ error });
     }
