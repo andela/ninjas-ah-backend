@@ -1,3 +1,7 @@
-import './user-model';
-import './article-model';
-import './comment-model';
+import './config';
+import './models';
+import './queries';
+import './helpers';
+import './middlewares';
+import './controllers';
+import './routes';

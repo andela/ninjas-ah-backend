@@ -1,10 +1,9 @@
 {
- "reporter": [
-   "lcov",
-   "text"
- ],
- "exclude": [
-   "src/migartions",
-   "src/helpers"
- ]
+  "reporter": [
+    "lcov",
+    "text"
+  ],
+  "exclude": [
+    "src/tests"
+  ]
 }

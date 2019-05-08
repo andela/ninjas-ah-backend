@@ -1,13 +1,27 @@
 env:
   global:
-  - CC_TEST_REPORTER_ID=d570e2625aaffa20e7828eaddfbec748c525e866b6d413472bc26e188cb2bc6a
+    - SECRET_KEY=12345
+    - NODE_ENV=test
+    - CC_TEST_REPORTER_ID=d570e2625aaffa20e7828eaddfbec748c525e866b6d413472bc26e188cb2bc6a
+    - DATABASE_URL_TEST=postgres://postgres@localhost:5432/authorhavens_test
+    - APP_URL=http://localhost:3000
+    - FACEBOOK_APP_ID=FacebookId
+    - FACEBOOK_APP_SECRET=FacebookSecret
+    - TWITTER_CONSUMER_KEY=TwitterKey
+    - TWITTER_CONSUMER_SECRET=TwitterKey
+    - GOOGLE_CONSUMER_KEY=ToogleKey
+    - GOOGLE_CONSUMER_SECRET=GoogleSecret
 language: node_js
 node_js:
   - "stable"
 cache:
   directories:
-  - "node_modules"
+    - "node_modules"
+services:
+  - postgresql
 before_script:
+  - psql -c 'CREATE DATABASE authorhavens_test;' -U postgres
+  - npm i sequelize-cli -g
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
