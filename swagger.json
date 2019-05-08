@@ -1,0 +1,219 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Authors Haven - A Social platform for the creative at heart.",
+    "description": "Create a community of like minded authors to fosterwww inspiration and innovation by leveraging the modern web....",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "localhost:3000",
+  "basePath": "/api/v1",
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+ ],
+  "tags": [
+    {
+      "name": "Users",
+      "description": "API for users in the system"
+    },
+    {
+      "name": "Articles",
+      "description": "API for articles in the system"
+    },
+    {
+      "name": "Comments",
+      "description": "API for comments in the system"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/auth/users": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Create a user in system",
+        "description": "Create a new user",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "user that we want to create",
+            "schema": {
+               "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "New user is created",
+            "schema": {
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get all users in system",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+            }
+          }
+        }
+      }
+    },
+
+    "/articles/": {
+      "post": {
+        "tags": [
+          "Articles"
+        ],
+        "summary": "Create a new article in system",
+        "description": "Create a new article",
+        "parameters": [
+          {
+            "name": "article",
+            "in": "body",
+            "description": "user that we want to create",
+            "schema": {
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "New article is created",
+            "schema": {
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Articles"
+        ],
+        "summary": "Get all articles in system",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+            }
+          }
+        }
+      }
+    },
+
+    "/comments/": {
+      "post": {
+        "tags": [
+          "Comments"
+        ],
+        "summary": "Create comment in system",
+        "description": "Create a comment",
+        "parameters": [
+          {
+            "name": "comment",
+            "in": "body",
+            "description": "create comment on an article",
+            "schema": {
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "New comment is created",
+            "schema": {
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Comments"
+        ],
+        "summary": "Get all comment in system",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+            }
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+       "jsonwebtoken": {
+         "type": "apiKey",
+         "name": "Authorization",
+         "in": "header"
+       }
+ },
+  "definitions": {
+    "User": {
+      "required": [
+        "firstName",
+        "lastName",
+        "username",
+        "email",
+        "password",
+        "role",
+        "permission"
+      ],
+      "properties": {
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "password": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "permission": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
