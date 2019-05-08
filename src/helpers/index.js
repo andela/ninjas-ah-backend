@@ -1,6 +1,7 @@
 import * as factory from './factory';
 import * as validation from './validation';
 import * as token from './tokens';
+// import tokenGenerator from './tokenGenerator';
 import sendgridMailTemplate from './sendgridMailTemplate';
 import * as password from './password';
 import sendMail from './sendMail';
