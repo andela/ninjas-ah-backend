@@ -23,17 +23,17 @@ describe('Create user query', () => {
   });
 
   it('should create a user account', async () => {
-    const newUser = await User.createUser(user);
+    const newUser = await User.create(user);
     expect(Object.keys(newUser).length).to.be.above(0);
   });
 
   it('should not create a user account', async () => {
-    const newUser = await User.createUser({});
+    const newUser = await User.create({});
     expect(newUser).to.include.keys('errors');
   });
 
   it('should throw an error message', async () => {
-    const newUser = await User.createUser('~~~');
+    const newUser = await User.create('~~~');
     expect(newUser).to.include.keys('errors');
   });
 

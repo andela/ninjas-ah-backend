@@ -1,2 +1,2 @@
-import './email';
-import './password';
+import './email.test';
+import './password.test';

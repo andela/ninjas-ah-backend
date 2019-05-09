@@ -1,3 +1,3 @@
 import './validation';
-import './tokenGenerator';
-import './passportSocialMediaUser';
+import './tokenGenerator.test';
+import './passportSocialMediaUser.test';

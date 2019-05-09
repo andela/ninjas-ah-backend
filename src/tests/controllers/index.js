@@ -1,1 +1,1 @@
-import './AuthPassportController';
+import './AuthPassportController.test';

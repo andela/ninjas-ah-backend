@@ -1,2 +1,2 @@
-import './404';
-import './logout';
+import './404.test';
+import './logout.test';
