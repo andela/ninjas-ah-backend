@@ -284,7 +284,7 @@ Authentication optional, will return multiple articles, ordered by most recent 
 
 ### Feed Articles
 
-`GET /api/articles/feed`
+`GET /api/feed`
 
 Can also take `limit` and `offset` query parameters like List Articles
 
@@ -292,7 +292,7 @@ Authentication required, will return multiple articles created by followed use
 
 ### Get Article
 
-`GET /api/articles/:slug`
+`GET /api/:slug`
 
 No authentication required, will return single article
 
@@ -321,7 +321,7 @@ Optional fields: `tagList` as an array of Strings
 
 ### Update Article
 
-`PUT /api/articles/:slug`
+`PUT /api/:slug`
 
 Example request body:
 
@@ -341,13 +341,13 @@ The `slug` also gets updated when the `title` is changed
 
 ### Delete Article
 
-`DELETE /api/articles/:slug`
+`DELETE /api/:slug`
 
 Authentication required
 
 ### Add Comments to an Article
 
-`POST /api/articles/:slug/comments`
+`POST /api/:slug/comments`
 
 Example request body:
 
@@ -364,26 +364,26 @@ Required field: `body`
 
 ### Get Comments from an Article
 
-`GET /api/articles/:slug/comments`
+`GET /api/:slug/comments`
 
 Authentication optional, returns multiple comments
 
 ### Delete Comment
 
-`DELETE /api/articles/:slug/comments/:id`
+`DELETE /api/:slug/comments/:id`
 
 Authentication required
 
 ### Favorite Article
 
-`POST /api/articles/:slug/favorite`
+`POST /api/:slug/favorite`
 
 Authentication required, returns the Article
 No additional parameters required
 
 ### Unfavorite Article
 
-`DELETE /api/articles/:slug/favorite`
+`DELETE /api/:slug/favorite`
 
 Authentication required, returns the Article
 

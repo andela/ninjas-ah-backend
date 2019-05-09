@@ -67,19 +67,15 @@ class ArticleController {
   static async update(req, res) {
     let updateArticle = {};
     let message = '';
-    if (req.body && Object.keys(req.body).length > 0) {
-      [updateArticle, message] = [
-        {
-          userId: 1,
-          title: spaceTrimmer(req.body.title),
-          body: spaceTrimmer(req.body.body),
-          description: spaceTrimmer(req.body.description),
-          readTime: generateReadTime(req.body.body),
-          coverUrl: req.body.coverUrl,
-          tagList: req.body.tagList
-        },
-        'Article has been updated'
-      ];
+    if (Object.keys(req.body).length > 0) {
+      updateArticle = {
+        userId: req.userId || req.body.userId,
+        title: spaceTrimmer(req.body.title),
+        body: spaceTrimmer(req.body.body),
+        description: spaceTrimmer(req.body.description),
+        readTime: generateReadTime(req.body.body)
+      };
+      message = 'Article has been updated';
     } else if (req.url.search(/\/publish/g) > 0) {
       [updateArticle, message] = [{ status: 'published' }, 'Article has been published'];
     } else if (req.url.search(/\/unpublish/g) > 0) {

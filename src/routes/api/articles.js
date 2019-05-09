@@ -5,14 +5,20 @@ import errorCatcher from '../../middlewares/errorCatcher';
 import checkArticle from '../../middlewares/checkArticle';
 
 const articles = Router();
-
 // create article
-articles.post('/articles', validateArticle.create, errorCatcher(ArticleController.saveArticle));
-articles.get('/articles', errorCatcher(ArticleController.getAllArticles));
+articles.post('/articles/', validateArticle.create, errorCatcher(ArticleController.saveArticle));
+articles.get('/articles/', errorCatcher(ArticleController.getAllArticles));
 articles.get('/articles/:slug', checkArticle, errorCatcher(ArticleController.getSpecificArticle));
 articles.put(
   '/articles/:slug',
   validateArticle.update,
+  checkArticle,
+  errorCatcher(ArticleController.update)
+);
+
+articles.put(
+  '/articles/:slug/publish',
+  validateArticle.slug,
   checkArticle,
   errorCatcher(ArticleController.update)
 );
