@@ -1,21 +1,25 @@
 const dbFindSingle = async (model, whereCondition) => model.findOne({
-  where: whereCondition
+  where: whereCondition,
+  logging: false
 });
 
 const dbFindAll = async (model, whereCondition) => model.findAll({
-  where: whereCondition
+  where: whereCondition,
+  logging: false
 });
 
-const dbCreate = async (model, condition) => model.create(condition);
+const dbCreate = async (model, condition) => model.create(condition, { logging: false });
 
 const dbDelete = async (model, whereCondition) => model.destroy({
-  where: whereCondition
+  where: whereCondition,
+  logging: false
 });
 
 const dbUpdate = async (model, condition, whereCondition) => model.update(
   { condition },
   {
-    where: whereCondition
+    where: whereCondition,
+    logging: false
   }
 );
 
