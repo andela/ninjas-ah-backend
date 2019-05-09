@@ -3,13 +3,12 @@ import CommentController from '../../controllers/CommentController';
 import Validation from '../../middlewares/validateComment';
 import checkArticle from '../../middlewares/checkArticle';
 import checkComment from '../../middlewares/checkComment';
-import errorHandler from '../../middlewares/errorHandler';
+import asyncHandler from '../../middlewares/asyncHandler';
 
 const router = Router();
 
-// router.post('/:articleId/comments', Validation, checkArticle, CommentController.create);
 router.post('/:articleId/comments', Validation, checkArticle, CommentController.create);
-router.get('/:articleId/comments', errorHandler(CommentController.getAll));
+router.get('/:articleId/comments', asyncHandler(CommentController.getAll));
 router.put(
   '/:articleId/comments/:id',
   Validation,

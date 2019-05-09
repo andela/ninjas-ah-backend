@@ -12,7 +12,7 @@ export default class AuthPassportController {
    */
   static async signup(user = {}) {
     const newUser = Object.keys(user).length
-      ? await User.createUser(helper.passportSocialMediaUser(user))
+      ? await User.create(helper.passportSocialMediaUser(user))
       : {};
 
     if (!newUser.errors && Object.keys(newUser).length > 0) {

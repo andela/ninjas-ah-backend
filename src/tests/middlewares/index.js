@@ -1,2 +1,2 @@
-import './validateNewUser';
 import './checkComment';
+import './validateNewUser.test';

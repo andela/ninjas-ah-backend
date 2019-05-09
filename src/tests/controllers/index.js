@@ -1,2 +1,2 @@
-import './AuthPassportController';
 import './CommentController.test';
+import './AuthPassportController.test';

@@ -1,1 +1,1 @@
-import './passportConfig';
+import './passportConfig.test';

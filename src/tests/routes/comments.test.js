@@ -45,7 +45,6 @@ describe('COMMENTS', () => {
       newArticle.userId = createdUser.id;
       createdArticle = (await db.Article.create(newArticle, { logging: false })).dataValues;
       newComment.articleId = newArticle.id;
-      // createdComment = (await db.Comment.create(newComment, { logging: false })).dataValues;
       newComment.userId = createdUser.id;
       createdComment = await chai
         .request(app)

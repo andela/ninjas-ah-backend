@@ -1,2 +1,2 @@
-import './createUser';
-import './findOneUser';
+import './createUser.test';
+import './findOneUser.test';
