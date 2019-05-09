@@ -1,1 +1,2 @@
 import './validateNewUser';
+import './checkComment';
