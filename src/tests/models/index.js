@@ -1,3 +1,3 @@
-import './userModel';
-import './articleModel';
-import './commentModel';
+import './userModel.test';
+import './articleModel.test';
+import './commentModel.test';

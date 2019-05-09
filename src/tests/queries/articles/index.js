@@ -1,4 +1,4 @@
-import './create';
-import './get';
-import './getAll';
-import './update';
+import './create.test';
+import './get.test';
+import './getAll.test';
+import './update.test';
