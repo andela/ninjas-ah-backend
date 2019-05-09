@@ -1,4 +1,4 @@
-import createUser from './createUser';
+import create from './createUser';
 import findOne from './findOneUser';
 
-export { createUser, findOne };
+export { create, findOne };
