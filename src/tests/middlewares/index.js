@@ -1,1 +1,1 @@
-import './validateNewUser';
+import './validateNewUser.test';
