@@ -18,7 +18,8 @@ export default {
     },
     slug: {
       type: Sequelize.STRING,
-      allowNull: true
+      allowNull: true,
+      unique: true
     },
     title: {
       type: Sequelize.STRING,
