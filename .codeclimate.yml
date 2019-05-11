@@ -5,15 +5,15 @@ plugins:
   eslint:
     enabled: true
 exclude_patterns:
-  - 'src/config/'
-  - 'src/models/'
-  - 'src/migrations/'
-  - 'src/helpers/factory'
-  - '**/node_modules/'
-  - 'script/'
-  - '**/spec/'
-  - '**/test/'
-  - '**/tests/'
-  - '**/vendor/'
-  - '**/seeds/'
-  - '**/*.d.ts'
+- "src/config/"
+- "src/models/"
+- "src/migrations/"
+- "src/seeders/"
+- "src/helpers/factory"
+- "**/node_modules/"
+- "script/"
+- "**/spec/"
+- "**/test/"
+- "**/tests/"
+- "**/vendor/"
+- "**/*.d.ts"

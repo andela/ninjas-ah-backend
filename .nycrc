@@ -4,6 +4,7 @@
     "text"
   ],
   "exclude": [
-    "src/tests"
+    "src/tests", 
+    "swagger.json"
   ]
 }
