@@ -40,8 +40,8 @@ export default (sequelize, DataTypes) => {
     }
   }, {});
   Comment.associate = (models) => {
-    Comment.belongsTo(models.Article);
-    Comment.belongsTo(models.User);
+    Comment.belongsTo(models.Article, { foreignKey: 'articleId' });
+    Comment.belongsTo(models.User, { foreignKey: 'userId' });
   };
   return Comment;
 };
