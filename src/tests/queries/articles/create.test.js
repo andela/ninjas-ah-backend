@@ -10,8 +10,8 @@ const { expect } = chai;
 const article = Factory.article.build();
 delete article.id;
 chai.use(chaiHttp);
-describe('Query to create article', () => {
-  it('should create article', async () => {
+describe('Tag query', () => {
+  it('should test that create tags', async () => {
     const newArticle = await create(article);
     expect(Object.keys(newArticle).length).to.be.above(0);
   });
