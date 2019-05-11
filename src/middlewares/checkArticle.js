@@ -1,5 +1,5 @@
 import status from '../config/status';
-import db from '../models';
+import { Article } from '../queries';
 /**
  * @param {object} req Request sent to the route
  * @param {object} res Response from server
@@ -7,7 +7,7 @@ import db from '../models';
  * @returns {object} Object representing the response returned
  */
 export default async (req, res, next) => {
-  const response = await db.Article.findOne({ where: { slug: req.params.slug }, logging: false });
+  const response = await Article.get({ slug: req.params.slug });
   if (!response) {
     return res.status(status.NOT_FOUND).send({
       error: 'No article found'
