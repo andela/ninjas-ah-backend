@@ -1,5 +1,5 @@
 import status from '../config/status';
-import { generateReadTime, generateSlug, spaceTrimmer } from '../helpers';
+import { generateReadTime, generateSlug } from '../helpers';
 
 import { Article } from '../queries';
 
@@ -14,9 +14,9 @@ class ArticleController {
    * @returns {object} Object representing the response returned
    */
   static async saveArticle(req, res) {
-    const title = spaceTrimmer(req.body.title);
-    const body = spaceTrimmer(req.body.body);
-    const description = spaceTrimmer(req.body.description);
+    const title = req.body.title.trim();
+    const body = req.body.body.trim();
+    const description = req.body.description.trim();
     const slug = generateSlug(title);
     const readTime = generateReadTime(body);
     const { coverUrl, tagList } = req.body;
@@ -70,9 +70,9 @@ class ArticleController {
     if (Object.keys(req.body).length > 0) {
       updateArticle = {
         userId: req.userId || req.body.userId,
-        title: spaceTrimmer(req.body.title),
-        body: spaceTrimmer(req.body.body),
-        description: spaceTrimmer(req.body.description),
+        title: req.body.title.trim(),
+        body: req.body.body.trim(),
+        description: req.body.description.trim(),
         readTime: generateReadTime(req.body.body)
       };
       message = 'Article has been updated';
