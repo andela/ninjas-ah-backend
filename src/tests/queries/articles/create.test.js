@@ -2,17 +2,36 @@
 import chai from 'chai';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import chaiHttp from 'chai-http';
-import { create } from '../../../queries/articles';
+import { Article, User } from '../../../queries';
 import * as Factory from '../../../helpers/factory';
+import generateSlug from '../../../helpers/generateSlug';
 
 const { expect } = chai;
 
 const article = Factory.article.build();
-delete article.id;
+const user = Factory.user.build();
+
 chai.use(chaiHttp);
-describe('Tag query', () => {
-  it('should test that create tags', async () => {
-    const newArticle = await create(article);
-    expect(Object.keys(newArticle).length).to.be.above(0);
+describe('Query to create article', () => {
+  it('should create aricle', async () => {
+    const newUser = await User.create(user);
+    article.userId = newUser.id;
+    article.slug = generateSlug(article.title);
+    const response = await Article.create(article);
+    expect(response).to.include.keys('dataValues');
+    expect(response.dataValues).to.include.keys('id');
+    expect(response.dataValues).to.include.keys('title');
+    expect(response.dataValues).to.include.keys('body');
+    expect(response.dataValues).to.include.keys('description');
+    expect(response.dataValues).to.include.keys('status');
+    expect(response.dataValues).to.include.keys('readTime');
+    expect(response.dataValues).to.include.keys('coverUrl');
+    expect(response.dataValues).to.include.keys('tagList');
+    expect(response.dataValues).to.include.keys('slug');
+    expect(response.dataValues).to.include.keys('tagList');
+    expect(response.dataValues).to.include.keys('updatedAt');
+    expect(response.dataValues).to.include.keys('createdAt');
+    expect(response.dataValues).to.include.keys('favorited');
+    expect(response.dataValues).to.include.keys('favoritesCount');
   });
 });
