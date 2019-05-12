@@ -19,7 +19,6 @@ describe('Tag query', () => {
       action
     );
     response.should.be.an('string');
-    console.log('rw', response);
-    // response.should.equal('Tags have been created');
+    response.should.equal('Tag have been deleted');
   });
 });
