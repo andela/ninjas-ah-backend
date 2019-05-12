@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import ArticleController from '../../controllers/ArticlesController';
+import ArticleController from '../../controllers/ArticleController';
 import validateArticle from '../../middlewares/validation/articles';
 import asyncHandler from '../../middlewares/asyncHandler';
 import checkArticleBySlug from '../../middlewares/checkArticleBySlug';
