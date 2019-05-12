@@ -5,7 +5,6 @@ import chaiHttp from 'chai-http';
 import { Article } from '../../../queries';
 import db from '../../../models';
 
-const { expect } = chai;
 chai.use(chaiHttp);
 // This is to test the query that is used to update data of a given article
 describe('Query to edit an article', () => {
