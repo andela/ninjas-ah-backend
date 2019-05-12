@@ -12,7 +12,22 @@ delete article.id;
 chai.use(chaiHttp);
 describe('Query to get article', () => {
   it('should get one article', async () => {
-    const newArticle = await get({ slug: article.slug });
-    expect(Object.keys(newArticle).length).to.be.above(0);
+    const response = await get({ slug: article.slug });
+    expect(Object.keys(response).length).to.be.above(0);
+    expect(response).to.include.keys('dataValues');
+    expect(response.dataValues).to.include.keys('id');
+    expect(response.dataValues).to.include.keys('title');
+    expect(response.dataValues).to.include.keys('body');
+    expect(response.dataValues).to.include.keys('description');
+    expect(response.dataValues).to.include.keys('status');
+    expect(response.dataValues).to.include.keys('readTime');
+    expect(response.dataValues).to.include.keys('coverUrl');
+    expect(response.dataValues).to.include.keys('tagList');
+    expect(response.dataValues).to.include.keys('slug');
+    expect(response.dataValues).to.include.keys('tagList');
+    expect(response.dataValues).to.include.keys('updatedAt');
+    expect(response.dataValues).to.include.keys('createdAt');
+    expect(response.dataValues).to.include.keys('favorited');
+    expect(response.dataValues).to.include.keys('favoritesCount');
   });
 });
