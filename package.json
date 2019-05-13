@@ -34,6 +34,7 @@
     "express-session": "^1.15.6",
     "extend": "^3.0.2",
     "http-errors": "^1.7.2",
+    "joi": "^14.3.1",
     "jsonwebtoken": "^8.3.0",
     "lodash": "^4.17.11",
     "method-override": "^2.3.10",
@@ -55,7 +56,8 @@
     "swagger": "^0.7.5",
     "swagger-jsdoc": "^3.2.9",
     "swagger-ui-express": "^4.0.2",
-    "underscore": "^1.9.1"
+    "underscore": "^1.9.1",
+    "uniqid": "^5.0.3"
   },
   "devDependencies": {
     "chai": "^4.2.0",

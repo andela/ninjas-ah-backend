@@ -20,7 +20,8 @@ export default (sequelize, DataTypes) => {
       },
       slug: {
         type: DataTypes.STRING,
-        allowNull: true
+        allowNull: false,
+        unique: true
       },
       title: {
         type: DataTypes.STRING,
@@ -34,7 +35,7 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: false
       },
-      tags: {
+      tagList: {
         type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull: true
       },
@@ -46,6 +47,20 @@ export default (sequelize, DataTypes) => {
       readTime: {
         type: DataTypes.STRING,
         allowNull: true
+      },
+      coverUrl: {
+        type: DataTypes.STRING,
+        allowNull: true
+      },
+      favorited: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+        defaultValue: false
+      },
+      favoritesCount: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: 0
       },
       createdAt: {
         allowNull: false,
@@ -59,7 +74,7 @@ export default (sequelize, DataTypes) => {
     {}
   );
   Article.associate = (models) => {
-    Article.belongsTo(models.User, { foreignKey: 'userId' });
+    Article.belongsTo(models.User, { foreignKey: 'userId', as: 'author' });
   };
   return Article;
 };

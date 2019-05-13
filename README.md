@@ -1,15 +1,16 @@
 [![Build Status](https://travis-ci.org/andela/ninjas-ah-backend.svg?branch=develop)](https://travis-ci.org/andela/ninjas-ah-backend) [![Coverage Status](https://coveralls.io/repos/github/andela/ninjas-ah-backend/badge.svg?branch=develop)](https://coveralls.io/github/andela/ninjas-ah-backend?branch=develop) [![Maintainability](https://api.codeclimate.com/v1/badges/4635ecd43e1b06546534/maintainability)](https://codeclimate.com/github/andela/ninjas-ah-backend/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/4635ecd43e1b06546534/test_coverage)](https://codeclimate.com/github/andela/ninjas-ah-backend/test_coverage)
 
-Authors Haven - A Social platform for the creative at heart.
-=======
+# Authors Haven - A Social platform for the creative at heart.
 
 ## Vision
+
 Create a community of like minded authors to foster inspiration and innovation
 by leveraging the modern web.
 
 ---
 
 ## API Spec
+
 The preferred JSON object to be returned by the API should be structured as follows:
 
 ### Users (for authentication)
@@ -25,7 +26,9 @@ The preferred JSON object to be returned by the API should be structured as foll
   }
 }
 ```
+
 ### Profile
+
 ```source-json
 {
   "profile": {
@@ -36,7 +39,9 @@ The preferred JSON object to be returned by the API should be structured as foll
   }
 }
 ```
+
 ### Single Article
+
 ```source-json
 {
   "article": {
@@ -58,7 +63,9 @@ The preferred JSON object to be returned by the API should be structured as foll
   }
 }
 ```
+
 ### Multiple Articles
+
 ```source-json
 {
   "articles":[{
@@ -98,7 +105,9 @@ The preferred JSON object to be returned by the API should be structured as foll
   "articlesCount": 2
 }
 ```
+
 ### Single Comment
+
 ```source-json
 {
   "comment": {
@@ -115,7 +124,9 @@ The preferred JSON object to be returned by the API should be structured as foll
   }
 }
 ```
+
 ### Multiple Comments
+
 ```source-json
 {
   "comments": [{
@@ -133,7 +144,9 @@ The preferred JSON object to be returned by the API should be structured as foll
   "commentsCount": 1
 }
 ```
+
 ### List of Tags
+
 ```source-json
 {
   "tags": [
@@ -142,7 +155,9 @@ The preferred JSON object to be returned by the API should be structured as foll
   ]
 }
 ```
+
 ### Errors and Status Codes
+
 If a request fails any validations, expect errors in the following format:
 
 ```source-json
@@ -154,16 +169,16 @@ If a request fails any validations, expect errors in the following format:
   }
 }
 ```
+
 ### Other status codes:
+
 401 for Unauthorized requests, when a request requires authentication but it isn't provided
 
 403 for Forbidden requests, when a request may be valid but the user doesn't have permissions to perform the action
 
 404 for Not found requests, when a resource can't be found to fulfill the request
 
-
-Endpoints:
-----------
+## Endpoints:
 
 ### Authentication:
 
@@ -180,9 +195,9 @@ Example request body:
 }
 ```
 
-No authentication required, returns a User
+No authentication required, returns a User
 
-Required fields: `email`, `password`
+Required fields: `email`, `password`
 
 ### Registration:
 
@@ -200,15 +215,15 @@ Example request body:
 }
 ```
 
-No authentication required, returns a User
+No authentication required, returns a User
 
-Required fields: `email`, `username`, `password`
+Required fields: `email`, `username`, `password`
 
 ### Get Current User
 
 `GET /api/user`
 
-Authentication required, returns a User that's the current user
+Authentication required, returns a User that's the current user
 
 ### Update User
 
@@ -226,21 +241,21 @@ Example request body:
 }
 ```
 
-Authentication required, returns the User
+Authentication required, returns the User
 
-Accepted fields: `email`, `username`, `password`, `image`, `bio`
+Accepted fields: `email`, `username`, `password`, `image`, `bio`
 
 ### Get Profile
 
 `GET /api/profiles/:username`
 
-Authentication optional, returns a Profile
+Authentication optional, returns a Profile
 
 ### Follow user
 
 `POST /api/profiles/:username/follow`
 
-Authentication required, returns a Profile
+Authentication required, returns a Profile
 
 No additional parameters required
 
@@ -248,7 +263,7 @@ No additional parameters required
 
 `DELETE /api/profiles/:username/follow`
 
-Authentication required, returns a Profile
+Authentication required, returns a Profile
 
 No additional parameters required
 
@@ -256,7 +271,7 @@ No additional parameters required
 
 `GET /api/articles`
 
-Returns most recent articles globally by default, provide `tag`, `author` or `favorited` query parameter to filter results
+Returns most recent articles globally by default, provide `tag`, `author` or `favorited` query parameter to filter results
 
 Query Parameters:
 
@@ -280,21 +295,21 @@ Offset/skip number of articles (default is 0):
 
 `?offset=0`
 
-Authentication optional, will return multiple articles, ordered by most recent first
+Authentication optional, will return multiple articles, ordered by most recent first
 
 ### Feed Articles
 
 `GET /api/articles/feed`
 
-Can also take `limit` and `offset` query parameters like List Articles
+Can also take `limit` and `offset` query parameters like List Articles
 
-Authentication required, will return multiple articles created by followed users, ordered by most recent first.
+Authentication required, will return multiple articles created by followed users, ordered by most recent first.
 
 ### Get Article
 
 `GET /api/articles/:slug`
 
-No authentication required, will return single article
+No authentication required, will return single article
 
 ### Create Article
 
@@ -313,11 +328,11 @@ Example request body:
 }
 ```
 
-Authentication required, will return an Article
+Authentication required, will return an Article
 
-Required fields: `title`, `description`, `body`
+Required fields: `title`, `description`, `body`
 
-Optional fields: `tagList` as an array of Strings
+Optional fields: `tagList` as an array of Strings
 
 ### Update Article
 
@@ -333,11 +348,11 @@ Example request body:
 }
 ```
 
-Authentication required, returns the updated Article
+Authentication required, returns the updated Article
 
-Optional fields: `title`, `description`, `body`
+Optional fields: `title`, `description`, `body`
 
-The `slug` also gets updated when the `title` is changed
+The `slug` also gets updated when the `title` is changed
 
 ### Delete Article
 
@@ -359,14 +374,14 @@ Example request body:
 }
 ```
 
-Authentication required, returns the created Comment
-Required field: `body`
+Authentication required, returns the created Comment
+Required field: `body`
 
 ### Get Comments from an Article
 
 `GET /api/articles/:slug/comments`
 
-Authentication optional, returns multiple comments
+Authentication optional, returns multiple comments
 
 ### Delete Comment
 
@@ -378,14 +393,14 @@ Authentication required
 
 `POST /api/articles/:slug/favorite`
 
-Authentication required, returns the Article
+Authentication required, returns the Article
 No additional parameters required
 
 ### Unfavorite Article
 
 `DELETE /api/articles/:slug/favorite`
 
-Authentication required, returns the Article
+Authentication required, returns the Article
 
 No additional parameters required
 

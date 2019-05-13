@@ -9,4 +9,5 @@ const asyncHandler = controller => async (req, res, next) => {
     });
   }
 };
+
 export default asyncHandler;

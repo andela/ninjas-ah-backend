@@ -1,9 +1,9 @@
-version: "2"
+version: '2'
 plugins:
- rubocop:
-  enabled: true
- eslint:
-  enabled: true
+  rubocop:
+    enabled: true
+  eslint:
+    enabled: true
 exclude_patterns:
 - "src/config/"
 - "src/models/"
