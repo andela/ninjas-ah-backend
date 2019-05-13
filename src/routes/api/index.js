@@ -6,4 +6,5 @@ const router = express.Router();
 
 router.use(articles);
 router.use('/articles', comments);
+
 export default router;
