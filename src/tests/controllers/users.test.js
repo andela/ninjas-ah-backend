@@ -13,19 +13,19 @@ delete user.id;
 
 // user test
 describe('user tests', () => {
-  // test signup;
-  before(async () => {
-    try {
-      await db.User.destroy({
-        truncate: true,
-        cascade: true,
-        logging: false
-      });
-    } catch (error) {
-      throw error;
-    }
-  });
   describe('user signup', () => {
+    // test signup;
+    before(async () => {
+      try {
+        await db.User.destroy({
+          truncate: true,
+          cascade: true,
+          logging: false
+        });
+      } catch (error) {
+        throw error;
+      }
+    });
     it('Should register new user', (done) => {
       chai
         .request(app)

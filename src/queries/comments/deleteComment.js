@@ -1,5 +1,5 @@
 import db from '../../models';
 import { dbDelete } from '../../helpers/queryHelper';
 
-const deleteElement = async (condition = {}) => dbDelete(db.Comment, condition);
-module.exports = { deleteElement };
+const deleteComment = async (condition = {}) => dbDelete(db.Comment, condition);
+export default deleteComment;

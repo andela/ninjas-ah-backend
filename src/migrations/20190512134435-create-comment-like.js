@@ -1,9 +1,15 @@
 export default {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('Comments', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('CommentLikes', {
     id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
+      type: Sequelize.INTEGER
+    },
+    userId: {
+      type: Sequelize.INTEGER
+    },
+    commentId: {
       type: Sequelize.INTEGER
     },
     articleSlug: {
@@ -16,24 +22,6 @@ export default {
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE'
     },
-    userId: {
-      type: Sequelize.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'Users',
-        key: 'id'
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'SET NULL'
-    },
-    body: {
-      type: Sequelize.TEXT,
-      allowNull: false
-    },
-    likes: {
-      type: Sequelize.INTEGER,
-      allowNull: true
-    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE
@@ -43,5 +31,5 @@ export default {
       type: Sequelize.DATE
     }
   }),
-  down: queryInterface => queryInterface.dropTable('Comments')
+  down: queryInterface => queryInterface.dropTable('CommentLikes')
 };

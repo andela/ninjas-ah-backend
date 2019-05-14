@@ -5,5 +5,5 @@ import getAll from './getAll';
 import * as bookmark from '../articleBookmarks';
 
 export {
-  create, update, get, getAll, bookmark
+  create, update, getAll, bookmark, get
 };

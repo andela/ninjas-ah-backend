@@ -1,6 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { Factory } from 'rosie';
-// eslint-disable-next-line import/no-unresolved
 import Chance from 'chance';
 
 const chance = new Chance();
