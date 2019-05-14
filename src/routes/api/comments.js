@@ -35,5 +35,12 @@ router.delete(
   checkComment,
   asyncHandler(CommentController.delete)
 );
+router.delete(
+  '/:articleSlug/comments/:commentId',
+  verifyToken,
+  checkArticle,
+  checkComment,
+  CommentController.delete
+);
 
 export default router;
