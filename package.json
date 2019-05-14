@@ -28,7 +28,7 @@
     "@hapi/joi": "^15.0.3",
     "@sendgrid/mail": "^6.4.0",
     "D": "^1.0.0",
-    "bcrypt": "^3.0.6",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "chance": "^1.0.18",
     "cheke": "^1.0.3",

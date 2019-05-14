@@ -24,5 +24,6 @@ export default async (req, res, next) => {
   }
 
   req.user = decodedToken;
+
   return next();
 };

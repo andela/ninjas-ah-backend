@@ -6,5 +6,4 @@ const chance = new Chance();
 
 export default Factory.define('comment')
   .sequence('id')
-  // .attr('userId', 1)
   .attr('body', chance.paragraph({ sentences: 1 }));
