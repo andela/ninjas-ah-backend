@@ -5,6 +5,7 @@ import tags from './tags';
 import users from './users';
 import chats from './chats';
 import upload from './upload';
+import likes from './likes';
 
 const router = express.Router();
 
@@ -14,5 +15,6 @@ router.use('/articles', comments);
 router.use('/users', users);
 router.use('/chats', chats);
 router.use(upload);
+router.use('/articles', likes);
 
 export default router;

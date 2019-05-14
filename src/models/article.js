@@ -62,6 +62,14 @@ export default (sequelize, DataTypes) => {
         allowNull: true,
         defaultValue: 0
       },
+      likes: {
+        allowNull: true,
+        type: DataTypes.INTEGER
+      },
+      dislikes: {
+        allowNull: true,
+        type: DataTypes.INTEGER
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE
