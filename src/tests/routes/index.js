@@ -7,3 +7,4 @@ import './chats.test';
 import './userArticles.test';
 import './commentLikes.test';
 import './articleLike.test';
+import './report.test';

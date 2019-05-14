@@ -6,6 +6,7 @@ import newUser from './newUser';
 import createTag from './createTag';
 import queryParameters from './queryParameters';
 import updateUser from './updateUser';
+import report from './report';
 
 export {
   email,
@@ -15,5 +16,6 @@ export {
   createTag,
   newUser,
   queryParameters,
-  updateUser
+  updateUser,
+  report
 };

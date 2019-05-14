@@ -6,6 +6,7 @@ import users from './users';
 import chats from './chats';
 import upload from './upload';
 import likes from './likes';
+import report from './reports';
 
 const router = express.Router();
 
@@ -16,5 +17,6 @@ router.use('/users', users);
 router.use('/chats', chats);
 router.use(upload);
 router.use('/articles', likes);
+router.use('/article', report);
 
 export default router;
