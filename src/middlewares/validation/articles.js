@@ -51,6 +51,31 @@ class articles {
     }
     return Error.joiErrorHandler(res, result);
   }
+
+  /**
+   * Validate pagination queries
+   * @param {object} req Request sent to the route
+   * @param {object} res Response from server
+   * @param {object} next Log errors
+   * @returns {object} Object representing the response returned
+   */
+  static pagination(req, res, next) {
+    const schema = Joi.object().keys({
+      limit: Joi.number()
+        .integer()
+        .min(1)
+        .optional(),
+      offset: Joi.number()
+        .integer()
+        .min(0)
+        .optional()
+    });
+    const result = Joi.validate(req.query, schema, { abortEarly: false });
+    if (!result.error) {
+      return next();
+    }
+    return Error.joiErrorHandler(res, result);
+  }
 }
 
 export default articles;
