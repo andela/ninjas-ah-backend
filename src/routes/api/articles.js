@@ -10,10 +10,13 @@ const articles = Router();
 // create article
 articles.post('/articles/', validateArticle.create, asyncHandler(ArticleController.saveArticle));
 
-articles.get('/articles/', asyncHandler(ArticleController.getAllArticles));
-
 articles.get('/articles/bookmarked', verifyToken, ArticleController.getBookmarks);
 
+articles.get(
+  '/articles/',
+  validateArticle.pagination,
+  asyncHandler(ArticleController.getAllArticles)
+);
 articles.get(
   '/articles/:slug',
   checkArticleBySlug,
