@@ -33,6 +33,11 @@ describe('Find user query', () => {
     expect(findUser).to.include.keys('errors');
   });
 
+  it('should an empty object if there is no parameter passed', async () => {
+    const findUser = await User.findOne();
+    expect(Object.keys(findUser).length).to.be.equal(0);
+  });
+
   after(async () => {
     try {
       newUser.email = Factory.user.build().email;

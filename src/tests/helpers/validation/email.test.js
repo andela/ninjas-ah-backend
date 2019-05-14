@@ -21,4 +21,8 @@ describe('Email validation', () => {
     expect(validateEmail('abcd@gmail.com', 'required').length).to.be.equals(0);
     expect(validateEmail('', false).length).to.be.equals(0);
   });
+
+  it('should return an empty array if no parameter', () => {
+    expect(validateEmail().length).to.be.equals(0);
+  });
 });

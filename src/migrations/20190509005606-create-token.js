@@ -1,33 +1,24 @@
 export default {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('Comments', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('Tokens', {
     id: {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
       type: Sequelize.INTEGER
     },
-    articleId: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'Articles',
-        key: 'id'
-      },
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE'
-    },
     userId: {
       type: Sequelize.INTEGER,
-      allowNull: true,
+      unique: true,
+      allowNull: false,
       references: {
         model: 'Users',
         key: 'id'
       },
       onUpdate: 'CASCADE',
-      onDelete: 'SET NULL'
+      onDelete: 'CASCADE'
     },
-    body: {
-      type: Sequelize.TEXT,
+    token: {
+      type: Sequelize.STRING,
       allowNull: false
     },
     createdAt: {
@@ -39,5 +30,5 @@ export default {
       type: Sequelize.DATE
     }
   }),
-  down: queryInterface => queryInterface.dropTable('Comments')
+  down: queryInterface => queryInterface.dropTable('Tokens')
 };

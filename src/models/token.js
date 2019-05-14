@@ -1,6 +1,6 @@
 export default (sequelize, DataTypes) => {
-  const Comment = sequelize.define(
-    'Comment',
+  const Token = sequelize.define(
+    'Token',
     {
       id: {
         allowNull: false,
@@ -8,28 +8,19 @@ export default (sequelize, DataTypes) => {
         primaryKey: true,
         type: DataTypes.INTEGER
       },
-      articleId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Articles',
-          key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
-      },
       userId: {
         type: DataTypes.INTEGER,
-        allowNull: true,
+        allowNull: false,
+        unique: true,
         references: {
           model: 'Users',
           key: 'id'
         },
         onUpdate: 'CASCADE',
-        onDelete: 'SET NULL'
+        onDelete: 'CASCADE'
       },
-      body: {
-        type: DataTypes.TEXT,
+      token: {
+        type: DataTypes.STRING,
         allowNull: false
       },
       createdAt: {
@@ -43,9 +34,8 @@ export default (sequelize, DataTypes) => {
     },
     {}
   );
-  Comment.associate = (models) => {
-    Comment.belongsTo(models.Article, { foreignKey: 'articleId' });
-    Comment.belongsTo(models.User, { foreignKey: 'userId' });
+  Token.associate = (models) => {
+    Token.belongsTo(models.User, { foreignKey: 'userId' });
   };
-  return Comment;
+  return Token;
 };

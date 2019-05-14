@@ -3,7 +3,8 @@ import local from './local';
 import facebook from './facebook';
 import twitter from './twitter';
 import google from './google';
-import status from '../../config/status';
+import logout from '../../middlewares/logout';
+import verifyToken from '../../middlewares/verifyToken';
 
 const router = express.Router();
 
@@ -11,12 +12,6 @@ router.use('/', local);
 router.use('/facebook', facebook);
 router.use('/twitter', twitter);
 router.use('/google', google);
-
-router.get('/logout', (req, res) => {
-  req.logout();
-  res.status(status.OK).json({
-    message: 'you are successfuly logged out'
-  });
-});
+router.get('/logout', verifyToken, logout);
 
 export default router;

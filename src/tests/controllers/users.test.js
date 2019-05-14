@@ -85,7 +85,7 @@ describe('user tests', () => {
         .post('/api/v1/auth/login')
         .send({
           email: 'sengayirepr@gmail.com',
-          password: user.pasword,
+          password: user.pasword
         })
         .end((err, res) => {
           res.body.should.be.an('object');

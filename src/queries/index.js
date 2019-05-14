@@ -1,5 +1,5 @@
 import * as User from './users';
 import * as Article from './articles';
-import createUser from './users/createUser';
+import * as Token from './tokens';
 
-export { User, Article, createUser };
+export { User, Article, Token };
