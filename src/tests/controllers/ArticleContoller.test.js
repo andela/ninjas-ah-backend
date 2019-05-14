@@ -317,6 +317,78 @@ describe('Article', () => {
         response.articles[0].coverUrl.should.be.a('string');
       });
   });
+  it('Should get articles by paginations', async () => {
+    const LIMIT = 1;
+    const OFFSET = 0;
+    chai
+      .request(app)
+      .get(`/api/v1/articles?limit=${LIMIT}&offset=${OFFSET}`)
+      .set('Authorization', `Bearer ${token}`)
+      .end((err, res) => {
+        const response = res.body;
+        expect(res).to.have.status(status.OK);
+        response.articles.should.be.a('array');
+        response.articles[0].should.be.a('object');
+        response.articles[0].id.should.be.a('number');
+        response.articles[0].title.should.be.a('string');
+        response.articles[0].body.should.be.a('string');
+        response.articles[0].description.should.be.a('string');
+        response.articles[0].slug.should.be.a('string');
+        response.articles[0].coverUrl.should.be.a('string');
+      });
+  });
+  it('Should throw error if limit is a string', async () => {
+    const LIMIT = 'text';
+    const OFFSET = 0;
+    chai
+      .request(app)
+      .get(`/api/v1/articles?limit=${LIMIT}&offset=${OFFSET}`)
+      .set('Authorization', `Bearer ${token}`)
+      .end((err, res) => {
+        expect(res).to.have.status(status.BAD_REQUEST);
+        res.body.errors.should.be.a('array');
+        res.body.errors[0].should.equal('limit must be a number');
+      });
+  });
+  it('Should throw error if offset is a string', async () => {
+    const LIMIT = 1;
+    const OFFSET = 'text';
+    chai
+      .request(app)
+      .get(`/api/v1/articles?limit=${LIMIT}&offset=${OFFSET}`)
+      .set('Authorization', `Bearer ${token}`)
+      .end((err, res) => {
+        expect(res).to.have.status(status.BAD_REQUEST);
+        res.body.errors.should.be.a('array');
+        res.body.errors[0].should.equal('offset must be a number');
+      });
+  });
+  it('Should throw error if offset number is less than 0', async () => {
+    const LIMIT = 1;
+    const OFFSET = -3;
+    chai
+      .request(app)
+      .get(`/api/v1/articles?limit=${LIMIT}&offset=${OFFSET}`)
+      .set('Authorization', `Bearer ${token}`)
+      .end((err, res) => {
+        expect(res).to.have.status(status.BAD_REQUEST);
+        res.body.errors.should.be.a('array');
+        res.body.errors[0].should.equal('offset must be larger than or equal to 0');
+      });
+  });
+  it('Should throw error if limit number is less than 1', async () => {
+    const LIMIT = 0;
+    const OFFSET = 0;
+    chai
+      .request(app)
+      .get(`/api/v1/articles?limit=${LIMIT}&offset=${OFFSET}`)
+      .set('Authorization', `Bearer ${token}`)
+      .end((err, res) => {
+        expect(res).to.have.status(status.BAD_REQUEST);
+        res.body.errors.should.be.a('array');
+        res.body.errors[0].should.equal('limit must be larger than or equal to 1');
+      });
+  });
   it('Should get one article', async () => {
     const getArticle = { ...article, slug: 'rosie-make-it-easy-1dh6jv9cn4sz' };
     chai
