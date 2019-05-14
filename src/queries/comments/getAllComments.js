@@ -1,5 +1,5 @@
 import db from '../../models';
 import { dbFindAll } from '../../helpers/queryHelper';
 
-const getAll = async (condition = {}) => dbFindAll(db.Comment, condition);
-module.exports = { getAll };
+const getAllComments = async condition => dbFindAll(db.Comment, condition);
+export default getAllComments;

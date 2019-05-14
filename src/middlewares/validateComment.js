@@ -9,7 +9,6 @@ export default function Validation(req, res, next) {
   const { error } = commentValidate(req.body);
   if (error) {
     return res.status(400).send({
-      status: 400,
       message: error.details[0].message
     });
   }
