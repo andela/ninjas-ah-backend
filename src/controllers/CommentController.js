@@ -2,7 +2,7 @@
 import status from '../config/status';
 import { create } from '../queries/comments/createComment';
 import { getAll } from '../queries/comments/getAllComments';
-import { updateElement } from '../queries/comments/updateComment';
+import { updateComment } from '../queries/comments/updateComment';
 import { deleteElement } from '../queries/comments/deleteComment';
 /**
  * comment controller class
@@ -69,10 +69,10 @@ export default class CommentController {
    * @returns { object } the return object.
    */
   static async edit(req, res) {
-    await updateElement(
+    await updateComment(
       { body: req.body.body },
       {
-        id: req.params.id
+        where: { id: req.params.id }
       }
     );
     return res.status(status.OK).send({

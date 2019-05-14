@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   up: queryInterface => queryInterface.bulkInsert(
     'Articles',
     [
@@ -11,6 +11,7 @@ module.exports = {
         tags: '{"can-edit"}',
         status: 'draft',
         readTime: '5min',
+        likes: 1,
         createdAt: '2019-04-29T22:00:00',
         updatedAt: '2019-04-29T22:00:00'
       },
@@ -23,6 +24,7 @@ module.exports = {
         tags: '{"can-edit"}',
         status: 'draft',
         readTime: '5min',
+        likes: 1,
         createdAt: '2019-04-29T22:00:00',
         updatedAt: '2019-04-29T22:00:00'
       }

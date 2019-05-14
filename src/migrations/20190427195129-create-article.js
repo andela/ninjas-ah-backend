@@ -11,39 +11,43 @@ export default {
       allowNull: false,
       references: {
         model: 'Users',
-        key: 'id',
+        key: 'id'
       },
       onUpdate: 'CASCADE',
-      onDelete: 'CASCADE',
+      onDelete: 'CASCADE'
     },
     slug: {
       type: Sequelize.STRING,
-      allowNull: true,
+      allowNull: true
     },
     title: {
       type: Sequelize.STRING,
-      allowNull: false,
+      allowNull: false
     },
     description: {
       type: Sequelize.STRING,
-      allowNull: true,
+      allowNull: true
     },
     body: {
       type: Sequelize.TEXT,
-      allowNull: false,
+      allowNull: false
     },
     tags: {
       type: Sequelize.ARRAY(Sequelize.STRING),
-      allowNull: true,
+      allowNull: true
     },
     status: {
       type: Sequelize.ENUM('draft', 'published', 'deleted'),
       allowNull: false,
-      defaultValue: 'draft',
+      defaultValue: 'draft'
     },
     readTime: {
       type: Sequelize.STRING,
-      allowNull: true,
+      allowNull: true
+    },
+    likes: {
+      type: Sequelize.INTEGER,
+      allowNull: true
     },
     createdAt: {
       allowNull: false,

@@ -1,17 +1,20 @@
-module.exports = {
+import Chance from 'chance';
+
+const chance = new Chance();
+export default {
   up: queryInterface => queryInterface.bulkInsert(
     'Users',
     [
       {
-        lastName: 'John',
-        firstName: 'Doe',
-        email: 'john@doe.com',
+        lastName: chance.first(),
+        firstName: chance.last(),
+        email: chance.email({ domain: 'example.com' }),
         password: '123123',
-        username: 'johndoe',
+        username: chance.word({ length: 5 }),
         role: 'normal',
         permissions: '{"can-edit"}',
         image: 'user.png',
-        bio: 'I can do magic easy',
+        bio: chance.sentence(1),
         createdAt: '2019-04-29T22:00:00',
         updatedAt: '2019-04-29T22:00:00'
       }

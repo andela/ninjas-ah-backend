@@ -3,11 +3,9 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import express from 'express';
 import status from '../../config/status';
-import db from '../../models';
 import * as Factory from '../../helpers/factory';
 import CommentController from '../../controllers/CommentController';
 
-const { expect } = chai;
 
 chai.use(chaiHttp);
 
@@ -33,7 +31,7 @@ delete newUser.id;
 delete newArticle.id;
 delete newComment.id;
 
-describe('COMMENTS', () => {
+describe('COMMENTS^^^^^^^^^^^^^^^', () => {
   it('Should not let the user create a comment with a bad request', (done) => {
     newComment.userId = createdUser.id;
     chai

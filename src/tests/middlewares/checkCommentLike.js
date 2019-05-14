@@ -4,7 +4,7 @@ import chaiHttp from 'chai-http';
 import express from 'express';
 import status from '../../config/status';
 import * as Factory from '../../helpers/factory';
-import checkComment from '../../middlewares/checkComment';
+import checkCommentLike from '../../middlewares/checkCommentLike';
 
 const { expect } = chai;
 
@@ -20,25 +20,23 @@ app.use(
   })
 );
 
-app.use('/api/v1/articles/111111111/comments', router.post('/', checkComment));
+app.use('/api/v1/comments/748734/likes', router.post('/', checkCommentLike));
 
 const createdUser = {};
 
 const newUser = Factory.user.build();
-const newArticle = Factory.article.build();
 const newComment = Factory.comment.build();
 
 delete newUser.id;
-delete newArticle.id;
 delete newComment.id;
 
-describe('COMMENTS++++++++++++++', () => {
+describe('COMMENTS@@@@@@@@@@@@@@@', () => {
   it('Should not let the user continue with wrong input', (done) => {
     newComment.userId = createdUser.id;
     chai
       .request(app)
-      .post('/api/v1/articles/111111111/comments')
-      .send('~~~~~')
+      .post('/api/v1/comments/sfggdhgshds/likes')
+      .send()
       .end((err, res) => {
         res.should.have.status(status.SERVER_ERROR);
         done();
