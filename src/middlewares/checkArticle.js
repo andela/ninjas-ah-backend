@@ -22,7 +22,6 @@ export default async function checkArticle(req, res, next) {
         message: 'That article does not exist'
       });
   } catch (error) {
-    console.log(error);
     return res.status(status.SERVER_ERROR).send({
       status: status.SERVER_ERROR,
       message: 'Ooops, something went wrong'

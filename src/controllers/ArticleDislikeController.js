@@ -1,4 +1,4 @@
-import status from '../config/status'
+import status from '../config/status';
 import db from '../models';
 import getSingleDislike from '../queries/articles/getSingleDislike';
 import getAllDislikes from '../queries/articles/getAllDislikes';
