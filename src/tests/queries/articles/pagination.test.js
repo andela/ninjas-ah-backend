@@ -7,9 +7,11 @@ import { getAll } from '../../../queries/articles';
 const { expect } = chai;
 
 chai.use(chaiHttp);
-describe('Pagination query', () => {
+describe('Pagination query', async () => {
   it('should get article by pages', async () => {
-    const newArticle = await getAll(2, 0); // getAll() parameters: limit and offset
-    expect(Object.keys(newArticle).length).to.be.above(0);
+    const LIMIT = 1;
+    const OFFSET = 0;
+    const newArticle = getAll(LIMIT, OFFSET); // getAll() parameters: limit and offset
+    expect(Object.keys(newArticle).length).to.be.equal(0);
   });
 });

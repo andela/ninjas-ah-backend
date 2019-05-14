@@ -8,7 +8,12 @@ import shareArticle from '../../middlewares/shareArticle';
 
 const articles = Router();
 // create article
-articles.post('/articles/', validateArticle.create, asyncHandler(ArticleController.saveArticle));
+articles.post(
+  '/articles/',
+  verifyToken,
+  validateArticle.create,
+  asyncHandler(ArticleController.saveArticle)
+);
 
 articles.get('/articles/bookmarked', verifyToken, ArticleController.getBookmarks);
 
@@ -25,6 +30,7 @@ articles.get(
 
 articles.put(
   '/articles/:slug',
+  verifyToken,
   validateArticle.update,
   checkArticleBySlug,
   asyncHandler(ArticleController.update)
@@ -32,6 +38,7 @@ articles.put(
 
 articles.put(
   '/articles/:slug/publish',
+  verifyToken,
   validateArticle.slug,
   checkArticleBySlug,
   asyncHandler(ArticleController.update)
@@ -39,6 +46,7 @@ articles.put(
 
 articles.put(
   '/articles/:slug/publish',
+  verifyToken,
   validateArticle.slug,
   checkArticleBySlug,
   asyncHandler(ArticleController.update)
@@ -46,6 +54,7 @@ articles.put(
 
 articles.put(
   '/articles/:slug/unpublish',
+  verifyToken,
   validateArticle.slug,
   checkArticleBySlug,
   asyncHandler(ArticleController.update)
@@ -53,6 +62,7 @@ articles.put(
 
 articles.delete(
   '/articles/:slug',
+  verifyToken,
   checkArticleBySlug,
   validateArticle.slug,
   asyncHandler(ArticleController.update)

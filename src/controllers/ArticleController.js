@@ -15,7 +15,7 @@ export default class ArticleController {
   static async saveArticle(req, res) {
     const { coverUrl, tagList } = req.body;
     const newArticle = await Article.create({
-      userId: req.body.userId || req.user.id,
+      userId: req.user.id || 0,
       slug: generateSlug(req.body.title),
       title: req.body.title.trim(),
       description: req.body.description.trim(),

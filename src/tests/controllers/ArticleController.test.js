@@ -2,6 +2,7 @@
 import chai from 'chai';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import chaiHttp from 'chai-http';
+import jwt from 'jsonwebtoken';
 import app from '../../app';
 import status from '../../config/status';
 import db from '../../models';
@@ -13,8 +14,23 @@ chai.should();
 const article = Factory.article.build();
 chai.use(chaiHttp);
 
+let accessToken = '';
+let createdUser = '';
+const createdArticle = '';
+
+const user = Factory.user.build();
+
+delete user.id;
+delete article.id;
 describe('No articles', () => {
   before(async () => {
+    createdUser = (await db.User.create(user, { logging: false })).dataValues;
+    article.userId = createdUser.id;
+    accessToken = jwt.sign(
+      { id: createdUser.id, role: createdUser.role, permissions: createdUser.permissions },
+      process.env.SECRET_KEY,
+      { expiresIn: '1d' }
+    );
     await db.Article.destroy({
       truncate: true,
       cascade: true,
@@ -35,11 +51,10 @@ describe('No articles', () => {
       await db.Article.create(initalArticle, { logging: false });
     });
     it('Should test slug validator and reject request if slug characters are minimum to 10', (done) => {
-      const token = 'token-string';
       chai
         .request(app)
         .put('/api/v1/articles/foo/publish')
-        .set('Authorization', `Bearer ${token}`)
+        .set('access-token', accessToken)
         .end((err, res) => {
           expect(res).to.have.status(status.BAD_REQUEST);
           res.body.should.be.an('object');
@@ -48,11 +63,10 @@ describe('No articles', () => {
         });
     });
     it('Should not get articles if article table is empty', async () => {
-      const token = 'token-string';
       chai
         .request(app)
         .get('/api/v1/articles')
-        .set('Authorization', `Bearer ${token}`)
+        .set('access-token', accessToken)
         .end((err, res) => {
           expect(res).to.have.status(status.NOT_FOUND);
           res.body.should.be.an('object');
@@ -60,11 +74,10 @@ describe('No articles', () => {
         });
     });
     it('Should not get articles if table is empty', async () => {
-      const token = 'token-string';
       chai
         .request(app)
         .get(`/api/v1/articles/${article.slug}`)
-        .set('Authorization', `Bearer ${token}`)
+        .set('access-token', accessToken)
         .end((err, res) => {
           expect(res).to.have.status(status.NOT_FOUND);
           res.body.should.be.an('object');
@@ -76,11 +89,11 @@ describe('No articles', () => {
       delete article.id;
       const fakeArticle1 = { ...article, slug: 'fake-easy-opojvbldff' };
       delete fakeArticle1.userId;
-      const token = 'token-string';
+
       chai
         .request(app)
         .put('/api/v1/articles/invalid-bad-pkljvbm1e9o')
-        .set('Authorization', `Bearer ${token}`)
+        .set('access-token', accessToken)
         .send(fakeArticle1)
         .end((err, res) => {
           expect(res).to.have.status(status.BAD_REQUEST);
@@ -92,11 +105,11 @@ describe('No articles', () => {
       delete article.id;
       const fakeArticle1 = { ...article, slug: 'fake-easy-opojvbldff' };
       delete fakeArticle1.userId;
-      const token = 'token-string';
+
       chai
         .request(app)
         .put('/api/v1/articles/invalid-bad-pkljvbm1e9o')
-        .set('Authorization', `Bearer ${token}`)
+        .set('access-token', accessToken)
         .send(fakeArticle1)
         .end((err, res) => {
           expect(res).to.have.status(status.BAD_REQUEST);
@@ -105,11 +118,10 @@ describe('No articles', () => {
         });
     });
     it('Should not unpublish a non-existing article', async () => {
-      const token = 'token-string';
       chai
         .request(app)
         .put('/api/v1/articles/invali-6jv9cn4szf/unpublish')
-        .set('Authorization', `Bearer ${token}`)
+        .set('access-token', accessToken)
         .end((err, res) => {
           expect(res).to.have.status(status.NOT_FOUND);
           res.body.should.be.a('object');
@@ -117,11 +129,10 @@ describe('No articles', () => {
         });
     });
     it('Should not publish a non-existing article', async () => {
-      const token = 'token-string';
       chai
         .request(app)
         .put('/api/v1/articles/invalid-1632jv5quc9c/publish')
-        .set('Authorization', `Bearer ${token}`)
+        .set('access-token', accessToken)
         .end((err, res) => {
           expect(res).to.have.status(status.NOT_FOUND);
           res.body.should.be.a('object');
@@ -133,7 +144,7 @@ describe('No articles', () => {
 
 describe('Article', () => {
   let author = 0;
-  const token = 'token-string';
+
   let articleSlug = '';
   before(async () => {
     const findUser = await db.User.findAll({ limit: 1, logging: false });
@@ -150,7 +161,7 @@ describe('Article', () => {
       .request(app)
       .post('/api/v1/articles')
       .send(article)
-      .set('Authorization', `Bearer ${token}`)
+      .set('access-token', accessToken)
       .end((err, res) => {
         const response = res.body;
         expect(res).to.have.status(status.CREATED);
@@ -176,7 +187,7 @@ describe('Article', () => {
       .request(app)
       .post('/api/v1/articles')
       .send(bigArticleTitle)
-      .set('Authorization', `Bearer ${token}`)
+      .set('access-token', accessToken)
       .end((err, res) => {
         const response = res.body;
         expect(res).to.have.status(status.CREATED);
@@ -198,7 +209,7 @@ describe('Article', () => {
       .request(app)
       .post('/api/v1/articles')
       .send(article)
-      .set('Authorization', `Bearer ${token}`)
+      .set('access-token', accessToken)
       .end((err, res) => {
         expect(res).to.have.status(status.BAD_REQUEST);
         res.body.errors.should.be.a('array');
@@ -215,7 +226,7 @@ describe('Article', () => {
       .request(app)
       .post('/api/v1/articles')
       .send(article)
-      .set('Authorization', `Bearer ${token}`)
+      .set('access-token', accessToken)
       .end((err, res) => {
         expect(res).to.have.status(status.BAD_REQUEST);
         res.body.errors.should.be.a('array');
@@ -232,7 +243,7 @@ describe('Article', () => {
       .request(app)
       .post('/api/v1/articles')
       .send(fakeArticle2)
-      .set('Authorization', `Bearer ${token}`)
+      .set('access-token', accessToken)
       .end((err, res) => {
         const response = res.body;
         expect(res).to.have.status(status.CREATED);
@@ -254,14 +265,14 @@ describe('Article', () => {
       .request(app)
       .post('/api/v1/articles')
       .send(article)
-      .set('Authorization', `Bearer ${token}`)
+      .set('access-token', accessToken)
       .end((err, res) => {
         expect(res).to.have.status(400);
         res.body.errors.should.be.a('array');
         done();
       });
   });
-  it('Should not create the article if the content is less than 5 characters', async () => {
+  it('Should not create the article if the content is less than 5 characters', (done) => {
     delete article.id;
     delete article.slug;
     delete article.userId;
@@ -271,13 +282,14 @@ describe('Article', () => {
       .request(app)
       .post('/api/v1/articles')
       .send(article)
-      .set('Authorization', `Bearer ${token}`)
+      .set('access-token', accessToken)
       .end((err, res) => {
         expect(res).to.have.status(status.BAD_REQUEST);
         res.body.errors.should.be.a('array');
+        done();
       });
   });
-  it('Should trim empty spaces before the content of the article and after the last letter of the content', async () => {
+  it('Should trim empty spaces before the content of the article and after the last letter of the content', (done) => {
     delete article.id;
     delete article.slug;
     delete article.readTime;
@@ -287,7 +299,7 @@ describe('Article', () => {
       .request(app)
       .post('/api/v1/articles')
       .send(fakeArticle3)
-      .set('Authorization', `Bearer ${token}`)
+      .set('access-token', accessToken)
       .end((err, res) => {
         const response = res.body;
         expect(res).to.have.status(status.CREATED);
@@ -297,13 +309,14 @@ describe('Article', () => {
         response.article.slug.should.be.a('string');
         response.article.coverUrl.should.be.a('string');
         expect(response.article.userId).should.be.an('object');
+        done();
       });
   });
-  it('Should get all articles', async () => {
+  it('Should get all articles', (done) => {
     chai
       .request(app)
       .get('/api/v1/articles')
-      .set('Authorization', `Bearer ${token}`)
+      .set('access-token', accessToken)
       .end((err, res) => {
         const response = res.body;
         expect(res).to.have.status(status.OK);
@@ -315,15 +328,16 @@ describe('Article', () => {
         response.articles[0].description.should.be.a('string');
         response.articles[0].slug.should.be.a('string');
         response.articles[0].coverUrl.should.be.a('string');
+        done();
       });
   });
-  it('Should get articles by paginations', async () => {
+  it('Should get articles by pagination', (done) => {
     const LIMIT = 1;
     const OFFSET = 0;
     chai
       .request(app)
       .get(`/api/v1/articles?limit=${LIMIT}&offset=${OFFSET}`)
-      .set('Authorization', `Bearer ${token}`)
+      .set('access-token', accessToken)
       .end((err, res) => {
         const response = res.body;
         expect(res).to.have.status(status.OK);
@@ -335,66 +349,99 @@ describe('Article', () => {
         response.articles[0].description.should.be.a('string');
         response.articles[0].slug.should.be.a('string');
         response.articles[0].coverUrl.should.be.a('string');
+        done();
       });
   });
-  it('Should throw error if limit is a string', async () => {
+  it('Should throw error if limit is a string', (done) => {
     const LIMIT = 'text';
     const OFFSET = 0;
     chai
       .request(app)
       .get(`/api/v1/articles?limit=${LIMIT}&offset=${OFFSET}`)
-      .set('Authorization', `Bearer ${token}`)
+      .set('access-token', accessToken)
       .end((err, res) => {
         expect(res).to.have.status(status.BAD_REQUEST);
-        res.body.errors.should.be.a('array');
+        res.body.errors.should.be.an('array');
         res.body.errors[0].should.equal('limit must be a number');
+        done();
       });
   });
-  it('Should throw error if offset is a string', async () => {
+  it('Should throw error if offset is a string', (done) => {
     const LIMIT = 1;
     const OFFSET = 'text';
     chai
       .request(app)
       .get(`/api/v1/articles?limit=${LIMIT}&offset=${OFFSET}`)
-      .set('Authorization', `Bearer ${token}`)
+      .set('access-token', accessToken)
       .end((err, res) => {
         expect(res).to.have.status(status.BAD_REQUEST);
-        res.body.errors.should.be.a('array');
+        res.body.errors.should.be.an('array');
         res.body.errors[0].should.equal('offset must be a number');
+        done();
       });
   });
-  it('Should throw error if offset number is less than 0', async () => {
+  it('Should throw error if offset number is less than 0', (done) => {
     const LIMIT = 1;
     const OFFSET = -3;
     chai
       .request(app)
       .get(`/api/v1/articles?limit=${LIMIT}&offset=${OFFSET}`)
-      .set('Authorization', `Bearer ${token}`)
+      .set('access-token', accessToken)
       .end((err, res) => {
         expect(res).to.have.status(status.BAD_REQUEST);
         res.body.errors.should.be.a('array');
         res.body.errors[0].should.equal('offset must be larger than or equal to 0');
+        done();
       });
   });
-  it('Should throw error if limit number is less than 1', async () => {
+  it('should throw error if limit is declared 2 times', (done) => {
+    const LIMIT = 1;
+    chai
+      .request(app)
+      .get(`/api/v1/articles?limit=${LIMIT}&limit=${LIMIT}`)
+      .set('access-token', accessToken)
+      .end((err, res) => {
+        expect(res).to.have.status(status.BAD_REQUEST);
+        res.body.errors.should.be.a('object');
+        res.body.errors.should.have.property('limit');
+        res.body.errors.limit.should.equal('Limit can not be declared more than once');
+        done();
+      });
+  });
+  it('should throw error if offset is declared 2 times', (done) => {
+    const OFFSET = 1;
+    chai
+      .request(app)
+      .get(`/api/v1/articles?offset=${OFFSET}&offset=${OFFSET}`)
+      .set('access-token', accessToken)
+      .end((err, res) => {
+        expect(res).to.have.status(status.BAD_REQUEST);
+        res.body.errors.should.be.a('object');
+        res.body.errors.should.have.property('offset');
+        res.body.errors.offset.should.equal('Offset can not be declared more than once');
+        done();
+      });
+  });
+  it('Should throw error if limit number is less than 1', (done) => {
     const LIMIT = 0;
     const OFFSET = 0;
     chai
       .request(app)
       .get(`/api/v1/articles?limit=${LIMIT}&offset=${OFFSET}`)
-      .set('Authorization', `Bearer ${token}`)
+      .set('access-token', accessToken)
       .end((err, res) => {
         expect(res).to.have.status(status.BAD_REQUEST);
         res.body.errors.should.be.a('array');
         res.body.errors[0].should.equal('limit must be larger than or equal to 1');
+        done();
       });
   });
-  it('Should get one article', async () => {
+  it('Should get one article', (done) => {
     const getArticle = { ...article, slug: 'rosie-make-it-easy-1dh6jv9cn4sz' };
     chai
       .request(app)
       .get(`/api/v1/articles/${getArticle.slug}`)
-      .set('Authorization', `Bearer ${token}`)
+      .set('access-token', accessToken)
       .end((err, res) => {
         const response = res.body;
         expect(res).to.have.status(status.OK);
@@ -405,6 +452,7 @@ describe('Article', () => {
         response.article.description.should.be.a('string');
         response.article.slug.should.be.a('string');
         response.article.coverUrl.should.be.a('string');
+        done();
       });
   });
   it('Should update the article', (done) => {
@@ -417,7 +465,7 @@ describe('Article', () => {
       .request(app)
       .put(`/api/v1/articles/${articleSlug}`)
       .send(updateArticle)
-      .set('Authorization', `Bearer ${token}`)
+      .set('access-token', accessToken)
       .end((err, res) => {
         expect(res).to.have.status(status.OK);
         res.body.should.be.an('object');
@@ -430,7 +478,7 @@ describe('Article', () => {
     chai
       .request(app)
       .put(`/api/v1/articles/${publishArticle.slug}/publish`)
-      .set('Authorization', `Bearer ${token}`)
+      .set('access-token', accessToken)
       .end((err, res) => {
         expect(res).to.have.status(status.OK);
         res.body.should.be.a('object');
@@ -438,44 +486,47 @@ describe('Article', () => {
         done();
       });
   });
-  it('Should test slug validator and reject request if slug characters are minimum to 10', async () => {
+  it('Should test slug validator and reject request if slug characters are minimum to 10', (done) => {
     const smallSlug = { ...article, title: 'Hey' };
     chai
       .request(app)
       .post('/api/v1/articles')
-      .set('Authorization', `Bearer ${token}`)
+      .set('access-token', accessToken)
       .send(smallSlug)
       .end((err, res) => {
         expect(res).to.have.status(status.BAD_REQUEST);
         res.body.should.be.an('object');
         res.body.errors.should.be.a('array');
+        done();
       });
   });
-  it('Should unpublish an article', async () => {
+  it('Should unpublish an article', (done) => {
     const unpublish = { ...article, slug: 'rosie-make-it-easy-1dh6jv9cn4sz' };
     chai
       .request(app)
       .put(`/api/v1/articles/${unpublish.slug}/unpublish`)
-      .set('Authorization', `Bearer ${token}`)
+      .set('access-token', accessToken)
       .end((err, res) => {
         expect(res).to.have.status(status.OK);
         res.body.should.be.a('object');
         res.body.message.should.equal('Article has been unpublished');
+        done();
       });
   });
-  it('Should delete article', async () => {
+  it('Should delete article', (done) => {
     const deleteArticle = { ...article, slug: 'rosie-make-it-easy-1dh6jv9cn4sz' };
     chai
       .request(app)
       .delete(`/api/v1/articles/${deleteArticle.slug}`)
-      .set('Authorization', `Bearer ${token}`)
+      .set('access-token', accessToken)
       .end((err, res) => {
         expect(res).to.have.status(status.OK);
         res.body.should.be.an('object');
         res.body.message.should.equal('Article has been deleted');
+        done();
       });
   });
-  it('Should not create article if the author does not exist', async () => {
+  it('Should not create article if the author does not exist', (done) => {
     delete article.id;
     delete article.slug;
     delete article.readTime;
@@ -484,11 +535,14 @@ describe('Article', () => {
       .request(app)
       .post('/api/v1/articles')
       .send(fakeArticle)
-      .set('Authorization', `Bearer ${token}`)
+      .set('access-token', 'brabra')
       .end((err, res) => {
-        expect(res).to.have.status(status.SERVER_ERROR);
+        console.log('rw', res.body);
+        expect(res).to.have.status(status.UNAUTHORIZED);
         res.body.should.be.an('object');
-        res.body.message.should.be.a('string');
+        res.body.should.have.property('errors');
+        res.body.errors.token.should.equal('Failed to authenticate token');
+        done();
       });
   });
 });
