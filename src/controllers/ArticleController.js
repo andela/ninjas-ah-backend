@@ -35,11 +35,15 @@ export default class ArticleController {
    * @returns {object} Object representing the response returned
    */
   static async getAllArticles(req, res) {
-    const allArticle = await Article.getAll();
-    if (allArticle.length >= 1) {
+    const { limit, offset } = req.query;
+    const queries = {
+      page: parseInt(limit, 0) || 20, // if pagination is not speficied, fetch 20 recent articles
+      offset: offset || 0 // default offset value: 0
+    };
+    const allArticle = await Article.getAll(queries.page, queries.offset);
+    if (allArticle.length >= 1 && !!allArticle) {
       res.status(status.OK).send({
-        articles: allArticle,
-        articlesCount: allArticle.length
+        articles: allArticle
       });
     } else {
       res.status(status.NOT_FOUND).send({ message: 'No articles found' });
