@@ -33,4 +33,8 @@ describe('Query to get article', () => {
     expect(response.dataValues).to.include.keys('favorited');
     expect(response.dataValues).to.include.keys('favoritesCount');
   });
+  it('should get article', async () => {
+    const response = await Article.get();
+    expect(Object.keys(response).length).to.be.above(0);
+  });
 });
