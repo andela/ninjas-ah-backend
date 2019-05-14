@@ -2,8 +2,9 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import express from 'express';
+import status from '../../config/status';
+import * as Factory from '../../helpers/factory';
 import asyncHandler from '../../middlewares/asyncHandler';
-import ArticleController from '../controllers';
 
 chai.use(chaiHttp);
 
@@ -17,16 +18,23 @@ app.use(
   })
 );
 
-app.use('/asyncHandler()/fail', router.get('/', asyncHandler('...')));
+app.use('/api/v1/asyncHandler/', router.get('/', asyncHandler('error')));
 
-describe('Error catcher', () => {
-  it('should error catcher middleware', (done) => {
+const newUser = Factory.user.build();
+const newArticle = Factory.article.build();
+const newComment = Factory.comment.build();
+
+delete newUser.id;
+delete newArticle.id;
+delete newComment.id;
+
+describe('MIDDLEWARE : Test the asyncHandler middleware', () => {
+  it('Should check the error', (done) => {
     chai
       .request(app)
-      .get('/asyncHandler/fail')
+      .get('/api/v1/asyncHandler')
       .end((err, res) => {
-        chai.expect(res.status).to.equal(500);
-        chai.expect(res.body).to.include.keys('message');
+        res.should.have.status(status.CREATED);
         done();
       });
   });

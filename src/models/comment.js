@@ -8,12 +8,12 @@ export default (sequelize, DataTypes) => {
         primaryKey: true,
         type: DataTypes.INTEGER
       },
-      articleId: {
-        type: DataTypes.INTEGER,
+      articleSlug: {
+        type: DataTypes.STRING,
         allowNull: false,
         references: {
           model: 'Articles',
-          key: 'id'
+          key: 'slug'
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
@@ -32,6 +32,10 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: false
       },
+      likes: {
+        allowNull: true,
+        type: DataTypes.INTEGER
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE
@@ -44,7 +48,7 @@ export default (sequelize, DataTypes) => {
     {}
   );
   Comment.associate = (models) => {
-    Comment.belongsTo(models.Article, { foreignKey: 'articleId' });
+    Comment.belongsTo(models.Article, { foreignKey: 'articleSlug' });
     Comment.belongsTo(models.User, { foreignKey: 'userId' });
   };
   return Comment;

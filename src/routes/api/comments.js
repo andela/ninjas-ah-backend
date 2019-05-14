@@ -7,15 +7,15 @@ import asyncHandler from '../../middlewares/asyncHandler';
 
 const router = Router();
 
-router.post('/:articleId/comments', Validation, checkArticle, CommentController.create);
-router.get('/:articleId/comments', asyncHandler(CommentController.getAll));
+router.post('/:articleSlug/comments', Validation, checkArticle, CommentController.create);
+router.get('/:articleSlug/comments', asyncHandler(CommentController.getAll));
 router.put(
-  '/:articleId/comments/:id',
+  '/:articleSlug/comments/:id',
   Validation,
   checkArticle,
   checkComment,
   CommentController.edit
 );
-router.delete('/:articleId/comments/:id', checkArticle, checkComment, CommentController.delete);
+router.delete('/:articleSlug/comments/:id', checkArticle, checkComment, CommentController.delete);
 
 export default router;

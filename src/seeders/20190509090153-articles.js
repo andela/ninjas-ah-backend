@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   up: queryInterface => queryInterface.bulkInsert(
     'Articles',
     [

@@ -60,7 +60,14 @@ export default (sequelize, DataTypes) => {
       favoritesCount: {
         type: DataTypes.INTEGER,
         allowNull: true,
-        defaultValue: 0
+        defaultValue: 0},
+      likes: {
+        allowNull: true,
+        type: DataTypes.INTEGER
+      },
+      dislikes: {
+        allowNull: true,
+        type: DataTypes.INTEGER
       },
       createdAt: {
         allowNull: false,

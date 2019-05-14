@@ -15,18 +15,6 @@ const dbDelete = async (model, whereCondition) => model.destroy({
   logging: false
 });
 
-const dbUpdate = async (model, condition, whereCondition) => model.update(
-  { condition },
-  {
-    where: whereCondition,
-    logging: false
-  }
-);
-
-module.exports = {
-  dbFindSingle,
-  dbFindAll,
-  dbCreate,
-  dbDelete,
-  dbUpdate
+export {
+  dbFindSingle, dbFindAll, dbCreate, dbDelete
 };

@@ -3,9 +3,8 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import express from 'express';
 import status from '../../config/status';
-import db from '../../models';
 import * as Factory from '../../helpers/factory';
-import CommentController from '../../controllers/CommentController';
+import checkCommentLike from '../../middlewares/checkCommentLike';
 
 const { expect } = chai;
 
@@ -21,29 +20,23 @@ app.use(
   })
 );
 
-app.use('/api/v1/articles/111111111/comments', router.post('/', CommentController.create));
+app.use('/api/v1/comments/748734/likes', router.post('/', checkCommentLike));
 
 const createdUser = {};
 
 const newUser = Factory.user.build();
-const newArticle = Factory.article.build();
 const newComment = Factory.comment.build();
 
 delete newUser.id;
-delete newArticle.id;
 delete newComment.id;
 
-describe('COMMENTS', () => {
-  it('Should not let the user create a comment with a bad request', (done) => {
+describe('COMMENTS@@@@@@@@@@@@@@@', () => {
+  it('Should not let the user continue with wrong input', (done) => {
     newComment.userId = createdUser.id;
     chai
       .request(app)
-      .post('/api/v1/articles/111111111/comments')
-      .send({
-        articleId: {},
-        userId: {},
-        body: {}
-      })
+      .post('/api/v1/comments/sfggdhgshds/likes')
+      .send()
       .end((err, res) => {
         res.should.have.status(status.SERVER_ERROR);
         done();
