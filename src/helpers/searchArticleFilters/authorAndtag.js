@@ -1,17 +1,18 @@
 import db from '../../models';
 
-export default (keyword, tag) => {
-  console.log('author and tag');
-  let where = {};
-  where = {
+export default (author, tag) => {
+  const where = {
     status: { [db.Op.ne]: 'deleted' },
-    [db.Op.or]: [
-      {
-        title: {
-          [db.Op.iLike]: `%${keyword}%`
-        }
-      }
-    ]
+    [db.Op.and]: {
+      tagList: {
+        [db.Op.contains]: [`${tag}`]
+      },
+      [db.Op.or]: [
+        { '$author.username$': { [db.Op.iLike]: `${author}` } },
+        { '$author.firstName$': { [db.Op.iLike]: `${author}` } },
+        { '$author.lastName$': { [db.Op.iLike]: `${author}` } }
+      ]
+    }
   };
   return where;
 };
