@@ -54,7 +54,8 @@ export default class ArticleController {
     );
     if (allArticle.length >= 1 && !!allArticle) {
       res.status(status.OK).send({
-        articles: allArticle
+        articles: allArticle,
+        articlesCount: allArticle.length
       });
     } else {
       res.status(status.NOT_FOUND).send({ message: 'No articles found' });
