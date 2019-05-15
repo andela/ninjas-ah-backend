@@ -65,6 +65,7 @@
     "sequelize": "^5.8.6",
     "sequelize-cli": "^5.4.0",
     "sequelize-test-helpers": "^1.1.1",
+    "sequelize-easy-query": "^1.1.0",
     "slug": "^1.1.0",
     "socket.io": "^2.2.0",
     "swagger": "^0.7.5",

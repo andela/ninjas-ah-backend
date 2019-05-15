@@ -19,7 +19,12 @@ articles.get('/articles/bookmarked', verifyToken, ArticleController.getBookmarks
 
 articles.get(
   '/articles/',
-  validateArticle.pagination,
+  validateArticle.queryParameters,
+  asyncHandler(ArticleController.getAllArticles)
+);
+articles.get(
+  '/articles/search',
+  validateArticle.queryParameters,
   asyncHandler(ArticleController.getAllArticles)
 );
 articles.get(

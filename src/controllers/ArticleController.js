@@ -35,12 +35,23 @@ export default class ArticleController {
    * @returns {object} Object representing the response returned
    */
   static async getAllArticles(req, res) {
-    const { limit, offset } = req.query;
+    const {
+      limit, offset, keyword, author, tag
+    } = req.query;
     const queries = {
       page: parseInt(limit, 0) || 20, // if pagination is not speficied, fetch 20 recent articles
-      offset: offset || 0 // default offset value: 0
+      offset: offset || 0, // default offset value: 0
+      keyword, // search keyword
+      author, // article author
+      tag // tags of the article
     };
-    const allArticle = await Article.getAll(queries.page, queries.offset);
+    const allArticle = await Article.getAll(
+      queries.page,
+      queries.offset,
+      queries.keyword,
+      queries.author,
+      queries.tag
+    );
     if (allArticle.length >= 1 && !!allArticle) {
       res.status(status.OK).send({
         articles: allArticle
