@@ -1,19 +1,13 @@
 import db from '../../models';
 
-export default (keyword, author, tag) => {
-  console.log('author');
-  let where = {};
-  if (author || keyword || tag) {
-    where = {
-      status: { [db.Op.ne]: 'deleted' },
-      [db.Op.or]: [
-        {
-          title: {
-            [db.Op.iLike]: `%${keyword}%`
-          }
-        }
-      ]
-    };
-  }
+export default (author) => {
+  const where = {
+    status: { [db.Op.ne]: 'deleted' },
+    [db.Op.or]: [
+      { '$author.username$': { [db.Op.iLike]: `${author}` } },
+      { '$author.firstName$': { [db.Op.iLike]: `${author}` } },
+      { '$author.lastName$': { [db.Op.iLike]: `${author}` } }
+    ]
+  };
   return where;
 };
