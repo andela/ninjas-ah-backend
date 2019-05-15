@@ -1,7 +1,7 @@
 import db from '../../models';
 
-export default async (keyword) => {
-  const where = await {
+export default (keyword) => {
+  const where = {
     status: { [db.Op.ne]: 'deleted' },
     [db.Op.or]: [
       {
