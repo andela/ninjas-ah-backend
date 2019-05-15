@@ -18,12 +18,7 @@ articles.post(
 articles.get('/articles/bookmarked', verifyToken, ArticleController.getBookmarks);
 
 articles.get(
-  '/articles/',
-  validateArticle.queryParameters,
-  asyncHandler(ArticleController.getAllArticles)
-);
-articles.get(
-  '/articles/search',
+  '/articles',
   validateArticle.queryParameters,
   asyncHandler(ArticleController.getAllArticles)
 );
