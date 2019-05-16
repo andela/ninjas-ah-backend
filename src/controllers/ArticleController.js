@@ -1,5 +1,5 @@
 import status from '../config/status';
-import { generateReadTime, generateSlug } from '../helpers';
+import * as helpers from '../helpers';
 
 import { Article } from '../queries';
 
@@ -13,6 +13,14 @@ export default class ArticleController {
    * @returns {object} Object representing the response returned
    */
   static async saveArticle(req, res) {
+<<<<<<< HEAD
+=======
+    const title = req.body.title.trim();
+    const body = req.body.body.trim();
+    const description = req.body.description.trim();
+    const slug = helpers.generator.slug(title);
+    const readTime = helpers.generator.readtime(body);
+>>>>>>> [feature #165412931] refactor search filters
     const { coverUrl, tagList } = req.body;
     const newArticle = await Article.create({
       userId: req.user.id || 0,
@@ -88,7 +96,7 @@ export default class ArticleController {
         title: req.body.title.trim(),
         body: req.body.body.trim(),
         description: req.body.description.trim(),
-        readTime: generateReadTime(req.body.body)
+        readTime: helpers.generator.slug(req.body.body)
       };
       message = 'Article has been updated';
     } else if (req.url.search(/\/publish/g) > 0) {
