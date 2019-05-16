@@ -1,4 +1,5 @@
 import * as User from './users';
+import * as Article from './articles';
+import createUser from './users/createUser';
 
-// eslint-disable-next-line import/prefer-default-export
-export { User };
+export { User, Article, createUser };

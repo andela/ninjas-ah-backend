@@ -26,7 +26,7 @@ describe('src/models/Article', () => {
       'title',
       'description',
       'body',
-      'tags',
+      'tagList',
       'readTime',
       'status',
       'createdAt',

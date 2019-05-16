@@ -15,7 +15,10 @@ describe('Create user query', () => {
       user.email = Factory.user.build().email;
       await db.User.destroy({
         where: { email: user.email },
-        logging: false
+        logging: false,
+        truncate: true,
+        cascade: true,
+        restartIdentity: true
       });
     } catch (error) {
       throw error;
