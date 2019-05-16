@@ -28,8 +28,8 @@ class articles {
    * @returns {object} Object representing the response returned
    */
   static update(req, res, next) {
-    const result = validate.updateArticle(req.body);
-    return result.error ? Error.joiErrorHandler(res, result) : next();
+    const response = validate.updateArticle(req.body);
+    return !response.error ? next() : Error.joiErrorHandler(res, response);
   }
 
   /**

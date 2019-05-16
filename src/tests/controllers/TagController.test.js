@@ -13,6 +13,7 @@ chai.should();
 const article = Factory.article.build();
 chai.use(chaiHttp);
 const token = 'token-string';
+let findArticle = '';
 describe('TAGS', () => {
   let response = '';
   before(async () => {
@@ -22,6 +23,7 @@ describe('TAGS', () => {
     article.slug = 'lorem-ipsum-foo-hasli234rhjav';
     article.userId = findUser[0].dataValues.id;
     response = await db.Article.create(article, { logging: false });
+    findArticle = await db.Article.findAll({ limit: 1, logging: false });
   });
   it('should create a tag', (done) => {
     chai
@@ -36,16 +38,16 @@ describe('TAGS', () => {
         done();
       });
   });
-  it('should not create tags if there are more than 5', (done) => {
+  it('should not create tags if they are more than 5', (done) => {
     chai
       .request(app)
       .put(`/api/v1/articles/${response.dataValues.slug}/tags`)
-      .send({ tagList: ['Morning', 'Bonjour', 'Bonjourno', 'Dias'] })
+      .send({ tagList: ['Morning', 'Bonjour', 'Bonjourno', 'Dias', 'Hakuna Matata', 'Energy'] })
       .set('Authorization', `Bearer ${token}`)
       .end((err, res) => {
-        expect(res).to.have.status(status.CREATED);
+        expect(res).to.have.status(status.BAD_REQUEST);
         res.body.should.be.an('object');
-        res.body.response.should.equal('You can not create more than 5 tags per article');
+        res.body.errors[0].should.equal('tagList must contain less than or equal to 5 items');
         done();
       });
   });
@@ -75,15 +77,29 @@ describe('TAGS', () => {
       });
   });
   it('should not create tags if it is a string', (done) => {
+    const tagList = 'text';
     chai
       .request(app)
       .put(`/api/v1/articles/${response.dataValues.slug}/tags`)
-      .send({ tagList: 'text' })
+      .send({ tagList })
       .set('Authorization', `Bearer ${token}`)
       .end((err, res) => {
         expect(res).to.have.status(status.BAD_REQUEST);
         res.body.should.be.an('object');
         res.body.errors[0].should.equal('tagList must be an array');
+        done();
+      });
+  });
+  it('should not create tags if tagList is not provided', (done) => {
+    chai
+      .request(app)
+      .put(`/api/v1/articles/${response.dataValues.slug}/tags`)
+      .send()
+      .set('Authorization', `Bearer ${token}`)
+      .end((err, res) => {
+        expect(res).to.have.status(status.BAD_REQUEST);
+        res.body.should.be.an('object');
+        res.body.errors[0].should.equal('tagList is required');
         done();
       });
   });

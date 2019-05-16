@@ -15,7 +15,14 @@ class TagsController {
   static async update(req, res) {
     const action = req.method === 'DELETE' ? 'delete' : 'update';
     const response = await Tag.update(req.body.tagList, req.params.slug, action);
-    return res.status(action === 'update' ? status.CREATED : status.OK).send({
+
+    let statusCode = status.BAD_REQUEST;
+    if (action === 'update') {
+      statusCode = status.CREATED;
+    } else if (action === 'delete') {
+      statusCode = status.OK;
+    }
+    return res.status(statusCode).send({
       response
     });
   }

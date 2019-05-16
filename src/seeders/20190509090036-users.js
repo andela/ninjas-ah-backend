@@ -9,7 +9,7 @@ module.exports = {
         password: '123123',
         username: 'johndoe',
         role: 'normal',
-        permissions: '{"can-edit"}',
+        permissions: ['read'],
         image: 'user.png',
         bio: 'I can do magic easy',
         createdAt: '2019-04-29T22:00:00',
