@@ -19,6 +19,6 @@ describe('Tag query', () => {
       action
     );
     response.should.be.an('string');
-    response.should.equal('Tag have been deleted');
+    response.should.equal('Tag has been deleted');
   });
 });

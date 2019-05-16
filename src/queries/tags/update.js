@@ -19,10 +19,10 @@ export default async (newTags, slug, action) => {
     result = response[0].dataValues.tagList
       ? [...new Set([...response[0].dataValues.tagList, ...newTags])]
       : newTags;
-    message = 'Tags have been created';
+    message = 'Tag list has been updated';
   } else {
     result = response[0].dataValues.tagList.filter(item => !newTags.includes(item));
-    message = 'Tag have been deleted';
+    message = 'Tag has been deleted';
   }
 
   if (result.length <= 5) {

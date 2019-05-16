@@ -15,6 +15,6 @@ describe('Tag query', () => {
     const findArticle = await db.Article.findAll({ limit: 1, logging: false });
     const response = await Tag.update(article.tagList, findArticle[0].dataValues.slug, action);
     response.should.be.an('string');
-    response.should.equal('Tags have been created');
+    response.should.equal('Tag list has been updated');
   });
 });

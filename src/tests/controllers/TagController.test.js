@@ -32,7 +32,7 @@ describe('TAGS', () => {
       .end((err, res) => {
         expect(res).to.have.status(status.CREATED);
         res.body.should.be.an('object');
-        res.body.response.should.equal('Tags have been created');
+        res.body.response.should.equal('Tag list has been updated');
         done();
       });
   });
@@ -58,7 +58,7 @@ describe('TAGS', () => {
       .end((err, res) => {
         expect(res).to.have.status(status.OK);
         res.body.should.be.an('object');
-        res.body.response.should.equal('Tag have been deleted');
+        res.body.response.should.equal('Tag has been deleted');
         done();
       });
   });
@@ -71,6 +71,19 @@ describe('TAGS', () => {
         expect(res).to.have.status(status.OK);
         res.body.should.be.an('object');
         res.body.tags.should.be.an('array');
+        done();
+      });
+  });
+  it('should not create tags if it is a string', (done) => {
+    chai
+      .request(app)
+      .put(`/api/v1/articles/${response.dataValues.slug}/tags`)
+      .send({ tagList: 'text' })
+      .set('Authorization', `Bearer ${token}`)
+      .end((err, res) => {
+        expect(res).to.have.status(status.BAD_REQUEST);
+        res.body.should.be.an('object');
+        res.body.errors[0].should.equal('tagList must be an array');
         done();
       });
   });
