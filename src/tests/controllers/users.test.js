@@ -4,25 +4,27 @@ import chaiHttp from 'chai-http';
 import app from '../../app';
 import status from '../../config/status';
 import db from '../../models';
-import { factory } from '../../helpers';
+import * as Factory from '../../helpers/factory';
 
 chai.should();
 chai.use(chaiHttp);
+const user = Factory.user.build();
+delete user.id;
 
 // user test
 describe('user tests', () => {
-  const user = factory.user.build();
-
+  // test signup;
   before(async () => {
     try {
       await db.User.destroy({
-        where: { email: user.email }
+        truncate: true,
+        cascade: true,
+        logging: false
       });
     } catch (error) {
       throw error;
     }
   });
-  // test signup;
   describe('user signup', () => {
     it('Should register new user', (done) => {
       chai

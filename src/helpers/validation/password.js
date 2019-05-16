@@ -11,7 +11,7 @@ export default (input, required = '') => {
   }
   if (
     input.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,25}$/)
-    && input.match(/[ \\,;:"!#$%&'+-/=?^_`{|}~]/)
+    && input.match(/[ \\,;:"!#$@*%&'+-/=?^_`{|}~]/)
   ) {
     return [];
   }
