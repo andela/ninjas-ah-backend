@@ -16,7 +16,7 @@ export default async (userId = 0) => {
     return token ? token.dataValues : {};
   } catch (error) {
     return {
-      errors: error.message
+      errors: error
     };
   }
 };

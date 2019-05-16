@@ -1,5 +1,5 @@
 import status from '../config/status';
-import { User } from '../queries';
+import { User, Token } from '../queries';
 import * as helper from '../helpers';
 
 /**
@@ -7,39 +7,54 @@ import * as helper from '../helpers';
  */
 export default class AuthPassportController {
   /**
-   * @param {object} user
-   * @returns {object} an object containing user information
+   * @param {object} profile social media user information
+   * @returns {object} a user object
    */
-  static async signup(user = {}) {
-    const newUser = Object.keys(user).length
-      ? await User.create(helper.passportSocialMediaUser(user))
-      : {};
-
-    if (!newUser.errors && Object.keys(newUser).length > 0) {
-      return {
-        code: status.CREATED,
-        user: newUser,
-        token: helper.token.generate({ id: newUser.id, role: newUser.role })
-      };
+  static getSocialMediaUser(profile = {}) {
+    const user = {};
+    if (profile.displayName) {
+      const [firstName, lastName] = profile.displayName.split(' ');
+      user.firstName = firstName;
+      user.lastName = lastName;
     }
-
-    return {
-      code: newUser.errors ? status.SERVER_ERROR : status.BAD_REQUEST,
-      error: 'account not created'
-    };
+    if (profile.name) {
+      user.firstName = profile.name.givenName;
+      user.lastName = profile.name.familyName;
+    }
+    if (profile.emails) {
+      user.email = profile.emails[0].value;
+    }
+    if (profile.username) {
+      user.username = profile.username;
+    }
+    return Object.keys(profile).length
+      ? {
+        ...user,
+        image: profile.photos[0].value,
+        accountProvider: profile.provider,
+        accountProviderUserId: profile.id
+      }
+      : {};
   }
 
   /**
-   * @param {object} user
-   * @returns {object} an object containing user information
+   * @param {object} err
+   * @returns {object} an object containing descriptive error messages
    */
-  static login(user = {}) {
-    return {
-      code: status.OK,
-      message: `welcome ${user.firstName} ${user.lastName}`,
-      user,
-      token: helper.token.generate({ id: user.id, role: user.role })
-    };
+  static checkErrors(err = {}) {
+    const errors = {};
+    if (err.name === 'SequelizeUniqueConstraintError') {
+      if (err.fields.email) {
+        errors.email = 'email already used';
+      }
+
+      if (err.fields.username) {
+        errors.username = 'username already used';
+      }
+
+      return { errors, code: status.EXIST };
+    }
+    return { errors: err.message, code: status.SERVER_ERROR };
   }
 
   /**
@@ -49,25 +64,39 @@ export default class AuthPassportController {
    */
   static async loginOrSignup(req, res) {
     const user = req.user || req.body || {};
-    const findUser = user.id && user.provider
-      ? await User.findOne({
-        accountProvider: user.provider,
-        accountProviderUserId: user.id
-      })
-      : {};
+    if (!Object.keys(user).length) {
+      return res.status(status.BAD_REQUEST).json({ errors: { body: 'should not be empty' } });
+    }
+    const newOrExistingUser = await User.findOrCreate(
+      { accountProvider: user.provider, accountProviderUserId: user.id },
+      AuthPassportController.getSocialMediaUser(user)
+    );
 
-    if (findUser.errors) {
-      return res.status(status.SERVER_ERROR).json({
-        error: 'sorry, something went wrong'
-      });
+    if (newOrExistingUser.errors) {
+      const errors = AuthPassportController.checkErrors(newOrExistingUser.errors);
+      const statusCode = errors.code;
+      delete errors.code;
+      return res.status(statusCode).json(errors);
     }
 
-    const result = Object.keys(findUser).length
-      ? await AuthPassportController.login(findUser)
-      : await AuthPassportController.signup(user);
+    await AuthPassportController.clearInvalidToken(newOrExistingUser[0].id);
+    delete newOrExistingUser[0].password;
+    return res.status(newOrExistingUser[1] ? status.CREATED : status.OK).json({
+      user: newOrExistingUser[0],
+      token: helper.token.generate({
+        id: newOrExistingUser[0].id,
+        role: newOrExistingUser[0].role,
+        permissions: newOrExistingUser[0].permissions
+      })
+    });
+  }
 
-    const statusCode = result.code;
-    delete result.code;
-    return res.status(statusCode).json(result);
+  /**
+   * @param {int} userId
+   * @return {object|boolean} true if every invalid token was destroyed or an error object
+   */
+  static async clearInvalidToken(userId) {
+    const destroyToken = typeof userId === 'number' ? await Token.destroy(userId) : {};
+    return destroyToken.errors ? destroyToken.errors.message : {};
   }
 }
