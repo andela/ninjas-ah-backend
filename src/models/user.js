@@ -80,6 +80,11 @@ export default (sequelize, DataTypes) => {
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE'
     });
+    User.hasOne(models.Token, {
+      foreignKey: 'userId',
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE'
+    });
   };
   return User;
 };

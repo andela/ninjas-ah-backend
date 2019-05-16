@@ -1,4 +1,4 @@
 import './validation';
-import './tokenGenerator.test';
+import './tokens';
 import './passportSocialMediaUser.test';
 import './generateReadTime.test';

@@ -40,6 +40,11 @@ describe('Create user query', () => {
     expect(newUser).to.include.keys('errors');
   });
 
+  it('should throw an error message if there is no passed parameter', async () => {
+    const newUser = await User.create();
+    expect(newUser).to.include.keys('errors');
+  });
+
   after(async () => {
     try {
       user.email = Factory.user.build().email;
