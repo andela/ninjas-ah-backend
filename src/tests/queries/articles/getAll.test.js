@@ -12,7 +12,9 @@ delete article.id;
 chai.use(chaiHttp);
 describe('Query to get article', () => {
   it('should get all articles', async () => {
-    const newArticle = await getAll(2, 0); // getAll() parameters: limit and offset
+    const LIMIT = 2;
+    const OFFSET = 0;
+    const newArticle = await getAll(LIMIT, OFFSET); // getAll() parameters: limit and offset
     expect(Object.keys(newArticle).length).to.be.above(0);
   });
 });
