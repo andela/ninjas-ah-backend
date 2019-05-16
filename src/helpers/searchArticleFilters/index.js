@@ -4,14 +4,8 @@ import author from './author';
 import keywordAndAuthor from './keywordAndAuthor';
 import keywordAndTag from './keywordAndTag';
 import authorAndtag from './authorAndtag';
-import authorAndKeywordAndTag from './authorAndKeywordAndTag';
+import allfilters from './allfilters';
 
 export {
-  keyword,
-  tag,
-  author,
-  keywordAndAuthor,
-  keywordAndTag,
-  authorAndtag,
-  authorAndKeywordAndTag
+  keyword, tag, author, keywordAndAuthor, keywordAndTag, authorAndtag, allfilters
 };
