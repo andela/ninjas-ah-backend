@@ -1,4 +1,5 @@
 import db from '../../models';
+import authorCondition from './authorCondition';
 
 export default (author, tag) => {
   const where = {
@@ -7,11 +8,7 @@ export default (author, tag) => {
       tagList: {
         [db.Op.contains]: [`${tag}`]
       },
-      [db.Op.or]: [
-        { '$author.username$': { [db.Op.iLike]: `${author}` } },
-        { '$author.firstName$': { [db.Op.iLike]: `${author}` } },
-        { '$author.lastName$': { [db.Op.iLike]: `${author}` } }
-      ]
+      [db.Op.or]: authorCondition(author)
     }
   };
   return where;

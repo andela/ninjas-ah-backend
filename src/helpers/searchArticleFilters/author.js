@@ -1,13 +1,10 @@
 import db from '../../models';
+import authorCondition from './authorCondition';
 
 export default (author) => {
   const where = {
     status: { [db.Op.ne]: 'deleted' },
-    [db.Op.or]: [
-      { '$author.username$': { [db.Op.iLike]: `${author}` } },
-      { '$author.firstName$': { [db.Op.iLike]: `${author}` } },
-      { '$author.lastName$': { [db.Op.iLike]: `${author}` } }
-    ]
+    [db.Op.or]: authorCondition(author)
   };
   return where;
 };
