@@ -1,5 +1,10 @@
-export default (errors) => {
-  errors.forEach((err) => {
+// eslint-disable-next-line valid-jsdoc
+/**
+ *
+ * @param {object} error
+ */
+function commentErrors(error) {
+  error.forEach((err) => {
     switch (err.type) {
       case 'any.empty':
         err.message = 'Please enter your comment';
@@ -11,5 +16,6 @@ export default (errors) => {
         break;
     }
   });
-  return errors;
-};
+  return error;
+}
+export default commentErrors;

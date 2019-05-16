@@ -4,3 +4,4 @@ import './auth.test';
 import './commentlike.test';
 import './articleLike.test';
 import './articleDislike.test';
+import './report.test';

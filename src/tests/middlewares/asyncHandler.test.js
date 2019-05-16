@@ -34,7 +34,7 @@ describe('MIDDLEWARE : Test the asyncHandler middleware', () => {
       .request(app)
       .get('/api/v1/asyncHandler')
       .end((err, res) => {
-        res.should.have.status(status.CREATED);
+        res.should.have.status(status.SERVER_ERROR);
         done();
       });
   });

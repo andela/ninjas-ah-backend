@@ -23,8 +23,7 @@ export default async function checkArticle(req, res, next) {
       });
   } catch (error) {
     return res.status(status.SERVER_ERROR).send({
-      status: status.SERVER_ERROR,
-      message: 'Ooops, something went wrong'
+      Error: 'Ooops, something went wrong'
     });
   }
 }
