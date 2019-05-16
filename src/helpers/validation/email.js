@@ -10,9 +10,9 @@ export default (input, required = '') => {
 
   let errors = [];
   const re = /[A-Z0-9]+@[A-Z0-9-]+\.[A-Z]{2,4}/gim;
-  const reUsername = /[\\ ,;:"!#$%&'*+/=?^`{|}~]/g;
-  const reDomainSLD = /[ \\,;:"!#$%&'*+/=?^`{|}~]/g;
-  const reDomainTLD = /[\d+ \\,;:"!#$%&'*+-/=?^_`{|}~]/g;
+  const reUsername = /[\\ ,;:"!#$%&'*+/=?^`{|}~([\])]/g;
+  const reDomainSLD = /[ \\,;:"!#$%&'*+/=?^`{|}~([\])]/g;
+  const reDomainTLD = /[\d+ \\,;:"!#$%&'*+-/=?^_`{|}~([\])]/g;
 
   const emailUsername = input.substring(0, input.lastIndexOf('@'));
   const emailDomainSLD = input.substring(input.lastIndexOf('@') + 1, input.lastIndexOf('.'));

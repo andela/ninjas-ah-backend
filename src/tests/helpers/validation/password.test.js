@@ -29,4 +29,8 @@ describe('Password validation', () => {
     expect(validatePassword('Abcde12345!', 'required').length).to.be.equals(0);
     expect(validatePassword('', false).length).to.be.equals(0);
   });
+
+  it('should return an empty array if no parameter', () => {
+    expect(validatePassword().length).to.be.equals(0);
+  });
 });

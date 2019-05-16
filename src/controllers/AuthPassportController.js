@@ -19,7 +19,7 @@ export default class AuthPassportController {
       return {
         code: status.CREATED,
         user: newUser,
-        token: helper.tokenGenerator({ id: newUser.id, role: newUser.role })
+        token: helper.token.generate({ id: newUser.id, role: newUser.role })
       };
     }
 
@@ -38,7 +38,7 @@ export default class AuthPassportController {
       code: status.OK,
       message: `welcome ${user.firstName} ${user.lastName}`,
       user,
-      token: helper.tokenGenerator({ id: user.id, role: user.role })
+      token: helper.token.generate({ id: user.id, role: user.role })
     };
   }
 

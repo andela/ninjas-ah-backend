@@ -21,15 +21,18 @@ export default class AuthLocalController {
       if (isUser) {
         return res.status(status.EXIST).send({ error: 'Sorry, this account already exists' });
       }
-      const hashedPassword = helper.password.hash(req.body.password);
       const newUser = await User.create({
-        firstName, lastName, username, email, password: hashedPassword
+        firstName,
+        lastName,
+        username,
+        email,
+        password: helper.password.hash(req.body.password)
       });
       if (!newUser.errors && newUser && Object.keys(newUser).length > 0) {
         delete newUser.password;
         return res.status(status.CREATED).send({
           user: newUser,
-          token: helper.tokenGenerator({ email, role: req.body.isAdmin })
+          token: helper.token.generate({ email, role: req.body.isAdmin })
         });
       }
     } catch (error) {
@@ -55,7 +58,7 @@ export default class AuthLocalController {
           });
         }
         const payload = { id: checkUser.id, role: checkUser.role };
-        const token = helper.tokenGenerator(payload);
+        const token = helper.token.generate(payload);
         delete checkUser.password;
         return res.status(status.OK).send({
           user: checkUser,
