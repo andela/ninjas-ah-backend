@@ -54,8 +54,9 @@ describe('No articles', () => {
         .get('/api/v1/articles')
         .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
-          expect(res).to.have.status(status.OK);
-          res.body.articles.should.be.an('array');
+          expect(res).to.have.status(status.NOT_FOUND);
+          res.body.should.be.an('object');
+          res.body.message.should.equal('No articles found');
         });
     });
     it('Should not get articles if table is empty', async () => {

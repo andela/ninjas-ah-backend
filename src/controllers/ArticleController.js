@@ -42,9 +42,14 @@ class ArticleController {
    */
   static async getAllArticles(req, res) {
     const allArticle = await Article.getAll();
-    return res.status(status.OK).send({
-      articles: allArticle
-    });
+    if (allArticle.length >= 1) {
+      res.status(status.OK).send({
+        articles: allArticle,
+        articlesCount: allArticle.length
+      });
+    } else {
+      res.status(status.NOT_FOUND).send({ message: 'No articles found' });
+    }
   }
 
   /**

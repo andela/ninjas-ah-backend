@@ -9,12 +9,10 @@ const { Op } = Sequelize;
  * @param {object} condition condition for query
  * @returns {object} Object representing the response returned
  */
-export default async (limit = 20, offset = 0) => {
+export default async () => {
   const condition = { status: { [Op.ne]: 'deleted' } };
   let response = [];
   response = await db.Article.findAll({
-    limit,
-    offset,
     where: condition,
     logging: false,
     include: [
