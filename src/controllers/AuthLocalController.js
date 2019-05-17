@@ -1,8 +1,11 @@
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 import { User } from '../queries';
 import * as helper from '../helpers';
 import * as validate from '../helpers/validation';
 import status from '../config/status';
 
+dotenv.config();
 /**
  * A class to handle user local authentication
  */
@@ -71,5 +74,57 @@ export default class AuthLocalController {
     } catch (error) {
       return res.status(500).send({ error });
     }
+  }
+
+  /**
+   * @param  {object} req
+   * @param  {object} res
+   * @return {object} return an object containing the confirmation message
+   */
+  static async sendEmail(req, res) {
+    const { email } = req.body;
+    const result = await User.findOne({ email }); // check if the email exist
+    if (Object.keys(result).length <= 0) {
+      return res.status(404).send({
+        message: 'email not found..'
+      });
+    }
+
+    await helper.sendMail(email); // send mail
+
+    return res.status(200).json({
+      message: 'Email sent, please check your email'
+    });
+  }
+
+  /**
+   * @param  {object} req
+   * @param  {object} res
+   * @return {object} return an object containing the confirmation message
+   */
+  static async updatePassword(req, res) {
+    const token = req.body.token || req.params.token;
+    const { passwordOne, passwordTwo } = req.body;
+    if (passwordOne !== passwordTwo) {
+      return res.status(status.BAD_REQUEST).send({ message: 'Passwords are not matching' });
+    }
+
+    if (!req.body.passwordOne || !req.body.passwordTwo) {
+      return res.status(status.BAD_REQUEST).send({ message: 'the password can not be empty' });
+    }
+
+    const isPasswordValid = validate.password(passwordOne, 'required');
+    const isPasswordValidTwo = validate.password(passwordTwo, 'required');
+
+    if (isPasswordValid.length || isPasswordValidTwo.length) {
+      return res.status(status.BAD_REQUEST).send({ message: isPasswordValid[0] });
+    }
+    const { email } = jwt.verify(token, process.env.SECRET_KEY);
+    const isUpdated = await User.update({ password: helper.password.hash(passwordOne) }, { email });
+    return isUpdated
+      ? res
+        .status(status.OK)
+        .send({ isUpdated, message: 'Success! your password has been changed.' })
+      : res.status(status.NOT_MODIFIED).send({ message: 'Password not updated' });
   }
 }

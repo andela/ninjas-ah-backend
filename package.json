@@ -21,6 +21,7 @@
     "@babel/preset-env": "^7.4.3",
     "@babel/register": "^7.4.0",
     "@hapi/joi": "^15.0.0",
+    "@sendgrid/mail": "^6.4.0",
     "D": "^1.0.0",
     "bcrypt": "^3.0.6",
     "body-parser": "^1.18.3",
