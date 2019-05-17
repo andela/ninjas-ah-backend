@@ -24,18 +24,15 @@ app.use(
 app.use('/api/v1/auth', router.post('/', AuthPassportController.loginOrSignup));
 
 const userFacebook = Factory.userFacebook.build();
+const userTwitter = Factory.userTwitter.build();
+const userGoogle = Factory.userGoogle.build();
 
-describe('Authentication controller', () => {
-  beforeEach(async () => {
+describe('Passport Authentication controller', () => {
+  before(async () => {
     try {
       await db.User.destroy({
-        where: {
-          [db.Op.or]: [
-            { accountProvider: 'facebook' },
-            { accountProvider: 'twitter' },
-            { accountProvider: 'google' }
-          ]
-        },
+        truncate: true,
+        cascade: true,
         logging: false
       });
     } catch (error) {
@@ -43,23 +40,102 @@ describe('Authentication controller', () => {
     }
   });
 
-  it('should login or register a user', (done) => {
-    const agent = chai.request.agent(app);
-    agent
+  it('should not create a user if some required fields are not provided', (done) => {
+    chai
+      .request(app)
+      .post('/api/v1/auth')
+      .send(Factory.userFacebook.build({ name: { familyName: null, givenName: null } }))
+      .end((err, res) => {
+        expect(res.body).to.include.keys('errors');
+        done();
+      });
+  });
+
+  it('should register a facebook user', (done) => {
+    chai
+      .request(app)
       .post('/api/v1/auth')
       .send(userFacebook)
-      .then((res) => {
+      .end((err, res) => {
         expect(res.status).to.equal(status.CREATED);
-        return agent
-          .post('/api/v1/auth')
-          .send(userFacebook)
-          .then((res) => {
-            expect(res.status).to.equal(status.OK);
-          })
-          .then(() => {
-            done();
-            agent.close();
-          });
+        done();
+      });
+  });
+
+  it('should login a facebook user', (done) => {
+    chai
+      .request(app)
+      .post('/api/v1/auth')
+      .send(userFacebook)
+      .end((err, res) => {
+        expect(res.status).to.equal(status.OK);
+        done();
+      });
+  });
+
+  it('should register a twitter user', (done) => {
+    chai
+      .request(app)
+      .post('/api/v1/auth')
+      .send(userTwitter)
+      .end((err, res) => {
+        expect(res.status).to.equal(status.CREATED);
+        done();
+      });
+  });
+
+  it('should login a twitter user', (done) => {
+    chai
+      .request(app)
+      .post('/api/v1/auth')
+      .send(userTwitter)
+      .end((err, res) => {
+        expect(res.status).to.equal(status.OK);
+        done();
+      });
+  });
+
+  it('should register a google user', (done) => {
+    chai
+      .request(app)
+      .post('/api/v1/auth')
+      .send(userGoogle)
+      .end((err, res) => {
+        expect(res.status).to.equal(status.CREATED);
+        done();
+      });
+  });
+
+  it('should login a google user', (done) => {
+    chai
+      .request(app)
+      .post('/api/v1/auth')
+      .send(userGoogle)
+      .end((err, res) => {
+        expect(res.status).to.equal(status.OK);
+        done();
+      });
+  });
+
+  it('should not register a user if the email is already used', (done) => {
+    chai
+      .request(app)
+      .post('/api/v1/auth')
+      .send({ ...userFacebook, provider: 'another' })
+      .end((err, res) => {
+        expect(res.status).to.equal(status.EXIST);
+        done();
+      });
+  });
+
+  it('should not register a user if username is already used', (done) => {
+    chai
+      .request(app)
+      .post('/api/v1/auth')
+      .send({ ...userTwitter, provider: 'another' })
+      .end((err, res) => {
+        expect(res.status).to.equal(status.EXIST);
+        done();
       });
   });
 
@@ -74,24 +150,13 @@ describe('Authentication controller', () => {
       });
   });
 
-  it('should not create a user if some required fields are not provided', (done) => {
-    chai
-      .request(app)
-      .post('/api/v1/auth')
-      .send(Factory.userFacebook.build({ name: { familyName: null, givenName: null } }))
-      .end((err, res) => {
-        expect(res.body).to.include.keys('error');
-        done();
-      });
-  });
-
   it('should not create a user if some inputs are not correct', (done) => {
     chai
       .request(app)
       .post('/api/v1/auth')
       .send(Factory.userFacebook.build({ provider: {} }))
       .end((err, res) => {
-        expect(res.body).to.include.keys('error');
+        expect(res.body).to.include.keys('errors');
         done();
       });
   });

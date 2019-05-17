@@ -9,10 +9,9 @@ const { expect } = chai;
 const user = Factory.user.build();
 delete user.id;
 
-describe('Create user query', () => {
+describe('Find or create user query', () => {
   before(async () => {
     try {
-      user.email = Factory.user.build().email;
       await db.User.destroy({
         truncate: true,
         cascade: true,
@@ -23,24 +22,21 @@ describe('Create user query', () => {
     }
   });
 
+  it('should throw an error message', async () => {
+    const newOrExistingUser = await User.findOrCreate();
+    expect(newOrExistingUser).to.include.keys('errors');
+  });
+
   it('should create a user account', async () => {
-    const newUser = await User.create(user);
-    expect(Object.keys(newUser).length).to.be.above(0);
+    const newOrExistingUser = await User.findOrCreate({ email: user.email }, user);
+    expect(Object.keys(newOrExistingUser[0]).length).to.be.above(0);
+    expect(newOrExistingUser[1]).to.be.equal(true);
   });
 
   it('should not create a user account', async () => {
-    const newUser = await User.create({});
-    expect(newUser).to.include.keys('errors');
-  });
-
-  it('should throw an error message', async () => {
-    const newUser = await User.create('~~~');
-    expect(newUser).to.include.keys('errors');
-  });
-
-  it('should throw an error message if there is no passed parameter', async () => {
-    const newUser = await User.create();
-    expect(newUser).to.include.keys('errors');
+    const newOrExistingUser = await User.findOrCreate({ email: user.email }, user);
+    expect(Object.keys(newOrExistingUser[0]).length).to.be.above(0);
+    expect(newOrExistingUser[1]).to.be.equal(false);
   });
 
   after(async () => {

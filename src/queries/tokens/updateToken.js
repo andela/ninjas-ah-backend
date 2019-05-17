@@ -14,7 +14,7 @@ export default async (token = '', userId = 0) => {
     return updatedToken[0] ? updatedToken[1][0].dataValues : {};
   } catch (error) {
     return {
-      errors: error.message
+      errors: error
     };
   }
 };

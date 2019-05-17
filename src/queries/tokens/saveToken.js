@@ -12,7 +12,7 @@ export default async (token = '', userId = 0) => {
     return newToken.dataValues;
   } catch (error) {
     return {
-      errors: error.message
+      errors: error
     };
   }
 };
