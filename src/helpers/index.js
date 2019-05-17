@@ -9,6 +9,7 @@ import checkCreateUpdateUserErrors from './checkCreateUpdateUserErrors';
 import parameters from './parameters';
 import clearInvalidToken from './clearInvalidToken';
 import generator from './generator';
+import * as filters from './searchArticleFilters';
 
 export {
   isUser,
@@ -21,5 +22,6 @@ export {
   parameters,
   clearInvalidToken,
   token,
-  generator
+  generator,
+  filters
 };

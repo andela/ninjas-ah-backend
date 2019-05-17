@@ -10,7 +10,8 @@ chai.should();
 chai.use(chaiHttp);
 let user = {};
 const theUser = Factory.user.build();
-describe('test locol passport authenticate', () => {
+delete theUser.id;
+describe('test local passport authenticate', () => {
   before(async () => {
     try {
       await db.User.destroy({ where: { email: theUser.email } });
@@ -28,7 +29,7 @@ describe('test locol passport authenticate', () => {
     const badId = '1000';
     const checkUser = await passport(
       {
-        id: badId,
+        id: badId
       },
       (err, user) => user
     );

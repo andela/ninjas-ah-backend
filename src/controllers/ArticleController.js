@@ -13,24 +13,16 @@ export default class ArticleController {
    * @returns {object} Object representing the response returned
    */
   static async saveArticle(req, res) {
-<<<<<<< HEAD
-=======
-    const title = req.body.title.trim();
-    const body = req.body.body.trim();
-    const description = req.body.description.trim();
-    const slug = helpers.generator.slug(title);
-    const readTime = helpers.generator.readtime(body);
->>>>>>> [feature #165412931] refactor search filters
     const { coverUrl, tagList } = req.body;
     const newArticle = await Article.create({
       userId: req.user.id || 0,
-      slug: generateSlug(req.body.title),
+      slug: helpers.generator.slug(req.body.title),
       title: req.body.title.trim(),
       description: req.body.description.trim(),
       body: req.body.body.trim(),
       coverUrl,
       tagList,
-      readTime: generateReadTime(req.body.body)
+      readTime: helpers.generator.readtime(req.body.body)
     });
     return res.status(status.CREATED).send({
       article: newArticle
@@ -46,28 +38,60 @@ export default class ArticleController {
     const {
       limit, offset, keyword, author, tag
     } = req.query;
-    const queries = {
-      page: parseInt(limit, 0) || 20, // if pagination is not speficied, fetch 20 recent articles
-      offset: offset || 0, // default offset value: 0
-      keyword, // search keyword
-      author, // article author
-      tag // tags of the article
-    };
-    const allArticle = await Article.getAll(
-      queries.page,
-      queries.offset,
-      queries.keyword,
-      queries.author,
-      queries.tag
-    );
-    if (allArticle.length >= 1 && !!allArticle) {
+    const articles = await Article.getAll(parseInt(limit, 0) || 20, offset || 0, {
+      keyword,
+      author,
+      tag
+    });
+    if (articles.length >= 1 && !!articles) {
       res.status(status.OK).send({
-        articles: allArticle,
-        articlesCount: allArticle.length
+        articles,
+        articlesCount: articles.length
       });
     } else {
       res.status(status.NOT_FOUND).send({ message: 'No articles found' });
     }
+  }
+
+  /**
+   * @param {object} req Request sent to the route
+   * @param {object} res Response from server
+   * @returns {object} Object representing the response returned
+   */
+  static async userArticleDrafts(req, res) {
+    const { limit, offset } = req.query;
+    const { id } = req.user;
+    const drafts = await Article.getUserArticles(parseInt(limit, 0) || 20, offset || 0, {
+      userId: id,
+      status: 'draft'
+    });
+    if (Object.keys(drafts).length > 0) {
+      res.status(status.OK).send({
+        articles: drafts,
+        articlesCount: drafts.length
+      });
+    } else {
+      res.status(status.NOT_FOUND).send({ message: 'No articles found' });
+    }
+  }
+
+  /**
+   * @param {object} req Request sent to the route
+   * @param {object} res Response from server
+   * @returns {object} Object representing the response returned
+   */
+  static async userArticlePublished(req, res) {
+    const { limit, offset } = req.query;
+    const published = await Article.getUserArticles(parseInt(limit, 0) || 20, offset || 0, {
+      userId: req.user.id,
+      status: 'published'
+    });
+    return published.length >= 1 && !!published
+      ? res.status(status.OK).send({
+        articles: published,
+        articlesCount: published.length
+      })
+      : res.status(status.NOT_FOUND).send({ message: 'No articles found' });
   }
 
   /**

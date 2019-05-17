@@ -1,5 +1,4 @@
 import db from '../../models';
-import * as filters from '../../helpers/searchArticleFilters';
 
 /**
  * Get specific article
@@ -9,21 +8,14 @@ import * as filters from '../../helpers/searchArticleFilters';
  * @returns {object} Object representing the response returned
  */
 export default async (limit, offset, condition = {}) => {
-  const where = filters.filterQueryBuilder(condition);
+  const { userId, status } = condition;
   let response = [];
   response = await db.Article.findAll({
     limit,
     offset,
-    where,
+    where: { userId, status },
     order: [['id', 'DESC']],
-    logging: false,
-    include: [
-      {
-        model: db.User,
-        as: 'author',
-        attributes: ['username', 'bio', 'image']
-      }
-    ]
+    logging: false
   });
   return response;
 };

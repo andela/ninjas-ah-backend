@@ -38,16 +38,6 @@ describe('user tests', () => {
           done();
         });
     });
-    it('chatch error', (done) => {
-      chai
-        .request(app)
-        .post('/api/v1/auth/signup')
-        .send('...')
-        .end((err, res) => {
-          res.status.should.be.equal(status.SERVER_ERROR);
-          done();
-        });
-    });
     it('Should fail to register new user if exists', (done) => {
       chai
         .request(app)
