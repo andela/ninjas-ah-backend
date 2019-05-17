@@ -4,7 +4,8 @@ import password from './password';
 import createArticle from './createArticle';
 import updateArticle from './updateArticle';
 import newUser from './newUser';
+import createTag from './createTag';
 
 export {
-  isUser, email, password, createArticle, updateArticle, newUser
+  isUser, email, password, createArticle, updateArticle, createTag, newUser
 };
