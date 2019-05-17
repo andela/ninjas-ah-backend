@@ -4,13 +4,18 @@
   "description": "A Social platform for the creative at heart",
   "main": "src/index.js",
   "scripts": {
-    "test": "NODE_ENV=test sequelize db:migrate:undo:all && NODE_ENV=test npm run db:migrate && NODE_ENV=test nyc mocha --require @babel/register --timeout 30000 src/tests/index.js",
+    "test": "NODE_ENV=test sequelize db:migrate:undo:all && npm run db:migrate:test && npm run db:migrate:seed:test && NODE_ENV=test nyc mocha --require @babel/register --timeout 30000 src/tests/index.js",
     "cover": "npm test && nyc report --reporter=text-lcov | coveralls",
     "coveralls": "cat coverage/lcov.info | coveralls",
     "start": "babel-node src/index.js",
     "dev": "nodemon src/index.js --exec babel-node --presets @babel/preset-env",
     "scss": "npm-sass templates/sass/style.scss  templates/css/style.css",
-    "db:migrate": "sequelize db:migrate"
+    "db:migrate": "sequelize db:migrate",
+    "db:migrate:seed": "sequelize db:seed:all",
+    "db:migrate:undo:all": "sequelize db:migrate:undo:all",
+    "db:migrate:test": "NODE_ENV=test sequelize db:migrate",
+    "db:migrate:seed:test": "NODE_ENV=test sequelize db:seed:all",
+    "db:migrate:undo:all:test": "NODE_ENV=test sequelize db:migrate:undo:all"
   },
   "author": "Andela Simulations Programme",
   "license": "MIT",
@@ -21,6 +26,7 @@
     "@babel/preset-env": "^7.4.3",
     "@babel/register": "^7.4.0",
     "@hapi/joi": "^15.0.0",
+    "@sendgrid/mail": "^6.4.0",
     "D": "^1.0.0",
     "bcrypt": "^3.0.6",
     "body-parser": "^1.18.3",

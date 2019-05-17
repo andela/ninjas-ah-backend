@@ -10,7 +10,7 @@ export default async (userId = 0) => {
     return deletedToken;
   } catch (error) {
     return {
-      errors: error.message
+      errors: error
     };
   }
 };

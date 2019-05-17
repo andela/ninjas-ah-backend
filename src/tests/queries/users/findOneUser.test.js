@@ -12,6 +12,11 @@ delete newUser.id;
 describe('Find user query', () => {
   before(async () => {
     try {
+      await db.User.destroy({
+        truncate: true,
+        cascade: true,
+        logging: false
+      });
       await db.User.create(newUser, { logging: false });
     } catch (error) {
       throw error;
