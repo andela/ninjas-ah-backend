@@ -6,7 +6,7 @@ export default async (req, res, next) => {
   const token = req.headers['access-token'] || req.params.token || null;
 
   if (!token) {
-    return res.status(status.UNAUTHORIZED).json({ errors: { token: ['Please, sign-in!'] } });
+    return res.status(status.UNAUTHORIZED).json({ errors: { authentication: 'Please, sign-in!' } });
   }
 
   const decodedToken = helper.token.decode(token);
@@ -14,13 +14,13 @@ export default async (req, res, next) => {
   if (decodedToken.errors || !decodedToken) {
     return res
       .status(status.UNAUTHORIZED)
-      .json({ errors: { token: ['Failed to authenticate token'] } });
+      .json({ errors: { token: 'Failed to authenticate token' } });
   }
 
   const isLoggedout = decodedToken.id ? await Token.findOne(decodedToken.id) : {};
 
   if (!isLoggedout.errors && Object.keys(isLoggedout).length) {
-    return res.status(status.UNAUTHORIZED).json({ errors: { token: ['This token is invalid'] } });
+    return res.status(status.UNAUTHORIZED).json({ errors: { token: 'This token is invalid' } });
   }
 
   req.user = decodedToken;

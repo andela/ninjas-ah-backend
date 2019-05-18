@@ -1,4 +1,5 @@
 import './userModel.test';
 import './articleModel.test';
 import './commentModel.test';
-import './tokenModel';
+import './tokenModel.test';
+import './articleBookmarkModel.test';
