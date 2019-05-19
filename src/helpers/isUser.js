@@ -1,4 +1,4 @@
-import { User } from '../../queries';
+import { User } from '../queries';
 
 /**
  * @param {object} input

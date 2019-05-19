@@ -1,4 +1,3 @@
-import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { User } from '../queries';
 import * as helper from '../helpers';
@@ -20,7 +19,7 @@ export default class AuthLocalController {
       firstName, lastName, username, email
     } = req.body;
     try {
-      const isUser = await validate.isUser({ email });
+      const isUser = await helper.isUser({ email });
       if (isUser) {
         return res.status(status.EXIST).send({ error: 'Sorry, this account already exists' });
       }
@@ -119,12 +118,13 @@ export default class AuthLocalController {
     if (isPasswordValid.length || isPasswordValidTwo.length) {
       return res.status(status.BAD_REQUEST).send({ message: isPasswordValid[0] });
     }
-    const { email } = jwt.verify(token, process.env.SECRET_KEY);
-    const isUpdated = await User.update({ password: helper.password.hash(passwordOne) }, { email });
-    return isUpdated
-      ? res
-        .status(status.OK)
-        .send({ isUpdated, message: 'Success! your password has been changed.' })
+    const { email } = helper.token.decode(token);
+    const updatedUser = await User.update(
+      { password: helper.password.hash(passwordOne) },
+      { email }
+    );
+    return Object.keys(updatedUser).length
+      ? res.status(status.OK).send({ message: 'Success! your password has been changed.' })
       : res.status(status.NOT_MODIFIED).send({ message: 'Password not updated' });
   }
 }
