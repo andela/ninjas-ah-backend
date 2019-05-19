@@ -205,4 +205,49 @@ describe('Bookmark article', () => {
         done();
       });
   });
+
+  // share an article
+  it('should share an article on facebook', (done) => {
+    chai
+      .request(app)
+      .get(`/api/v1/articles/${createdArticle.slug}/share/facebook`)
+      .set('access-token', accessToken)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(status.OK);
+        done();
+      });
+  });
+
+  it('should share an article on twitter', (done) => {
+    chai
+      .request(app)
+      .get(`/api/v1/articles/${createdArticle.slug}/share/twitter`)
+      .set('access-token', accessToken)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(status.OK);
+        done();
+      });
+  });
+
+  it('should share an article on linkedin', (done) => {
+    chai
+      .request(app)
+      .get(`/api/v1/articles/${createdArticle.slug}/share/linkedin`)
+      .set('access-token', accessToken)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(status.OK);
+        done();
+      });
+  });
+
+  it('should share an article on gmail', (done) => {
+    chai
+      .request(app)
+      .get(`/api/v1/articles/${createdArticle.slug}/share/gmail`)
+      .set('access-token', accessToken)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(status.OK);
+        done();
+      });
+  });
 });

@@ -4,6 +4,7 @@ import validateArticle from '../../middlewares/validation/articles';
 import asyncHandler from '../../middlewares/asyncHandler';
 import checkArticleBySlug from '../../middlewares/checkArticleBySlug';
 import verifyToken from '../../middlewares/verifyToken';
+import shareArticle from '../../middlewares/shareArticle';
 
 const articles = Router();
 // create article
@@ -62,5 +63,37 @@ articles.patch(
 );
 
 articles.delete('/articles/:slug/bookmark', verifyToken, ArticleController.removeBookmark);
+
+articles.get(
+  '/articles/:slug/share/facebook',
+  verifyToken,
+  checkArticleBySlug,
+  shareArticle,
+  ArticleController.share
+);
+
+articles.get(
+  '/articles/:slug/share/twitter',
+  verifyToken,
+  checkArticleBySlug,
+  shareArticle,
+  ArticleController.share
+);
+
+articles.get(
+  '/articles/:slug/share/linkedin',
+  verifyToken,
+  checkArticleBySlug,
+  shareArticle,
+  ArticleController.share
+);
+
+articles.get(
+  '/articles/:slug/share/gmail',
+  verifyToken,
+  checkArticleBySlug,
+  shareArticle,
+  ArticleController.share
+);
 
 export default articles;

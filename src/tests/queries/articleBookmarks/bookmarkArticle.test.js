@@ -42,7 +42,7 @@ describe('Bookmark article query', () => {
     expect(bookmarkedArticle).to.include.keys('errors');
   });
 
-  it('should not bookmark an article if the article ID is not provided', async () => {
+  it('should not bookmark an article if the article slug is not provided', async () => {
     const bookmarkedArticle = await Article.bookmark.add(createdUser.id);
     expect(bookmarkedArticle).to.include.keys('errors');
   });
