@@ -34,8 +34,9 @@ export default (input) => {
       .min(2)
       .max(100)
       .optional(),
-    permissions: Joi.array()
-      .items(Joi.string().min(1))
+    permissions: Joi.string()
+      .min(5)
+      .max(255)
       .optional()
   });
 

@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 
 dotenv.config();
+
 export default (sequelize, DataTypes) => {
   const User = sequelize.define(
     'User',
@@ -47,8 +48,8 @@ export default (sequelize, DataTypes) => {
         defaultValue: 'normal'
       },
       permissions: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
-        allowNull: true
+        type: DataTypes.STRING,
+        allowNull: false
       },
       accountProvider: {
         type: DataTypes.ENUM('facebook', 'twitter', 'google'),

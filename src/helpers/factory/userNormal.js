@@ -5,11 +5,13 @@ import Chance from 'chance';
 const chance = new Chance();
 
 export default Factory.define('user')
-  .attr('id', `${chance.integer({ min: 100, max: 100000 })}`)
-  .attr('name', { familyName: chance.last(), givenName: chance.first() })
-  .attr('emails', [{ value: chance.email({ domain: 'example.com' }) }])
-  .attr('photos', [{ value: 'image.jpg' }])
-  .attr('provider', 'facebook')
+  .sequence('id')
+  .attr('firstName', chance.first())
+  .attr('lastName', chance.last())
+  .attr('username', chance.word({ length: 5 }))
+  .attr('email', chance.email({ domain: 'example.com' }))
+  .attr('password', 'Baaa1234!')
+  .attr('role', 'normal')
   .attr(
     'permissions',
     JSON.stringify({

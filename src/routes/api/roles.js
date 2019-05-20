@@ -1,11 +1,15 @@
 import { Router } from 'express';
-import { getAllRoles, updateUserRole } from '../../controllers/roles';
-import verifyAdminUser from '../../middlewares/verifyAdmin';
+import UserController from '../../controllers/UserController';
+import verifyToken from '../../middlewares/verifyToken';
+import checkUpdateUserPermission from '../../middlewares/checkUpdateUserPermission';
 
 const rolesRouter = Router();
 
-rolesRouter.get('/', verifyAdminUser, getAllRoles);
-
-rolesRouter.put('/:username', verifyAdminUser, updateUserRole);
+rolesRouter.put(
+  '/:username',
+  verifyToken,
+  checkUpdateUserPermission,
+  UserController.updateUserRole
+);
 
 export default rolesRouter;

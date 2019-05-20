@@ -17,15 +17,7 @@ export default async (req, res, next) => {
       .json({ errors: { token: 'Failed to authenticate token' } });
   }
 
-<<<<<<< HEAD
   const isLoggedout = decodedToken.id ? await Token.findOne(decodedToken.id, token) : {};
-=======
-<<<<<<< HEAD
-  const isLoggedout = decodedToken.id ? await Token.findOne(decodedToken.id) : {};
-=======
-  const isLoggedout = await Token.findOne(decodedToken.id);
->>>>>>> [ft-165412939] add role base functionalities
->>>>>>> [ft-165412939] add role base functionalities
 
   if (!isLoggedout.errors && Object.keys(isLoggedout).length) {
     return res.status(status.UNAUTHORIZED).json({ errors: { token: 'This token is invalid' } });

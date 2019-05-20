@@ -1,6 +1,5 @@
 import status from '../config/status';
 import * as helpers from '../helpers';
-
 import { Article } from '../queries';
 /**
  * A class to handle actions performed on articles

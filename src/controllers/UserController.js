@@ -4,6 +4,7 @@ import * as helper from '../helpers';
 import status from '../config/status';
 
 dotenv.config();
+
 /**
  * A class to handle user local authentication
  */
@@ -45,5 +46,33 @@ export default class UserController {
       message: 'All authors fetched successfully',
       Authors: findAll
     });
+  }
+
+  /**
+   *  Make a user an admin
+   * @param {Object} req express request object
+   * @param {Object} res express response object
+   * @returns {*} success response
+   * @throws {*} error if database error
+   */
+  static async updateUserRole(req, res) {
+    const { role } = req.body;
+    const { username } = req.params;
+
+    const user = await User.findOne({ username });
+    if (!user.errors && !Object.keys(user).length) {
+      return res
+        .status(status.NOT_FOUND)
+        .json({ message: `This user with the username ${username} does not exist` });
+    }
+    if (user.role === role) {
+      return res.status(status.EXIST).send({ message: 'The user already has this role' });
+    }
+    if (!req.body.role) {
+      return res.status(status.BAD_REQUEST).send({ message: 'the role can not be empty' });
+    }
+    const updatedUser = await User.update({ role }, { username });
+    delete updatedUser.password;
+    return res.status(status.OK).json({ message: 'roles updated successfully', updatedUser });
   }
 }
