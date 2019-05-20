@@ -24,29 +24,22 @@ describe('Update user query', () => {
   });
 
   it('should update user information', async () => {
-    const isUpdated = await User.update({ password: '12345' }, { email: user.email });
-    expect(isUpdated).to.be.equal(true);
+    const updatedUser = await User.update({ password: '12345' }, { email: user.email });
+    expect(Object.keys(updatedUser).length).to.be.above(0);
   });
 
   it('should not update a user account', async () => {
-    const isUpdated = await User.update({ password: '12345' }, { email: 'aaa' });
-    expect(isUpdated).to.be.equal(false);
+    const updatedUser = await User.update({ password: '12345' }, { email: 'aaa' });
+    expect(Object.keys(updatedUser).length).to.be.equal(0);
   });
 
   it('should throw an error message', async () => {
-    const isUpdated = await User.update({}, '~~');
-    expect(isUpdated).to.include.keys('errors');
+    const updatedUser = await User.update({}, '~~');
+    expect(updatedUser).to.include.keys('errors');
   });
 
-  after(async () => {
-    try {
-      user.email = Factory.user.build().email;
-      await db.User.destroy({
-        where: { email: user.email },
-        logging: false
-      });
-    } catch (error) {
-      throw error;
-    }
+  it('should throw an error message if no parameter is passed', async () => {
+    const updatedUser = await User.update();
+    expect(Object.keys(updatedUser).length).to.be.equal(0);
   });
 });

@@ -11,5 +11,4 @@ export default Factory.define('user')
   .attr('username', chance.word({ length: 5 }))
   .attr('email', chance.email({ domain: 'example.com' }))
   .attr('password', 'Baaa1234!')
-  .attr('role', 'admin')
-  .attr('permissions', ['read', 'write', 'delete', 'edit']);
+  .attr('role', 'admin');

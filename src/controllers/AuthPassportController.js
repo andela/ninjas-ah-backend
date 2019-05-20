@@ -38,26 +38,6 @@ export default class AuthPassportController {
   }
 
   /**
-   * @param {object} err
-   * @returns {object} an object containing descriptive error messages
-   */
-  static checkErrors(err = {}) {
-    const errors = {};
-    if (err.name === 'SequelizeUniqueConstraintError') {
-      if (err.fields.email) {
-        errors.email = 'email already used';
-      }
-
-      if (err.fields.username) {
-        errors.username = 'username already used';
-      }
-
-      return { errors, code: status.EXIST };
-    }
-    return { errors: err.message, code: status.SERVER_ERROR };
-  }
-
-  /**
    * @param {object} req
    * @param {object} res
    * @returns {object} an object containing user information
@@ -73,7 +53,7 @@ export default class AuthPassportController {
     );
 
     if (newOrExistingUser.errors) {
-      const errors = AuthPassportController.checkErrors(newOrExistingUser.errors);
+      const errors = helper.checkCreateUpdateUserErrors(newOrExistingUser.errors);
       const statusCode = errors.code;
       delete errors.code;
       return res.status(statusCode).json(errors);
