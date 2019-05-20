@@ -13,5 +13,6 @@ export default async (req, res, next) => {
       error: 'No article found'
     });
   }
+  req.article = response.get();
   next();
 };

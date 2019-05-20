@@ -154,4 +154,16 @@ export default class ArticleController {
       message: 'bookmark successfuly removed'
     });
   }
+
+  /**
+   * @param {object} req Request sent to the route
+   * @param {object} res Response from server
+   * @returns {object} Object representing the response returned
+   */
+  static async share(req, res) {
+    return res.status(status.OK).json({
+      message: 'Thank you for sharing!',
+      article: req.article
+    });
+  }
 }
