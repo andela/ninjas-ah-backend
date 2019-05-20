@@ -1,5 +1,5 @@
 import status from '../config/status';
-import { User, Token } from '../queries';
+import { User } from '../queries';
 import * as helper from '../helpers';
 
 /**
@@ -58,9 +58,9 @@ export default class AuthPassportController {
       delete errors.code;
       return res.status(statusCode).json(errors);
     }
-
-    await AuthPassportController.clearInvalidToken(newOrExistingUser[0].id);
+    await helper.clearInvalidToken(newOrExistingUser[0].id);
     delete newOrExistingUser[0].password;
+
     return res.status(newOrExistingUser[1] ? status.CREATED : status.OK).json({
       user: newOrExistingUser[0],
       token: helper.token.generate({
@@ -69,14 +69,5 @@ export default class AuthPassportController {
         permissions: newOrExistingUser[0].permissions
       })
     });
-  }
-
-  /**
-   * @param {int} userId
-   * @return {object|boolean} true if every invalid token was destroyed or an error object
-   */
-  static async clearInvalidToken(userId) {
-    const destroyToken = typeof userId === 'number' ? await Token.destroy(userId) : {};
-    return destroyToken.errors ? destroyToken.errors.message : {};
   }
 }

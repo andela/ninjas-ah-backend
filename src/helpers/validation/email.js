@@ -26,7 +26,7 @@ export default (input, required = '') => {
     return [];
   }
 
-  errors = [...['Please provide a valid email address']];
+  errors = [...errors, 'Please provide a valid email address'];
 
   return errors;
 };

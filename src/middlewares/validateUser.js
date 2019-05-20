@@ -10,11 +10,7 @@ export default async (req, res, next) => {
 
   if (error && typeof error === 'object' && Object.keys(error).length) {
     error.details.forEach((err) => {
-      if (errors[err.path[0]] && errors[err.path[0]].length) {
-        errors[err.path[0]] = [...[err.message]];
-      } else {
-        errors[err.path[0]] = [err.message];
-      }
+      errors[err.path[0]] = err.message;
     });
   }
 
@@ -22,15 +18,11 @@ export default async (req, res, next) => {
   const checkPassword = req.body.password ? validate.password(req.body.password, 'required') : [];
 
   if (checkEmail.length) {
-    errors.email = checkEmail;
+    errors.email = errors.email || checkEmail[0];
   }
   if (checkPassword.length) {
-    errors.password = checkPassword;
+    errors.password = errors.password || checkPassword[0];
   }
 
-  if (Object.keys(errors).length) {
-    return res.status(status.BAD_REQUEST).json({ errors });
-  }
-
-  next();
+  return Object.keys(errors).length ? res.status(status.BAD_REQUEST).json({ errors }) : next();
 };
