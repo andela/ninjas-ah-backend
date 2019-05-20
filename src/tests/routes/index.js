@@ -5,3 +5,4 @@ import './commentlike.test';
 import './articleLike.test';
 import './articleDislike.test';
 import './report.test';
+import './commentEdit.test';

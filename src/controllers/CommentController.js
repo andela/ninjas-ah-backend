@@ -3,7 +3,7 @@ import status from '../config/status';
 import create from '../queries/comments/createComment';
 import getAll from '../queries/comments/getAllComments';
 import deleteElement from '../queries/comments/deleteComment';
-import db from '../models';
+// import db from '../models';
 /**
  * comment controller class
  */
@@ -47,24 +47,6 @@ export default class CommentController {
     return res.status(status.OK).send({
       message: 'Comments fetched successfully',
       comment: response
-    });
-  }
-
-  /**
-   * Edit one comment
-   * @param { object } req the request.
-   * @param { object } res The response.
-   * @returns { object } the return object.
-   */
-  static async edit(req, res) {
-    await db.Comment.update(
-      { body: req.body.body },
-      {
-        where: { id: req.params.id }
-      }
-    );
-    return res.status(status.OK).send({
-      message: 'Comment edited successfully'
     });
   }
 
