@@ -4,31 +4,25 @@ import { generateReadTime, generateSlug } from '../helpers';
 import { Article } from '../queries';
 
 /**
- * Author: Gilles Kagarama
- * @returns {object} Object representing the response returned
+ * A class to handle actions performed on articles
  */
-class ArticleController {
+export default class ArticleController {
   /**
    * @param {object} req Request sent to the route
    * @param {object} res Response from server
    * @returns {object} Object representing the response returned
    */
   static async saveArticle(req, res) {
-    const title = req.body.title.trim();
-    const body = req.body.body.trim();
-    const description = req.body.description.trim();
-    const slug = generateSlug(title);
-    const readTime = generateReadTime(body);
     const { coverUrl, tagList } = req.body;
     const newArticle = await Article.create({
-      userId: req.body.userId || 1,
-      slug,
-      title,
-      description,
-      body,
+      userId: req.body.userId || req.user.id,
+      slug: generateSlug(req.body.title),
+      title: req.body.title.trim(),
+      description: req.body.description.trim(),
+      body: req.body.body.trim(),
       coverUrl,
       tagList,
-      readTime
+      readTime: generateReadTime(req.body.body)
     });
     return res.status(status.CREATED).send({
       article: newArticle
@@ -91,7 +85,85 @@ class ArticleController {
     await Article.update(updateArticle, req.params.slug);
     return res.status(status.OK).send({ message });
   }
-}
 
-// validation
-export default ArticleController;
+  /**
+   * @param {object} req Request sent to the route
+   * @param {object} res Response from server
+   * @returns {object} Object representing the response returned
+   */
+  static async bookmark(req, res) {
+    const bookmarkedArticle = await Article.bookmark.add(req.user.id, req.params.slug);
+    const errors = bookmarkedArticle.errors || null;
+    let errorMessage = 'Oups, something went wrong';
+    let errorStatuscode = status.SERVER_ERROR;
+
+    if (errors && errors.name === 'SequelizeUniqueConstraintError') {
+      errorStatuscode = status.EXIST;
+      errorMessage = { bookmark: 'sorry, you have already bookmarked this article' };
+    }
+    if (errors && errors.name === 'SequelizeForeignKeyConstraintError') {
+      errorStatuscode = status.UNAUTHORIZED;
+      errorMessage = { account: 'sorry, your account is not valid' };
+    }
+
+    return errors
+      ? res.status(errorStatuscode).json({ errors: errorMessage })
+      : res.status(status.CREATED).json({
+        message: 'article successfuly bookmarked',
+        bookmark: bookmarkedArticle
+      });
+  }
+
+  /**
+   * @param {object} req Request sent to the route
+   * @param {object} res Response from server
+   * @returns {object} Object representing the response returned
+   */
+  static async getBookmarks(req, res) {
+    const bookmarkedArticles = await Article.bookmark.getAll(req.user.id || 0);
+    const errors = bookmarkedArticles.errors || null;
+
+    return errors
+      ? res.status(status.SERVER_ERROR).json({ errors: { bookmark: errors.message } })
+      : res.status(status.OK).json({ bookmarks: bookmarkedArticles });
+  }
+
+  /**
+   * @param {object} req Request sent to the route
+   * @param {object} res Response from server
+   * @returns {object} Object representing the response returned
+   */
+  static async removeBookmark(req, res) {
+    const userId = req.user.id || 0;
+    const { slug } = req.params;
+
+    const removedBookmark = await Article.bookmark.remove(userId, slug);
+
+    if (removedBookmark.errors) {
+      return res.status(status.SERVER_ERROR).json({
+        errors: { bookmark: removedBookmark.errors.message }
+      });
+    }
+
+    if (!removedBookmark) {
+      return res.status(status.BAD_REQUEST).json({
+        errors: { bookmark: 'bookmark not removed' }
+      });
+    }
+    return res.status(status.OK).json({
+      message: 'bookmark successfuly removed'
+    });
+  }
+
+  /**
+   * @param {object} req Request sent to the route
+   * @param {object} res Response from server
+   * @returns {object} Object representing the response returned
+   */
+  static async share(req, res) {
+    return res.status(status.OK).json({
+      message: 'Thank you for sharing!',
+      article: req.article
+    });
+  }
+}

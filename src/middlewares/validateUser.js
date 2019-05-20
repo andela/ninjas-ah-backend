@@ -2,8 +2,11 @@ import * as validate from '../helpers/validation';
 import status from '../config/status';
 
 export default async (req, res, next) => {
+  if (!Object.keys(req.body).length) {
+    return res.status(status.BAD_REQUEST).json({ errors: { body: 'should not be empty' } });
+  }
   const errors = {};
-  const { error } = validate.newUser(req.body);
+  const { error } = req.method === 'POST' ? validate.newUser(req.body) : validate.updateUser(req.body);
 
   if (error && typeof error === 'object' && Object.keys(error).length) {
     error.details.forEach((err) => {
@@ -15,16 +18,14 @@ export default async (req, res, next) => {
     });
   }
 
-  if (errors && !Object.keys(errors).length) {
-    const checkEmail = validate.email(req.body.email, 'required');
-    const checkPassword = validate.password(req.body.password, 'required');
+  const checkEmail = req.body.email ? validate.email(req.body.email, 'required') : [];
+  const checkPassword = req.body.password ? validate.password(req.body.password, 'required') : [];
 
-    if (checkEmail.length) {
-      errors.email = checkEmail;
-    }
-    if (checkPassword.length) {
-      errors.password = checkPassword;
-    }
+  if (checkEmail.length) {
+    errors.email = checkEmail;
+  }
+  if (checkPassword.length) {
+    errors.password = checkPassword;
   }
 
   if (Object.keys(errors).length) {

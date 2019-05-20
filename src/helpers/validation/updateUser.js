@@ -5,25 +5,31 @@ export default (input) => {
     firstName: Joi.string()
       .min(2)
       .max(45)
-      .required()
+      .optional()
       .label('First name'),
     lastName: Joi.string()
       .min(2)
       .max(45)
-      .required()
+      .optional()
       .label('Last name'),
     username: Joi.string()
       .min(4)
       .max(45)
-      .required(),
+      .optional(),
     email: Joi.string()
       .min(5)
       .max(100)
-      .required(),
+      .optional(),
     password: Joi.string()
       .min(8)
       .max(100)
-      .required(),
+      .optional(),
+    bio: Joi.string()
+      .min(5)
+      .optional(),
+    image: Joi.string()
+      .min(5)
+      .optional(),
     role: Joi.string()
       .min(2)
       .max(100)

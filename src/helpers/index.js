@@ -6,8 +6,11 @@ import * as password from './password';
 import sendMail from './sendMail';
 import generateReadTime from './generateReadTime';
 import generateSlug from './generateSlug';
+import isUser from './isUser';
+import checkCreateUpdateUserErrors from './checkCreateUpdateUserErrors';
 
 export {
+  isUser,
   factory,
   validation,
   generateReadTime,
@@ -15,5 +18,6 @@ export {
   password,
   token,
   sendgridMailTemplate,
-  sendMail
+  sendMail,
+  checkCreateUpdateUserErrors
 };
