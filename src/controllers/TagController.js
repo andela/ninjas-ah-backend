@@ -3,8 +3,7 @@ import status from '../config/status';
 import { Tag } from '../queries';
 
 /**
- * Author: Gilles Kagarama
- * @returns {object} Object representing the response returned
+ * A class to handle actions performed on article tags
  */
 class TagsController {
   /**

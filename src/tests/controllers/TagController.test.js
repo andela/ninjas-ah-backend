@@ -2,6 +2,7 @@
 import chai from 'chai';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import chaiHttp from 'chai-http';
+import jwt from 'jsonwebtoken';
 import app from '../../app';
 import status from '../../config/status';
 import db from '../../models';
@@ -11,26 +12,35 @@ const { expect } = chai;
 chai.should();
 
 const article = Factory.article.build();
+const user = Factory.user.build();
 chai.use(chaiHttp);
-const token = 'token-string';
-let findArticle = '';
+let accessToken = '';
+let createdUser = '';
+delete user.id;
+user.email = 'rosie@haven.com';
+user.username = 'rosie123';
 describe('TAGS', () => {
   let response = '';
   before(async () => {
-    const findUser = await db.User.findAll({ limit: 1, logging: false });
+    createdUser = (await db.User.create(user, { logging: false })).dataValues;
+    article.userId = createdUser.id;
+    accessToken = jwt.sign(
+      { id: createdUser.id, role: createdUser.role, permissions: createdUser.permissions },
+      process.env.SECRET_KEY,
+      { expiresIn: '1d' }
+    );
     delete article.id;
     delete article.readTime;
     article.slug = 'lorem-ipsum-foo-hasli234rhjav';
-    article.userId = findUser[0].dataValues.id;
+    article.userId = createdUser.id;
     response = await db.Article.create(article, { logging: false });
-    findArticle = await db.Article.findAll({ limit: 1, logging: false });
   });
   it('should create a tag', (done) => {
     chai
       .request(app)
       .put(`/api/v1/articles/${response.dataValues.slug}/tags`)
       .send({ tagList: ['Holla'] })
-      .set('Authorization', `Bearer ${token}`)
+      .set('access-token', accessToken)
       .end((err, res) => {
         expect(res).to.have.status(status.CREATED);
         res.body.should.be.an('object');
@@ -43,7 +53,7 @@ describe('TAGS', () => {
       .request(app)
       .put(`/api/v1/articles/${response.dataValues.slug}/tags`)
       .send({ tagList: ['Morning', 'Bonjour', 'Bonjourno', 'Dias', 'Hakuna Matata', 'Energy'] })
-      .set('Authorization', `Bearer ${token}`)
+      .set('access-token', accessToken)
       .end((err, res) => {
         expect(res).to.have.status(status.BAD_REQUEST);
         res.body.should.be.an('object');
@@ -56,7 +66,7 @@ describe('TAGS', () => {
       .request(app)
       .delete(`/api/v1/articles/${response.dataValues.slug}/tags`)
       .send({ tagList: ['Holla'] })
-      .set('Authorization', `Bearer ${token}`)
+      .set('access-token', accessToken)
       .end((err, res) => {
         expect(res).to.have.status(status.OK);
         res.body.should.be.an('object');
@@ -68,7 +78,7 @@ describe('TAGS', () => {
     chai
       .request(app)
       .get('/api/v1/tags')
-      .set('Authorization', `Bearer ${token}`)
+      .set('access-token', accessToken)
       .end((err, res) => {
         expect(res).to.have.status(status.OK);
         res.body.should.be.an('object');
@@ -82,7 +92,7 @@ describe('TAGS', () => {
       .request(app)
       .put(`/api/v1/articles/${response.dataValues.slug}/tags`)
       .send({ tagList })
-      .set('Authorization', `Bearer ${token}`)
+      .set('access-token', accessToken)
       .end((err, res) => {
         expect(res).to.have.status(status.BAD_REQUEST);
         res.body.should.be.an('object');
@@ -95,7 +105,7 @@ describe('TAGS', () => {
       .request(app)
       .put(`/api/v1/articles/${response.dataValues.slug}/tags`)
       .send()
-      .set('Authorization', `Bearer ${token}`)
+      .set('access-token', accessToken)
       .end((err, res) => {
         expect(res).to.have.status(status.BAD_REQUEST);
         res.body.should.be.an('object');
