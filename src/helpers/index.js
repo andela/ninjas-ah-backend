@@ -8,6 +8,8 @@ import generateReadTime from './generateReadTime';
 import generateSlug from './generateSlug';
 import isUser from './isUser';
 import checkCreateUpdateUserErrors from './checkCreateUpdateUserErrors';
+import parameters from './parameters';
+import isActiveUser from './isActiveUser';
 
 export {
   isUser,
@@ -19,5 +21,7 @@ export {
   token,
   sendgridMailTemplate,
   sendMail,
-  checkCreateUpdateUserErrors
+  checkCreateUpdateUserErrors,
+  parameters,
+  isActiveUser
 };

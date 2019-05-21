@@ -26,7 +26,8 @@ export default (input) => {
       .required(),
     role: Joi.string()
       .min(2)
-      .max(100)
+      .max(10)
+      .regex(/^[a-zA-Z]{2,10}$/)
       .optional(),
     permissions: Joi.array()
       .items(Joi.string().min(1))

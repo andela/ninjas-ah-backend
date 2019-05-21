@@ -168,4 +168,25 @@ describe('Users routes', () => {
         done();
       });
   });
+  it('should fetch one user by id', (done) => {
+    chai
+      .request(app)
+      .get(`/api/v1/users/${createdUserTwo.id}`)
+      .set('access-token', accessTokenAdmin)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(status.OK);
+        done();
+      });
+  });
+  it('should not fetch one user by if id is wrong', (done) => {
+    const id = 0;
+    chai
+      .request(app)
+      .get(`/api/v1/users/${id}`)
+      .set('access-token', accessTokenAdmin)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(status.NOT_FOUND);
+        done();
+      });
+  });
 });

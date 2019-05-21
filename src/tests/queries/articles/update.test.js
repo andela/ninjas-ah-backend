@@ -34,4 +34,10 @@ describe('Query to edit an article', () => {
     response.should.be.an('array');
     response[0].should.equal(1);
   });
+  it('should fail to edit article', async () => {
+    // find article to update
+    const response = await Article.update();
+    response.should.be.an('array');
+    response[0].should.equal(0);
+  });
 });

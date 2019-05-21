@@ -50,6 +50,11 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull: true
       },
+      isActive: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+      },
       accountProvider: {
         type: DataTypes.ENUM('facebook', 'twitter', 'google'),
         allowNull: true
