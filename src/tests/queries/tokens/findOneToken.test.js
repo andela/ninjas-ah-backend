@@ -28,13 +28,13 @@ describe('Update token query', () => {
   });
 
   it('should find a token', async () => {
-    const foundToken = await Token.findOne(createdUser.id);
+    const foundToken = await Token.findOne(createdUser.id, token);
     expect(Object.keys(foundToken).length).to.be.above(0);
     expect(foundToken).to.not.include.keys('errors');
   });
 
   it('should not find a token if the token or the user ID is not provided', async () => {
-    const foundToken = await Token.findOne(0);
+    const foundToken = await Token.findOne(0, token);
     expect(Object.keys(foundToken).length).to.be.equal(0);
     expect(foundToken).to.not.include.keys('errors');
   });

@@ -58,7 +58,6 @@ export default class AuthPassportController {
       delete errors.code;
       return res.status(statusCode).json(errors);
     }
-    await helper.clearInvalidToken(newOrExistingUser[0].id);
     delete newOrExistingUser[0].password;
 
     return res.status(newOrExistingUser[1] ? status.CREATED : status.OK).json({

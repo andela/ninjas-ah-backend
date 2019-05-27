@@ -1,9 +1,9 @@
 import { Token } from '../queries';
 /**
  * @param {int} userId
- * @return {object|boolean} true if every invalid token was destroyed or an error object
+ * @return {integer} the number of destroyed tokens
  */
 export default async (userId) => {
-  const destroyToken = typeof userId === 'number' ? await Token.destroy(userId) : {};
-  return destroyToken.errors ? destroyToken.errors.message : {};
+  const destroyedToken = typeof userId === 'number' ? await Token.destroy(userId) : 0;
+  return !destroyedToken.errors ? destroyedToken : null;
 };
