@@ -21,9 +21,6 @@ export default async (to, action, data) => {
           <div style="background:#266cef;padding:10px;color:#ffffff;text-align:center;font-size:34px">
           Authors Haven - Ninjas
           </div>
-          <div style="padding:0;">
-          <img src="https://res.cloudinary.com/ninjas/image/upload/v1558620216/iplil7qwx3npbkrqur3e.jpg" style="width:100%;max-width:300px;margin:0 auto;height:auto">
-          </div>
           <div style="padding:20px;text-align:left;">
           ${notifier.html}
           </div>

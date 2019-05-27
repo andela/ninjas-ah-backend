@@ -45,7 +45,11 @@ export default class AuthLocalController {
           message: 'The credentials you provided are incorrect'
         });
       }
-      const payload = { id: checkUser.id, role: checkUser.role };
+      const payload = {
+        id: checkUser.id,
+        role: checkUser.role,
+        permissions: checkUser.permissions
+      };
       const token = helper.token.generate(payload);
       delete checkUser.password;
       return res.status(status.OK).json({

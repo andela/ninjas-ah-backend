@@ -40,11 +40,11 @@ function onError(error) {
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
-      process.stdout.write(`${bind} requires elevated privileges`);
+      process.stdout.write(`${bind} requires elevated privileges\n`);
       process.exit(1);
       break;
     case 'EADDRINUSE':
-      process.stdout.write(`${bind} is already in use`);
+      process.stdout.write(`${bind} is already in use\n`);
       process.exit(1);
       break;
     default:
@@ -56,6 +56,6 @@ function onError(error) {
  * Listen on provided port, on all network interfaces.
  */
 app.server.listen(port, () => {
-  process.stdout.write(`Server is running on port: ${port}`);
+  process.stdout.write(`Server is running on port: ${port}\n`);
 });
 app.server.on('error', onError);

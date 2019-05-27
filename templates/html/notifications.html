@@ -32,6 +32,14 @@
         <div class="card">
           <hr>
         </div>
+        <div id="preference" class="card light">
+          <label>Preference</label>
+          <select name="preference" class="shadow-4 radius-2 medium-padding card medium-text">
+            <option value=""></option>
+            <option value="inApp">In App</option>
+            <option value="email">email</option>
+          </select>
+        </div>
         <fieldset class="card light">
           <legend class="primary text-white large-h-padding large-text">
             Configuration
@@ -121,6 +129,14 @@
       }
     }
 
+    async function updateNotifications(URL, data) {
+      let result = await sendData('PUT', URL, data, 'json', localStorage.token);
+
+      if (result) {
+        document.querySelector('#response').innerHTML = JSON.stringify(result, null, 4)
+      }
+    }
+
     async function deleteNotifications(URL) {
       let result = await sendData('DELETE', URL, {}, 'json', localStorage.token);
 
@@ -166,6 +182,10 @@
           }
         };
 
+        const data = {
+          preference: document.querySelector('select[name="preference"]').value
+        }
+
         switch (verb) {
           case 'GET':
             await getNotifications(URL)
@@ -174,7 +194,12 @@
             await setNotificationConfig(URL, { config })
             break;
           case 'PUT':
-            await updateNotificationConfig(URL, { config })
+            if (URL.search(/\/configuration/g) >= 0) {
+              await updateNotificationConfig(URL, { config })
+            } else {
+              Object.keys(data).forEach(key => data[key] || delete data[key])
+              await updateNotifications(URL, data)
+            }
             break;
           case 'DELETE':
             await deleteNotifications(URL)

@@ -5,5 +5,5 @@ const chance = new Chance();
 
 export default Factory.define('comment')
   .sequence('id')
-  .attr('title', chance.paragraph({ sentences: 1 }))
+  .attr('title', chance.word({ length: 5 }))
   .attr('body', chance.paragraph({ sentences: 2 }));

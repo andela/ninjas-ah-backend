@@ -37,13 +37,16 @@ describe('Remove notification query', () => {
   });
 
   it('should remove a notification', async () => {
-    const removedNotification = await Notification.remove(createdNotificationOne.id);
+    const removedNotification = await Notification.remove(
+      createdNotificationOne.id,
+      createdUser.id
+    );
     expect(removedNotification).to.be.above(0);
     expect(removedNotification).to.not.include.keys('errors');
   });
 
   it('should not remove a notification if the notification ID is not found', async () => {
-    const removedNotification = await Notification.remove(0);
+    const removedNotification = await Notification.remove(0, createdUser.id);
     expect(removedNotification).to.be.equal(0);
   });
 
@@ -55,15 +58,6 @@ describe('Remove notification query', () => {
     expect(removedNotification).to.be.equal(0);
   });
 
-  it('should remove a notification', async () => {
-    const removedNotification = await Notification.remove(
-      createdNotificationTwo.id,
-      createdUser.id
-    );
-    expect(removedNotification).to.be.above(0);
-    expect(removedNotification).to.not.include.keys('errors');
-  });
-
   it('should not remove a notification if the parameter passed is invalid', async () => {
     const removedNotification = await Notification.remove({});
     expect(removedNotification).to.include.keys('errors');
@@ -71,6 +65,6 @@ describe('Remove notification query', () => {
 
   it('should not remove a notification if there is no passed parameter', async () => {
     const removedNotification = await Notification.remove();
-    expect(removedNotification).to.be.equal(0);
+    expect(removedNotification).to.include.keys('errors');
   });
 });

@@ -22,6 +22,15 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: false
       },
+      preference: {
+        type: DataTypes.ENUM('inApp', 'email'),
+        allowNull: true,
+        defaultValue: 'inApp'
+      },
+      url: {
+        type: DataTypes.STRING,
+        allowNull: true
+      },
       status: {
         type: DataTypes.ENUM('seen', 'unseen'),
         allowNull: false,
