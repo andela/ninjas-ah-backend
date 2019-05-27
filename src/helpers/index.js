@@ -11,6 +11,7 @@ import clearInvalidToken from './clearInvalidToken';
 import generator from './generator';
 import * as filters from './searchArticleFilters';
 import upload from './upload';
+import * as notification from './notifications';
 
 export {
   isUser,
@@ -25,5 +26,6 @@ export {
   token,
   generator,
   filters,
-  upload
+  upload,
+  notification
 };

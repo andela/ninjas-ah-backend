@@ -1,3 +1,5 @@
+import eventEmitter from '../helpers/eventEmitter';
+
 export default (sequelize, DataTypes) => {
   const Comment = sequelize.define(
     'Comment',
@@ -45,7 +47,13 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.DATE
       }
     },
-    {}
+    {
+      hooks: {
+        afterCreate: async (comment) => {
+          eventEmitter.emit('commentArticle', comment.get());
+        }
+      }
+    }
   );
   Comment.associate = (models) => {
     Comment.belongsTo(models.Article, { foreignKey: 'articleSlug' });
