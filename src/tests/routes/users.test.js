@@ -101,7 +101,7 @@ describe('Users routes', () => {
     chai
       .request(app)
       .put(`/api/v1/users/${createdUserTwo.id}`)
-      .send({ email: 'aaa@bbb.com' })
+      .send({ email: 'aaa@bbb.com', role: 'admin' })
       .set('access-token', accessTokenNormalUser)
       .end((err, res) => {
         expect(res.status).to.be.equal(status.UNAUTHORIZED);

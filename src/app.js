@@ -1,3 +1,5 @@
+import http from 'http';
+import path from 'path';
 import createError from 'http-errors';
 import swaggerUi from 'swagger-ui-express';
 import express from 'express';
@@ -6,10 +8,13 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import session from 'express-session';
 import passport from 'passport';
+import socketIo from 'socket.io';
 import routes from './routes';
 import * as swaggerDocument from '../swagger.json';
 
 const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
 
 dotenv.config();
 
@@ -24,7 +29,6 @@ app.use(
 
 // swagger route
 
-
 app.use(logger('dev'));
 
 app.use(express.json());
@@ -32,6 +36,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
+
+app.use(express.static(path.join(__dirname, '../templates')));
+app.use('/mockups', express.static(path.join(__dirname, '../templates/html')));
 
 app.use('/api/v1/', routes);
 app.use('/swagger-api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
@@ -56,4 +68,5 @@ app.use((err, req, res, next) => {
   next();
 });
 
+app.server = server;
 export default app;

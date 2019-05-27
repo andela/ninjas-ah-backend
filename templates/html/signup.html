@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="/socket.io/socket.io.js"></script>
+  <link rel="stylesheet" href="../css/style.css">
+  <title>Signup</title>
+</head>
+
+<body>
+  <div class="container shadow-2 radius-3 large-padding">
+    <div class="center">
+      <div id="message"></div>
+      <h1 class="primary text-white radius-2 uppercase large-padding center-align">
+        SIGNUP
+      </h1>
+      <br>
+      <input type="text" name="firstName" id="firstName" class="shadow-4 radius-2 medium-padding card"
+        placeholder="enter your first name">
+      <input type="text" name="lastName" id="lastName" class="shadow-4 radius-2 medium-padding card"
+        placeholder="enter your last name">
+      <input type="email" name="email" id="email" class="shadow-4 radius-2 medium-padding card"
+        placeholder="enter your email">
+      <input type="password" name="password" id="password" class="shadow-4 radius-2 medium-padding card"
+        placeholder="enter your password">
+      <div class="center-align">
+        <button type="button" id="send"
+          class="radius-2 primary text-white button center-align large-h-padding large-text">
+          Signup
+        </button>
+        <hr>
+        OR
+        <hr>
+        <a href="login.html" class="radius-2 primary text-white center-align large-h-padding large-text">
+          Login
+        </a>
+      </div>
+    </div>
+  </div>
+  <script>
+    async function signup(formData) {
+      const URL = `${HOST}/api/v1/auth/signup`;
+      const result = await sendData('POST', URL, formData, 'json');
+
+      if (result) {
+        console.log(result);
+
+        if (result.error) {
+          document.querySelector('#message').innerHTML = `
+          <div class="danger text-white radius-2 uppercase large-padding center-align">
+            ${result.error}
+          </div>`;
+        } else {
+          document.querySelector('#message').innerHTML = `
+          <div class="success text-white radius-2 uppercase large-padding center-align">
+            Welcome ${result.user.firstName} ${result.user.lastName}, check your email to activate your account!
+          </div>`;
+        }
+      }
+    }
+
+    window.document.addEventListener('DOMContentLoaded', () => {
+      document.querySelector('#send').onclick = (e) => {
+        const firstName = document.querySelector("#firstName").value;
+        const lastName = document.querySelector("#lastName").value;
+        const email = document.querySelector("#email").value;
+        const password = document.querySelector("#password").value;
+        if (firstName && lastName && email && password) {
+          signup({
+            firstName,
+            lastName,
+            email,
+            password
+          });
+        }
+      }
+    });
+  </script>
+  <script src="../js/index.js"></script>
+</body>
+
+</html>

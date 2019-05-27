@@ -9,6 +9,7 @@ import generateSlug from './generateSlug';
 import isUser from './isUser';
 import checkCreateUpdateUserErrors from './checkCreateUpdateUserErrors';
 import parameters from './parameters';
+import clearInvalidToken from './clearInvalidToken';
 
 export {
   isUser,
@@ -21,5 +22,6 @@ export {
   sendgridMailTemplate,
   sendMail,
   checkCreateUpdateUserErrors,
-  parameters
+  parameters,
+  clearInvalidToken
 };
