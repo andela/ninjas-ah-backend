@@ -6,7 +6,7 @@ import checkUpdateUserPermission from '../../middlewares/checkUpdateUserPermissi
 
 const router = Router();
 
-router.put('/', verifyToken, validateUser, UserController.update); // update user profile
+router.put('/', verifyToken, validateUser, checkUpdateUserPermission, UserController.update); // update user profile
 router.put('/:id', verifyToken, validateUser, checkUpdateUserPermission, UserController.update); // update user profile by id
 
 export default router;

@@ -537,7 +537,6 @@ describe('Article', () => {
       .send(fakeArticle)
       .set('access-token', 'brabra')
       .end((err, res) => {
-        console.log('rw', res.body);
         expect(res).to.have.status(status.UNAUTHORIZED);
         res.body.should.be.an('object');
         res.body.should.have.property('errors');

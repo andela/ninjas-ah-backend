@@ -4,7 +4,7 @@
  * @returns {array} an array of errors or an empty array if no error
  */
 export default (input, required = '') => {
-  const errors = [];
+  let errors = [];
 
   if (!input && !required) {
     return [];
@@ -16,9 +16,10 @@ export default (input, required = '') => {
     return [];
   }
 
-  errors.push(
+  errors = [
+    ...errors,
     'Your password should have a minimum 8 and maximum of 25 characters, it must include at least one upper case letter, one lower case letter, one numeric digit and one special character (*&^!%$@#)'
-  );
+  ];
 
   return errors;
 };
