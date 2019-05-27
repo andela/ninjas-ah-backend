@@ -7,6 +7,7 @@ import * as Factory from '../../../helpers/factory';
 const { expect } = chai;
 
 let createdUser = '';
+let createdToken = '';
 const user = Factory.user.build();
 const { token } = Factory.token.build();
 
@@ -21,7 +22,14 @@ describe('Destroy token query', () => {
         logging: false
       });
       createdUser = (await db.User.create(user, { logging: false })).dataValues;
-      await db.Token.create({ token, userId: createdUser.id }, { logging: false });
+      createdToken = await db.Token.create(
+        {
+          token,
+          userId: createdUser.id,
+          createdAt: new Date(new Date() - 24 * 60 * 60 * 1000)
+        },
+        { logging: true }
+      );
     } catch (error) {
       throw error;
     }
@@ -33,18 +41,13 @@ describe('Destroy token query', () => {
     expect(destroyedToken).to.not.include.keys('errors');
   });
 
-  it('should not destroy a token if the user ID is not found', async () => {
-    const destroyedToken = await Token.destroy(0);
+  it('should not destroy a token if no expired token found', async () => {
+    const destroyedToken = await Token.destroy(createdUser.id);
     expect(destroyedToken).to.be.equal(0);
   });
 
-  it('should not destroy a token if the parameter passed is invalid', async () => {
+  it('should throw an error if the parameter is not a integer', async () => {
     const destroyedToken = await Token.destroy({});
     expect(destroyedToken).to.include.keys('errors');
-  });
-
-  it('should not destroy a token if there is no passed parameter', async () => {
-    const destroyedToken = await Token.destroy();
-    expect(destroyedToken).to.be.equal(0);
   });
 });

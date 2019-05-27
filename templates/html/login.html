@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="/socket.io/socket.io.js"></script>
+  <link rel="stylesheet" href="../css/style.css">
+  <title>Login</title>
+</head>
+
+<body>
+  <div class="container shadow-2 radius-3 large-padding">
+    <div class="center">
+      <div id="message"></div>
+      <h1 class="primary text-white radius-2 uppercase large-padding center-align">
+        LOGIN
+      </h1>
+      <br>
+      <input type="email" name="email" id="email" class="shadow-4 radius-2 medium-padding card"
+        placeholder="enter your email">
+      <input type="password" name="password" id="password" class="shadow-4 radius-2 medium-padding card"
+        placeholder="enter your password">
+      <div class="center-align">
+        <button type="button" id="send" class="radius-2 primary text-white center-align large-h-padding large-text">
+          Login
+        </button>
+        <hr>
+        OR
+        <hr>
+        <a href="signup.html" class="radius-2 primary text-white center-align large-h-padding large-text">
+          Create account
+        </a>
+      </div>
+    </div>
+  </div>
+  <script>
+    async function login(formData) {
+      const URL = `${HOST}/api/v1/auth/login`;
+      const result = await sendData('POST', URL, formData, 'json');
+
+      if (result) {
+        console.log(result);
+
+        if (result.message) {
+          document.querySelector('#message').innerHTML = `
+          <div class="danger text-white radius-2 uppercase large-padding center-align">
+            ${result.message}
+          </div>`;
+        } else {
+          localStorage.token = result.token;
+          localStorage.user = JSON.stringify(result.user);
+          document.querySelector('#message').innerHTML = `
+          <div class="success text-white radius-2 uppercase large-padding center-align">
+            Welcome ${result.user.firstName} ${result.user.lastName}
+          </div>`;
+        }
+      }
+    }
+
+    window.document.addEventListener('DOMContentLoaded', () => {
+      document.querySelector('#send').onclick = (e) => {
+        const email = document.querySelector("#email").value;
+        const password = document.querySelector("#password").value;
+        if (email && password) {
+          login({
+            email,
+            password
+          });
+        }
+      }
+    });
+  </script>
+  <script src="../js/index.js"></script>
+</body>
+
+</html>

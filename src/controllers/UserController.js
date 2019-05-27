@@ -14,17 +14,20 @@ export default class UserController {
    * @return {object} return an object containing the updated profile
    */
   static async update(req, res) {
+    const userId = req.userId || req.user.id;
+
     if (req.body.password) {
       req.body.password = helper.password.hash(req.body.password);
     }
-    const updatedUser = await User.update(req.body, { id: req.userId || req.user.id });
+    const updatedUser = await User.update(req.body, { id: userId });
     if (updatedUser.errors) {
       const errors = helper.checkCreateUpdateUserErrors(updatedUser.errors);
       return res.status(errors.code).json(errors);
     }
+    delete updatedUser.password;
     return res.status(status.OK).json({
       message: Object.keys(updatedUser).length
-        ? 'profile successfuly updated'
+        ? 'profile successfully updated'
         : "this account doesn't exist",
       user: updatedUser
     });

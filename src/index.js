@@ -1,11 +1,4 @@
-import http from 'http';
 import app from './app';
-
-/**
- * Create HTTP server.
- */
-const server = http.createServer(app);
-
 /**
  * Normalize a port into a number, string, or false.
  * @param {int} val The port number.
@@ -15,13 +8,11 @@ function normalizePort(val) {
   const port = parseInt(val, 10);
 
   if (Number.isNaN(port)) {
-    // named pipe
-    return val;
+    return val; // named pipe
   }
 
   if (port >= 0) {
-    // port number
-    return port;
+    return port; // port number
   }
 
   return false;
@@ -44,18 +35,16 @@ function onError(error) {
     throw error;
   }
 
-  const bind = typeof port === 'string'
-    ? `Pipe ${port}`
-    : `Port ${port}`;
+  const bind = typeof port === 'string' ? `Pipe ${port}` : `Port ${port}`;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
-      console.error(`${bind} requires elevated privileges`);
+      process.stdout.write(`${bind} requires elevated privileges`);
       process.exit(1);
       break;
     case 'EADDRINUSE':
-      console.error(`${bind} is already in use`);
+      process.stdout.write(`${bind} is already in use`);
       process.exit(1);
       break;
     default:
@@ -66,5 +55,7 @@ function onError(error) {
 /**
  * Listen on provided port, on all network interfaces.
  */
-server.listen(port, () => { console.log(`Server is running on port: ${port}`); });
-server.on('error', onError);
+app.server.listen(port, () => {
+  process.stdout.write(`Server is running on port: ${port}`);
+});
+app.server.on('error', onError);
