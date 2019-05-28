@@ -23,7 +23,7 @@ export default class ArticleLikeController {
     });
 
     await updateArticleLikes(req);
-    if (status === 'dislike') {
+    if (req.params.status === 'dislike') {
       message = 'You disliked the article';
     }
     res.status(statusCode.CREATED).json({ message, createLike });

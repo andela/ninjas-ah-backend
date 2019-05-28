@@ -1,7 +1,6 @@
+/* eslint-disable max-len */
 import db from '../../../models';
-import { dbUpdate } from '../../../helpers/queryHelper';
 
-// eslint-disable-next-line max-len
-const updateLike = async (condition, whereCondition) => dbUpdate(db.ArticleLike, condition, whereCondition);
+const updateLike = async (condition = {}, whereCondition) => db.ArticleLike.update(condition, { where: whereCondition, logging: false });
 
 export default updateLike;

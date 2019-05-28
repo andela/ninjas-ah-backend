@@ -4,11 +4,11 @@ import * as report from '../queries/reports';
  * A class to control the report
  */
 export default class ReportController {
-  // eslint-disable-next-line valid-jsdoc
   /**
-   *
+   * A method to create a report
    * @param {object} req the request
    * @param {object } res the response
+   * @returns {object} a response to the client
    */
   static async createReport(req, res) {
     const userId = req.user.id;
@@ -27,11 +27,11 @@ export default class ReportController {
     });
   }
 
-  // eslint-disable-next-line valid-jsdoc
   /**
-   *
+   * A method to get all reports for a specific article
    * @param {object} req the request
    * @param {object } res the response
+   * @returns {object} a response to the client
    */
   static async getAll(req, res) {
     const { articleSlug } = req.params;
@@ -41,11 +41,11 @@ export default class ReportController {
       .json({ message: 'fetched all reports successfully', Reports: findAllReport });
   }
 
-  // eslint-disable-next-line valid-jsdoc
   /**
-   *
+   * A method to get a single report
    * @param {object} req the request
    * @param {object } res the response
+   * @returns {object} a response to the client
    */
   static async getSingle(req, res) {
     const { articleSlug, reportId } = req.params;
@@ -56,11 +56,11 @@ export default class ReportController {
       .json({ message: 'Report fetched Successfully', Report: findSingle });
   }
 
-  // eslint-disable-next-line valid-jsdoc
   /**
-   *
+   * A method to delete a report
    * @param {object} req the request
    * @param {object } res the response
+   * @returns {object} a response to the client
    */
   static async deleteSingle(req, res) {
     const { articleSlug, reportId } = req.params;

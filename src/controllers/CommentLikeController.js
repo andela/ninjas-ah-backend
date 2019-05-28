@@ -1,4 +1,3 @@
-/* eslint-disable import/named */
 import status from '../config/status';
 import * as comment from '../queries/comments/likes';
 import updateCommentLikes from '../queries/comments/updateCommentLikes';

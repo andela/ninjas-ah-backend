@@ -17,16 +17,31 @@ router.post(
 );
 router.get(
   '/:articleSlug/comments',
-  verifyToken,
   checkArticle,
+  verifyToken,
   asyncHandler(CommentController.getAll)
 );
-router.put(
+router.patch(
   '/:articleSlug/comments/:commentId',
+  verifyToken,
   Validation,
   checkArticle,
   checkComment,
-  asyncHandler(CommentController.edit)
+  asyncHandler(CommentController.editComment)
+);
+router.delete(
+  '/:articleSlug/comments/:commentId',
+  verifyToken,
+  checkArticle,
+  checkComment,
+  asyncHandler(CommentController.delete)
+);
+router.get(
+  '/:articleSlug/comments/:commentId/edits',
+  verifyToken,
+  checkArticle,
+  checkComment,
+  asyncHandler(CommentController.getAllEdit)
 );
 router.delete(
   '/:articleSlug/comments/:commentId',
@@ -36,11 +51,11 @@ router.delete(
   asyncHandler(CommentController.delete)
 );
 router.delete(
-  '/:articleSlug/comments/:commentId',
+  '/:articleSlug/comments/:commentId/edits/:id',
   verifyToken,
   checkArticle,
   checkComment,
-  CommentController.delete
+  asyncHandler(CommentController.remove)
 );
 
 export default router;

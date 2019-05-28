@@ -1,13 +1,15 @@
-import * as articleLike from './likes';
+import * as like from './likes';
 import * as article from '.';
 
-const updateArticle = async (req) => {
+const updateArticleLikes = async (req) => {
   const { articleSlug } = req.params;
-  const findAllLikes = await articleLike.getAllLikes({ status: 'like', articleSlug });
-  const findAllDislikes = await articleLike.getAllLikes({ status: 'dislike', articleSlug });
+
+  const findAllLikes = await like.getAllLikes({ status: 'like', articleSlug });
+  const findAllDislikes = await like.getAllLikes({ status: 'dislike', articleSlug });
+
   await article.update(
     { likes: findAllLikes.length, dislikes: findAllDislikes.length },
     req.params.articleSlug
   );
 };
-export default updateArticle;
+export default updateArticleLikes;

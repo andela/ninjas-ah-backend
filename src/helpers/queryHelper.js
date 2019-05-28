@@ -14,7 +14,7 @@ const dbDelete = async (model, whereCondition) => model.destroy({
   where: whereCondition,
   logging: false
 });
-const dbUpdate = async (model, condition, whereCondition) => {
+const dbUpdate = async (model, condition, whereCondition = {}) => {
   model.update(condition, { where: whereCondition, logging: false });
 };
 
