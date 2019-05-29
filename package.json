@@ -31,12 +31,10 @@
     "body-parser": "^1.19.0",
     "chance": "^1.0.18",
     "cheke": "^1.0.3",
+    "cloudinary": "^1.14.0",
     "cors": "^2.8.5",
-<<<<<<< HEAD
-=======
     "d": "^1.0.0",
     "datauri": "^2.0.0",
->>>>>>> [feature #166325993] add image upload
     "dotenv": "^6.2.0",
     "ejs": "^2.6.1",
     "errorhandler": "^1.5.1",
