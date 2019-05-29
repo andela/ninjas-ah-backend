@@ -18,27 +18,23 @@ export default class AuthLocalController {
     const {
       firstName, lastName, username, email
     } = req.body;
-    try {
-      const isUser = await helper.isUser({ email });
-      if (isUser) {
-        return res.status(status.EXIST).send({ error: 'Sorry, this account already exists' });
-      }
-      const newUser = await User.create({
-        firstName,
-        lastName,
-        username,
-        email,
-        password: helper.password.hash(req.body.password)
+    const isUser = await helper.isUser({ email });
+    if (isUser) {
+      return res.status(status.EXIST).send({ error: 'Sorry, this account already exists' });
+    }
+    const newUser = await User.create({
+      firstName,
+      lastName,
+      username,
+      email,
+      password: helper.password.hash(req.body.password)
+    });
+    if (!newUser.errors && newUser && Object.keys(newUser).length > 0) {
+      delete newUser.password;
+      return res.status(status.CREATED).send({
+        user: newUser,
+        token: helper.token.generate({ email, role: req.body.isAdmin })
       });
-      if (!newUser.errors && newUser && Object.keys(newUser).length > 0) {
-        delete newUser.password;
-        return res.status(status.CREATED).send({
-          user: newUser,
-          token: helper.token.generate({ email, role: req.body.isAdmin })
-        });
-      }
-    } catch (error) {
-      return res.status(status.SERVER_ERROR).send({ error });
     }
   }
 

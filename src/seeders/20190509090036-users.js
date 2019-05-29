@@ -11,9 +11,22 @@ module.exports = {
         role: 'normal',
         permissions: ['read'],
         image: 'user.png',
-        bio: 'I can do magic easy',
-        createdAt: '2019-04-29T22:00:00',
-        updatedAt: '2019-04-29T22:00:00'
+        bio: 'I can do easy magic',
+        createdAt: '2019-05-14T22:00:00',
+        updatedAt: '2019-05-14T22:00:00'
+      },
+      {
+        lastName: 'Lorem',
+        firstName: 'Ipsum',
+        email: 'lorem@ipsum.com',
+        password: '123123',
+        username: 'lorum',
+        role: 'normal',
+        permissions: '{"can-edit"}',
+        image: 'user.png',
+        bio: 'Lorem ipsum',
+        createdAt: '2019-05-12T22:00:00',
+        updatedAt: '2019-05-15T22:00:00'
       }
     ],
     {}

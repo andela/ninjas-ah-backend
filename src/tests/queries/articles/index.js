@@ -3,3 +3,4 @@ import './get.test';
 import './getAll.test';
 import './update.test';
 import './pagination.test';
+import './searchFilters.test';

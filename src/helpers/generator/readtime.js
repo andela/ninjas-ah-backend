@@ -2,7 +2,7 @@
 Estimation of read time inspired by Nick Fisher
 Link: https://blog.medium.com/read-time-and-you-bc2048ab620c
 */
-const generateReadTime = (text) => {
+export default (text) => {
   const MINUTES = 60;
   const WORD_PER_MINUTE = 265;
   const SECONDS_PER_IMAGE = 12;
@@ -26,5 +26,3 @@ const generateReadTime = (text) => {
   const totalSeconds = parseInt((wordsSeconds + imageSeconds) / MINUTES, 0);
   return totalSeconds;
 };
-
-export default generateReadTime;

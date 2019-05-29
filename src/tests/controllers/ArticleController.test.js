@@ -1,6 +1,4 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import chai from 'chai';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import chaiHttp from 'chai-http';
 import jwt from 'jsonwebtoken';
 import app from '../../app';
@@ -16,7 +14,6 @@ chai.use(chaiHttp);
 
 let accessToken = '';
 let createdUser = '';
-const createdArticle = '';
 
 const user = Factory.user.build();
 
@@ -331,6 +328,25 @@ describe('Article', () => {
         done();
       });
   });
+  it('Should get all articles', (done) => {
+    chai
+      .request(app)
+      .get('/api/v1/profile/articles/drafts')
+      .set('access-token', accessToken)
+      .end((err, res) => {
+        const response = res.body;
+        expect(res).to.have.status(status.OK);
+        response.articles.should.be.a('array');
+        response.articles[0].should.be.a('object');
+        response.articles[0].id.should.be.a('number');
+        response.articles[0].title.should.be.a('string');
+        response.articles[0].body.should.be.a('string');
+        response.articles[0].description.should.be.a('string');
+        response.articles[0].slug.should.be.a('string');
+        response.articles[0].coverUrl.should.be.a('string');
+        done();
+      });
+  });
   it('Should get articles by pagination', (done) => {
     const LIMIT = 1;
     const OFFSET = 0;
@@ -363,6 +379,48 @@ describe('Article', () => {
         expect(res).to.have.status(status.BAD_REQUEST);
         res.body.errors.should.be.an('array');
         res.body.errors[0].should.equal('limit must be a number');
+        done();
+      });
+  });
+  it('Should throw error if tag filter is called more than once', (done) => {
+    const TAG = 'text';
+    chai
+      .request(app)
+      .get(`/api/v1/articles?tag=${TAG}&tag=${TAG}`)
+      .set('access-token', accessToken)
+      .end((err, res) => {
+        expect(res).to.have.status(status.BAD_REQUEST);
+        res.body.errors.should.be.an('object');
+        res.body.errors.tag.should.be.a('string');
+        res.body.errors.tag.should.equal('tag can not be declared more than once');
+        done();
+      });
+  });
+  it('Should throw error if keyword filter is called more than once', (done) => {
+    const KEYWORD = 'text';
+    chai
+      .request(app)
+      .get(`/api/v1/articles?keyword=${KEYWORD}&keyword=${KEYWORD}`)
+      .set('access-token', accessToken)
+      .end((err, res) => {
+        expect(res).to.have.status(status.BAD_REQUEST);
+        res.body.errors.should.be.an('object');
+        res.body.errors.keyword.should.be.a('string');
+        res.body.errors.keyword.should.equal('keyword can not be declared more than once');
+        done();
+      });
+  });
+  it('Should throw error if author filter is called more than once', (done) => {
+    const AUTHOR = 'text';
+    chai
+      .request(app)
+      .get(`/api/v1/articles?author=${AUTHOR}&author=${AUTHOR}`)
+      .set('access-token', accessToken)
+      .end((err, res) => {
+        expect(res).to.have.status(status.BAD_REQUEST);
+        res.body.errors.should.be.an('object');
+        res.body.errors.author.should.be.a('string');
+        res.body.errors.author.should.equal('author can not be declared more than once');
         done();
       });
   });
@@ -404,7 +462,7 @@ describe('Article', () => {
         expect(res).to.have.status(status.BAD_REQUEST);
         res.body.errors.should.be.a('object');
         res.body.errors.should.have.property('limit');
-        res.body.errors.limit.should.equal('Limit can not be declared more than once');
+        res.body.errors.limit.should.equal('limit can not be declared more than once');
         done();
       });
   });
@@ -418,7 +476,7 @@ describe('Article', () => {
         expect(res).to.have.status(status.BAD_REQUEST);
         res.body.errors.should.be.a('object');
         res.body.errors.should.have.property('offset');
-        res.body.errors.offset.should.equal('Offset can not be declared more than once');
+        res.body.errors.offset.should.equal('offset can not be declared more than once');
         done();
       });
   });

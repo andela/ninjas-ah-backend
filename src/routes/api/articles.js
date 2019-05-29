@@ -18,7 +18,7 @@ articles.post(
 articles.get('/articles/bookmarked', verifyToken, ArticleController.getBookmarks);
 
 articles.get(
-  '/articles/',
+  '/articles',
   validateArticle.pagination,
   asyncHandler(ArticleController.getAllArticles)
 );
@@ -27,7 +27,16 @@ articles.get(
   checkArticleBySlug,
   asyncHandler(ArticleController.getSpecificArticle)
 );
-
+articles.get(
+  '/profile/articles/drafts',
+  verifyToken,
+  asyncHandler(ArticleController.userArticleDrafts)
+);
+articles.get(
+  '/profile/articles/published',
+  verifyToken,
+  asyncHandler(ArticleController.userArticlePublished)
+);
 articles.put(
   '/articles/:slug',
   verifyToken,
