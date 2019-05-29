@@ -147,9 +147,7 @@ export default class ArticleController {
       switch (result.errors.name) {
         case 'SequelizeUniqueConstraintError':
           return res.status(status.EXIST).json({
-            errors: {
-              [resourceAction]: `this article is already in ${resourceAction}s`
-            }
+            errors: { [resourceAction]: `this article is already in ${resourceAction}s` }
           });
         case 'SequelizeForeignKeyConstraintError':
           return res.status(status.UNAUTHORIZED).json({
