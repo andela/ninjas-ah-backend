@@ -139,26 +139,30 @@ export default class ArticleController {
    * @param {object} res Response from server
    * @returns {object} Object representing the response returned
    */
-  static async bookmark(req, res) {
-    const bookmarkedArticle = await Article.bookmark.add(req.user.id, req.params.slug);
-    const errors = bookmarkedArticle.errors || null;
-    let errorMessage = 'Oups, something went wrong';
-    let errorStatuscode = status.SERVER_ERROR;
+  static async bookmarkOrFavorite(req, res) {
+    const resourceAction = req.url.search(/\/bookmark/g) > 0 ? 'bookmark' : 'favorite';
+    const result = await Article[resourceAction].add(req.user.id, req.params.slug);
 
-    if (errors && errors.name === 'SequelizeUniqueConstraintError') {
-      errorStatuscode = status.EXIST;
-      errorMessage = { bookmark: 'sorry, you have already bookmarked this article' };
-    }
-    if (errors && errors.name === 'SequelizeForeignKeyConstraintError') {
-      errorStatuscode = status.UNAUTHORIZED;
-      errorMessage = { account: 'sorry, your account is not valid' };
+    if (result.errors) {
+      if (result.errors.name === 'SequelizeUniqueConstraintError') {
+        result.errors = {
+          code: status.EXIST,
+          errors: { [resourceAction]: `sorry, this article is already in ${resourceAction}s` }
+        };
+      } else if (result.errors.name === 'SequelizeForeignKeyConstraintError') {
+        result.errors = {
+          code: status.UNAUTHORIZED,
+          errors: { account: 'sorry, your account is not valid' }
+        };
+      } else {
+        result.errors = { code: status.SERVER_ERROR, errors: 'oops, something went wrong' };
+      }
     }
 
-    return errors
-      ? res.status(errorStatuscode).json({ errors: errorMessage })
+    return result.errors
+      ? res.status(result.errors.code).json({ ...result.errors })
       : res.status(status.CREATED).json({
-        message: 'article successfuly bookmarked',
-        bookmark: bookmarkedArticle
+        [resourceAction]: result
       });
   }
 
@@ -167,13 +171,13 @@ export default class ArticleController {
    * @param {object} res Response from server
    * @returns {object} Object representing the response returned
    */
-  static async getBookmarks(req, res) {
-    const bookmarkedArticles = await Article.bookmark.getAll(req.user.id || 0);
-    const errors = bookmarkedArticles.errors || null;
+  static async getBookmarksOrFavorites(req, res) {
+    const resourceAction = req.url.search(/\/bookmarked/g) > 0 ? 'bookmark' : 'favorite';
+    const result = await Article[resourceAction].getAll(req.user.id);
 
-    return errors
-      ? res.status(status.SERVER_ERROR).json({ errors: { bookmark: errors.message } })
-      : res.status(status.OK).json({ bookmarks: bookmarkedArticles });
+    return result.errors
+      ? res.status(status.SERVER_ERROR).json({ errors: 'oops, something went wrong' })
+      : res.status(status.OK).json({ [[`${resourceAction}s`]]: result });
   }
 
   /**
@@ -181,26 +185,23 @@ export default class ArticleController {
    * @param {object} res Response from server
    * @returns {object} Object representing the response returned
    */
-  static async removeBookmark(req, res) {
-    const userId = req.user.id || 0;
-    const { slug } = req.params;
+  static async removeBookmarkOrFavorite(req, res) {
+    const resourceAction = req.url.search(/\/bookmark/g) > 0 ? 'bookmark' : 'favorite';
+    const result = await Article[resourceAction].remove(req.user.id, req.params.slug);
 
-    const removedBookmark = await Article.bookmark.remove(userId, slug);
-
-    if (removedBookmark.errors) {
+    if (result.errors) {
       return res.status(status.SERVER_ERROR).json({
-        errors: { bookmark: removedBookmark.errors.message }
+        errors: 'oops, something went wrong'
       });
     }
 
-    if (!removedBookmark) {
-      return res.status(status.BAD_REQUEST).json({
-        errors: { bookmark: 'bookmark not removed' }
+    return !result
+      ? res.status(status.BAD_REQUEST).json({
+        errors: { [resourceAction]: `article not removed from ${resourceAction}s` }
+      })
+      : res.status(status.OK).json({
+        message: `article successfully removed from ${resourceAction}s `
       });
-    }
-    return res.status(status.OK).json({
-      message: 'bookmark successfuly removed'
-    });
   }
 
   /**
