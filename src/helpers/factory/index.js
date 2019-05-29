@@ -12,6 +12,7 @@ import report from './report';
 import editComment from './editComment';
 import permissionsNormal from './permissionsNormal';
 import permissionsAdmin from './permissionsAdmin';
+import highlight from './highlight';
 
 export {
   user,
@@ -27,5 +28,6 @@ export {
   report,
   editComment,
   permissionsNormal,
-  permissionsAdmin
+  permissionsAdmin,
+  highlight
 };
