@@ -6,11 +6,9 @@ import db from '../../models';
  */
 export default async (favoritedBy) => {
   try {
-    const favoritedArticles = favoritedBy
+    return favoritedBy
       ? await db.FavoriteArticle.findAll({ where: { userId: favoritedBy }, logging: false })
-      : null;
-
-    return favoritedArticles || [];
+      : [];
   } catch (error) {
     return {
       errors: error

@@ -7,12 +7,7 @@ import db from '../../models';
  */
 export default async (userId, articleSlug) => {
   try {
-    const favoritedArticle = await db.FavoriteArticle.create(
-      { userId, articleSlug },
-      { logging: false }
-    );
-
-    return favoritedArticle.get();
+    return (await db.FavoriteArticle.create({ userId, articleSlug }, { logging: false })).get();
   } catch (error) {
     return {
       errors: error

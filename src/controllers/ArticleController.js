@@ -161,9 +161,7 @@ export default class ArticleController {
 
     return result.errors
       ? res.status(result.errors.code).json({ ...result.errors })
-      : res.status(status.CREATED).json({
-        [resourceAction]: result
-      });
+      : res.status(status.CREATED).json({ [resourceAction]: result });
   }
 
   /**
