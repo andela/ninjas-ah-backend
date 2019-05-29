@@ -1,6 +1,7 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import jwt from 'jsonwebtoken';
+import path from 'path';
 import app from '../../app';
 import status from '../../config/status';
 import db from '../../models';
@@ -33,7 +34,7 @@ describe('UPLOAD', () => {
       .send()
       .field('Content-Type', 'multipart/form-data')
       .field('fileName', 'ninja.png')
-      .attach('image', './templates/images/ninja.png')
+      .attach('image', path.join(__dirname, '../../../templates/images/ninja.png'))
       .set('access-token', accessToken)
       .end((err, res) => {
         expect(res).to.have.status(status.CREATED);
@@ -50,7 +51,6 @@ describe('UPLOAD', () => {
       .post('/api/v1/upload')
       .set('access-token', accessToken)
       .end((err, res) => {
-        console.log('rwimg', res.body);
         expect(res).to.have.status(status.BAD_REQUEST);
         res.body.errors.should.be.an('object');
         res.body.errors.image.should.equal(

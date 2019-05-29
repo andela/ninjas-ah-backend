@@ -3,10 +3,11 @@ import { dataUri } from '../../middlewares/multer';
 
 export default async (req) => {
   await cloudinaryConfig();
+  let response = '';
   let result = '';
   if (req.file) {
     const file = dataUri(req).content;
-    const response = await uploader.upload(file);
+    response = await uploader.upload(file);
     const { IMAGE_BASE_URL } = process.env;
     result = {
       info: {
