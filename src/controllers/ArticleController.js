@@ -140,24 +140,21 @@ export default class ArticleController {
    * @returns {object} Object representing the response returned
    */
   static async bookmarkOrFavorite(req, res) {
-    const { slug } = req.params;
     const resourceAction = req.url.search(/\/bookmark/g) > 0 ? 'bookmark' : 'favorite';
-    const result = await Article[resourceAction].add(req.user.id, slug);
+    const result = await Article[resourceAction].add(req.user.id, req.params.slug);
 
-    if (result.errors) {
-      if (result.errors.name === 'SequelizeUniqueConstraintError') {
-        result.errors = {
-          code: status.EXIST,
-          errors: { [resourceAction]: `sorry, this article is already in ${resourceAction}s` }
-        };
-      } else if (result.errors.name === 'SequelizeForeignKeyConstraintError') {
-        result.errors = {
-          code: status.UNAUTHORIZED,
-          errors: { account: 'sorry, your account is not valid' }
-        };
-      } else {
-        result.errors = { code: status.SERVER_ERROR, errors: 'oops, something went wrong' };
-      }
+    if (result.errors && result.errors.name === 'SequelizeUniqueConstraintError') {
+      result.errors = {
+        code: status.EXIST,
+        errors: { [resourceAction]: `sorry, this article is already in ${resourceAction}s` }
+      };
+    } else if (result.errors && result.errors.name === 'SequelizeForeignKeyConstraintError') {
+      result.errors = {
+        code: status.UNAUTHORIZED,
+        errors: { account: 'sorry, your account is not valid' }
+      };
+    } else if (result.errors) {
+      result.errors = { code: status.SERVER_ERROR, errors: 'oops, something went wrong' };
     }
 
     return result.errors
