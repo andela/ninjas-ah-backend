@@ -146,19 +146,19 @@ export default class ArticleController {
     if (result.errors && result.errors.name === 'SequelizeUniqueConstraintError') {
       result.errors = {
         code: status.EXIST,
-        errors: { [resourceAction]: `this article is already in ${resourceAction}s` }
+        error: { [resourceAction]: `this article is already in ${resourceAction}s` }
       };
     } else if (result.errors && result.errors.name === 'SequelizeForeignKeyConstraintError') {
       result.errors = {
         code: status.UNAUTHORIZED,
-        errors: { account: 'sorry, your account is not valid' }
+        error: { account: 'sorry, your account is not valid' }
       };
     }
 
     return result.errors
       ? res
         .status(result.errors.code || status.SERVER_ERROR)
-        .json({ errors: result.errors.errors || 'oops, something went wrong' })
+        .json({ errors: result.errors.error || 'oops, something went wrong' })
       : res.status(status.CREATED).json({ [resourceAction]: result });
   }
 
