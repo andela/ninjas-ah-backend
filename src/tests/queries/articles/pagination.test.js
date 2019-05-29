@@ -1,6 +1,4 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import chai from 'chai';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import chaiHttp from 'chai-http';
 import { getAll } from '../../../queries/articles';
 

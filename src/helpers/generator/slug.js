@@ -1,7 +1,7 @@
 import slugify from 'slug';
 import uniqid from 'uniqid';
 
-const generateSlug = (title) => {
+export default (title) => {
   if (title.length > 70) title = title.substring(0, 70);
   // generate slug;
   return `${slugify(title, {
@@ -10,5 +10,3 @@ const generateSlug = (title) => {
     symbols: false
   })}-${uniqid.process()}`;
 };
-
-export default generateSlug;

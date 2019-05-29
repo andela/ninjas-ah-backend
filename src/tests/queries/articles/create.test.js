@@ -1,10 +1,8 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import chai from 'chai';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import chaiHttp from 'chai-http';
 import { Article, User } from '../../../queries';
 import * as Factory from '../../../helpers/factory';
-import generateSlug from '../../../helpers/generateSlug';
+import * as helpers from '../../../helpers';
 
 const { expect } = chai;
 
@@ -16,7 +14,7 @@ describe('Query to create article', () => {
   it('should create aricle', async () => {
     const newUser = await User.create(user);
     article.userId = newUser.id;
-    article.slug = generateSlug(article.title);
+    article.slug = helpers.generator.slug(article.title);
     const response = await Article.create(article);
     expect(response).to.include.keys('dataValues');
     expect(response.dataValues).to.include.keys('id');
