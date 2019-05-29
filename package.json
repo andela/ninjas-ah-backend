@@ -32,6 +32,11 @@
     "chance": "^1.0.18",
     "cheke": "^1.0.3",
     "cors": "^2.8.5",
+<<<<<<< HEAD
+=======
+    "d": "^1.0.0",
+    "datauri": "^2.0.0",
+>>>>>>> [feature #166325993] add image upload
     "dotenv": "^6.2.0",
     "ejs": "^2.6.1",
     "errorhandler": "^1.5.1",
@@ -62,7 +67,7 @@
     "pg-hstore": "^2.3.2",
     "request": "^2.88.0",
     "rosie": "^2.0.1",
-    "sequelize": "^5.8.6",
+    "sequelize": "^5.8.7",
     "sequelize-cli": "^5.4.0",
     "sequelize-easy-query": "^1.1.0",
     "sequelize-test-helpers": "^1.1.1",
@@ -70,7 +75,7 @@
     "socket.io": "^2.2.0",
     "swagger": "^0.7.5",
     "swagger-jsdoc": "^3.2.9",
-    "swagger-ui-express": "^4.0.4",
+    "swagger-ui-express": "^4.0.5",
     "underscore": "^1.9.1",
     "uniqid": "^5.0.3"
   },
