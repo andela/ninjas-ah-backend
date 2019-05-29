@@ -143,28 +143,23 @@ export default class ArticleController {
     const resourceAction = req.url.search(/\/bookmark/g) > 0 ? 'bookmark' : 'favorite';
     const result = await Article[resourceAction].add(req.user.id, req.params.slug);
 
-    if (
-      result.errors
-      && (result.errors.name === 'SequelizeUniqueConstraintError'
-        || result.errors.name === 'SequelizeForeignKeyConstraintError')
-    ) {
-      result.errors = {
-        code:
-          result.errors.name === 'SequelizeUniqueConstraintError'
-            ? status.EXIST
-            : status.UNAUTHORIZED,
-        error:
-          result.errors.name === 'SequelizeUniqueConstraintError'
-            ? { [resourceAction]: `this article is already in ${resourceAction}s` }
-            : { account: 'sorry, your account is not valid' }
-      };
+    if (result.errors) {
+      switch (result.errors.name) {
+        case 'SequelizeUniqueConstraintError':
+          return res.status(status.EXIST).json({
+            errors: {
+              [resourceAction]: `this article is already in ${resourceAction}s`
+            }
+          });
+        case 'SequelizeForeignKeyConstraintError':
+          return res.status(status.UNAUTHORIZED).json({
+            errors: { account: 'sorry, your account is not valid' }
+          });
+        default:
+          return res.status(status.SERVER_ERROR).json({ errors: 'oops, something went wrong' });
+      }
     }
-
-    return result.errors
-      ? res
-        .status(result.errors.code || status.SERVER_ERROR)
-        .json({ errors: result.errors.error || 'oops, something went wrong' })
-      : res.status(status.CREATED).json({ [resourceAction]: result });
+    return res.status(status.CREATED).json({ [resourceAction]: result });
   }
 
   /**
