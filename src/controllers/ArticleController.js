@@ -143,15 +143,20 @@ export default class ArticleController {
     const resourceAction = req.url.search(/\/bookmark/g) > 0 ? 'bookmark' : 'favorite';
     const result = await Article[resourceAction].add(req.user.id, req.params.slug);
 
-    if (result.errors && result.errors.name === 'SequelizeUniqueConstraintError') {
+    if (
+      result.errors
+      && (result.errors.name === 'SequelizeUniqueConstraintError'
+        || result.errors.name === 'SequelizeForeignKeyConstraintError')
+    ) {
       result.errors = {
-        code: status.EXIST,
-        error: { [resourceAction]: `this article is already in ${resourceAction}s` }
-      };
-    } else if (result.errors && result.errors.name === 'SequelizeForeignKeyConstraintError') {
-      result.errors = {
-        code: status.UNAUTHORIZED,
-        error: { account: 'sorry, your account is not valid' }
+        code:
+          result.errors.name === 'SequelizeUniqueConstraintError'
+            ? status.EXIST
+            : status.UNAUTHORIZED,
+        error:
+          result.errors.name === 'SequelizeUniqueConstraintError'
+            ? { [resourceAction]: `this article is already in ${resourceAction}s` }
+            : { account: 'sorry, your account is not valid' }
       };
     }
 
