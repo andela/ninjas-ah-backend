@@ -140,8 +140,9 @@ export default class ArticleController {
    * @returns {object} Object representing the response returned
    */
   static async bookmarkOrFavorite(req, res) {
+    const { slug } = req.params;
     const resourceAction = req.url.search(/\/bookmark/g) > 0 ? 'bookmark' : 'favorite';
-    const result = await Article[resourceAction].add(req.user.id, req.params.slug);
+    const result = await Article[resourceAction].add(req.user.id, slug);
 
     if (result.errors) {
       if (result.errors.name === 'SequelizeUniqueConstraintError') {
