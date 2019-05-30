@@ -19,6 +19,7 @@ const router = express.Router();
 router.use(articles);
 router.use('/users/roles', roles);
 router.use(tags);
+router.use(rating);
 router.use('/articles', comments);
 router.use('/users', users);
 router.use('/chats', chats);
@@ -28,7 +29,6 @@ router.use('/article', report);
 router.use('/permissions', permissions);
 router.use(highlights);
 router.use('/notifications', notifications);
-router.use(rating);
 router.use('/user', readingStats);
 
 export default router;
