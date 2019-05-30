@@ -37,13 +37,13 @@ describe('Delete favorited article query', () => {
   });
 
   it('should remove a favorited article', async () => {
-    favoritedArticle = await Article.favorite.remove(createdUser.id, createdArticle.slug);
+    favoritedArticle = await Article.favorite.remove(createdUser.id, createdArticle.slug, 1);
     expect(favoritedArticle).to.be.above(0);
     expect(favoritedArticle).to.not.include.keys('errors');
   });
 
   it('should not remove a favorited article if the article slug is not found', async () => {
-    favoritedArticle = await Article.favorite.remove(createdUser.id, 'invalid-slug');
+    favoritedArticle = await Article.favorite.remove(createdUser.id, 'invalid-slug', 1);
     expect(favoritedArticle).be.equal(0);
     expect(favoritedArticle).to.not.include.keys('errors');
   });
@@ -54,7 +54,7 @@ describe('Delete favorited article query', () => {
   });
 
   it('should throw an error if the parameters are not valid', async () => {
-    favoritedArticle = await Article.favorite.remove({}, {});
+    favoritedArticle = await Article.favorite.remove({}, {}, 1);
     expect(favoritedArticle).to.include.keys('errors');
   });
 });

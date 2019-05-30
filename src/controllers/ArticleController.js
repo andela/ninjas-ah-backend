@@ -141,7 +141,11 @@ export default class ArticleController {
    */
   static async bookmarkOrFavorite(req, res) {
     const resourceAction = req.url.search(/\/bookmark/g) > 0 ? 'bookmark' : 'favorite';
-    const result = await Article[resourceAction].add(req.user.id, req.params.slug);
+    const result = await Article[resourceAction].add(
+      req.user.id,
+      req.params.slug,
+      req.article.favoritesCount
+    );
 
     if (result.errors) {
       switch (result.errors.name) {
@@ -181,7 +185,11 @@ export default class ArticleController {
    */
   static async removeBookmarkOrFavorite(req, res) {
     const resourceAction = req.url.search(/\/bookmark/g) > 0 ? 'bookmark' : 'favorite';
-    const result = await Article[resourceAction].remove(req.user.id, req.params.slug);
+    const result = await Article[resourceAction].remove(
+      req.user.id,
+      req.params.slug,
+      req.article.favoritesCount
+    );
 
     if (result.errors) {
       return res.status(status.SERVER_ERROR).json({

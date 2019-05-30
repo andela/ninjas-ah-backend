@@ -94,12 +94,14 @@ articles.patch(
 articles.delete(
   '/articles/:slug/bookmark',
   verifyToken,
+  checkArticleBySlug,
   ArticleController.removeBookmarkOrFavorite
 );
 
 articles.delete(
   '/articles/:slug/favorite',
   verifyToken,
+  checkArticleBySlug,
   ArticleController.removeBookmarkOrFavorite
 );
 

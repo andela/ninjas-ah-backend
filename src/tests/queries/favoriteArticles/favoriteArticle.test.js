@@ -32,13 +32,13 @@ describe('Favorite article query', () => {
   });
 
   it('should favorite an article', async () => {
-    const favoritedArticle = await Article.favorite.add(createdUser.id, createdArticle.slug);
+    const favoritedArticle = await Article.favorite.add(createdUser.id, createdArticle.slug, 1);
     expect(Object.keys(favoritedArticle).length).to.be.above(0);
     expect(favoritedArticle).to.not.include.keys('errors');
   });
 
   it('should not favorite an article if the user has already favorited it', async () => {
-    const favoritedArticle = await Article.favorite.add(createdUser.id, createdArticle.slug);
+    const favoritedArticle = await Article.favorite.add(createdUser.id, createdArticle.slug, 1);
     expect(favoritedArticle).to.include.keys('errors');
   });
 
