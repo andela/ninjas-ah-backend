@@ -9,3 +9,4 @@ import './commentLikes.test';
 import './articleLike.test';
 import './report.test';
 import './editComment.test';
+import './allUser.test';
