@@ -185,7 +185,7 @@ export default class ArticleController {
    */
   static async removeBookmarkOrFavorite(req, res) {
     const resourceAction = req.url.search(/\/bookmark/g) > 0 ? 'bookmark' : 'favorite';
-    const [slug, favoritesCount] = [req.params.slug, req.params.favoritesCount];
+    const [slug, favoritesCount] = [req.params.slug, req.article.favoritesCount];
     const result = await Article[resourceAction].remove(req.user.id, slug, favoritesCount);
 
     if (result.errors) {
