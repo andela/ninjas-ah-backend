@@ -16,7 +16,7 @@ export default async (req) => {
         image_format: response.format
       },
       image: {
-        original: response.secure_url,
+        original: `v${response.version}/${response.public_id}.${response.format}`,
         thumbnail: `${IMAGE_BASE_URL}/w_600/v${response.version}/${response.public_id}.${
           response.format
         }`,
