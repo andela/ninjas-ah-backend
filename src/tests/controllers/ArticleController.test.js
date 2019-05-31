@@ -1,6 +1,7 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import jwt from 'jsonwebtoken';
+import path from 'path';
 import app from '../../app';
 import status from '../../config/status';
 import db from '../../models';
@@ -157,8 +158,13 @@ describe('Article', () => {
     chai
       .request(app)
       .post('/api/v1/articles')
-      .send(article)
       .set('access-token', accessToken)
+      .set('Content-Type', 'multipart/form-data')
+      .set('Accept', 'application/json')
+      .field('title', article.title)
+      .field('description', article.description)
+      .field('body', article.body)
+      .attach('image', path.join(__dirname, '../../../templates/images/ninja.png'))
       .end((err, res) => {
         const response = res.body;
         expect(res).to.have.status(status.CREATED);
@@ -183,7 +189,12 @@ describe('Article', () => {
     chai
       .request(app)
       .post('/api/v1/articles')
-      .send(bigArticleTitle)
+      .set('Content-Type', 'multipart/form-data')
+      .set('Accept', 'application/json')
+      .field('title', bigArticleTitle.title)
+      .field('description', bigArticleTitle.description)
+      .field('body', bigArticleTitle.body)
+      .attach('image', path.join(__dirname, '../../../templates/images/ninja.png'))
       .set('access-token', accessToken)
       .end((err, res) => {
         const response = res.body;
@@ -205,7 +216,12 @@ describe('Article', () => {
     chai
       .request(app)
       .post('/api/v1/articles')
-      .send(article)
+      .set('Content-Type', 'multipart/form-data')
+      .set('Accept', 'application/json')
+      .field('title', article.title)
+      .field('description', article.description)
+      .field('body', article.body)
+      .attach('image', path.join(__dirname, '../../../templates/images/ninja.png'))
       .set('access-token', accessToken)
       .end((err, res) => {
         expect(res).to.have.status(status.BAD_REQUEST);
@@ -222,7 +238,12 @@ describe('Article', () => {
     chai
       .request(app)
       .post('/api/v1/articles')
-      .send(article)
+      .set('Content-Type', 'multipart/form-data')
+      .set('Accept', 'application/json')
+      .field('title', article.title)
+      .field('description', article.description)
+      .field('body', article.body)
+      .attach('image', path.join(__dirname, '../../../templates/images/ninja.png'))
       .set('access-token', accessToken)
       .end((err, res) => {
         expect(res).to.have.status(status.BAD_REQUEST);
@@ -239,7 +260,12 @@ describe('Article', () => {
     chai
       .request(app)
       .post('/api/v1/articles')
-      .send(fakeArticle2)
+      .set('Content-Type', 'multipart/form-data')
+      .set('Accept', 'application/json')
+      .field('title', fakeArticle2.title)
+      .field('description', fakeArticle2.description)
+      .field('body', fakeArticle2.body)
+      .attach('image', path.join(__dirname, '../../../templates/images/ninja.png'))
       .set('access-token', accessToken)
       .end((err, res) => {
         const response = res.body;
@@ -261,7 +287,12 @@ describe('Article', () => {
     chai
       .request(app)
       .post('/api/v1/articles')
-      .send(article)
+      .set('Content-Type', 'multipart/form-data')
+      .set('Accept', 'application/json')
+      .field('title', article.title)
+      .field('description', article.description)
+      .field('body', article.body)
+      .attach('image', path.join(__dirname, '../../../templates/images/ninja.png'))
       .set('access-token', accessToken)
       .end((err, res) => {
         expect(res).to.have.status(400);
@@ -295,8 +326,13 @@ describe('Article', () => {
     chai
       .request(app)
       .post('/api/v1/articles')
-      .send(fakeArticle3)
       .set('access-token', accessToken)
+      .set('Content-Type', 'multipart/form-data')
+      .set('Accept', 'application/json')
+      .field('title', fakeArticle3.title)
+      .field('description', fakeArticle3.description)
+      .field('body', fakeArticle3.body)
+      .attach('image', path.join(__dirname, '../../../templates/images/ninja.png'))
       .end((err, res) => {
         const response = res.body;
         expect(res).to.have.status(status.CREATED);
