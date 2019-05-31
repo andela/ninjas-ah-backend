@@ -11,71 +11,77 @@
 </head>
 
 <body>
-  <div class="container shadow-2 radius-3 large-padding">
+  <div class="container shadow-2 radius-3">
     <div class="center">
-      <div id="message"></div>
       <h1 class="primary text-white radius-2 uppercase large-padding center-align">
-        SIGNUP
+        Signup
       </h1>
-      <br>
-      <input type="text" name="firstName" id="firstName" class="shadow-4 radius-2 medium-padding card"
-        placeholder="enter your first name">
-      <input type="text" name="lastName" id="lastName" class="shadow-4 radius-2 medium-padding card"
-        placeholder="enter your last name">
-      <input type="email" name="email" id="email" class="shadow-4 radius-2 medium-padding card"
-        placeholder="enter your email">
-      <input type="password" name="password" id="password" class="shadow-4 radius-2 medium-padding card"
-        placeholder="enter your password">
-      <div class="center-align">
-        <button type="button" id="send"
-          class="radius-2 primary text-white button center-align large-h-padding large-text">
-          Signup
-        </button>
-        <hr>
-        OR
-        <hr>
-        <a href="login.html" class="radius-2 primary text-white center-align large-h-padding large-text">
-          Login
-        </a>
+      <div class="large-padding">
+        <div class="radius-2 medium-padding card">
+          <input type="url" id="url" class="shadow-4 radius-2 medium-padding card medium-text large-screen-3">
+          <br>
+          <select id="verb" class="shadow-4 radius-4 large-padding large-text right">
+            <option value="POST">POST</option>
+          </select>
+        </div>
+        <br>
+        <div class="card">
+          <hr>
+        </div>
+        <input type="text" name="firstName" id="firstName" class="shadow-4 radius-2 medium-padding card"
+          placeholder="First name">
+        <input type="text" name="lastName" id="lastName" class="shadow-4 radius-2 medium-padding card"
+          placeholder="Last name">
+        <input type="text" name="username" id="username" class="shadow-4 radius-2 medium-padding card"
+          placeholder="Username">
+        <input type="email" name="email" id="email" class="shadow-4 radius-2 medium-padding card" placeholder="Email">
+        <input type="password" name="password" id="password" class="shadow-4 radius-2 medium-padding card"
+          placeholder="Password">
+        <div class="radius-2 medium-padding card">
+          <button type="button" id="submit" class="radius-4 primary text-white center-align large-h-padding large-text">
+            Submit
+          </button>
+        </div>
+      </div>
+      <div class="primary large-padding">
+        <span class="small-h-padding large-text white radius-2">Response</span>
+        <pre id="response" class="white shadow-4 radius-2 medium-padding card"></pre>
       </div>
     </div>
   </div>
   <script>
     async function signup(formData) {
-      const URL = `${HOST}/api/v1/auth/signup`;
+      const URL = document.querySelector("#url").value;
       const result = await sendData('POST', URL, formData, 'json');
 
       if (result) {
-        console.log(result);
-
-        if (result.error) {
-          document.querySelector('#message').innerHTML = `
-          <div class="danger text-white radius-2 uppercase large-padding center-align">
-            ${result.error}
-          </div>`;
-        } else {
-          document.querySelector('#message').innerHTML = `
-          <div class="success text-white radius-2 uppercase large-padding center-align">
-            Welcome ${result.user.firstName} ${result.user.lastName}, check your email to activate your account!
-          </div>`;
+        if (result) {
+          document.querySelector('#response').innerHTML = JSON.stringify(result, null, 4)
         }
       }
     }
 
     window.document.addEventListener('DOMContentLoaded', () => {
-      document.querySelector('#send').onclick = (e) => {
+      if (document.querySelector("#url")) {
+        document.querySelector("#url").value = `${HOST}/api/v1/auth/signup`;
+      }
+      document.querySelector('#submit').onclick = async (e) => {
+        startLoadingButton();
         const firstName = document.querySelector("#firstName").value;
         const lastName = document.querySelector("#lastName").value;
+        const username = document.querySelector("#username").value;
         const email = document.querySelector("#email").value;
         const password = document.querySelector("#password").value;
         if (firstName && lastName && email && password) {
-          signup({
+          await signup({
             firstName,
             lastName,
+            username,
             email,
             password
           });
         }
+        endLoadingButton();
       }
     });
   </script>

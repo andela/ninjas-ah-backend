@@ -7,31 +7,26 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <script src="/socket.io/socket.io.js"></script>
   <link rel="stylesheet" href="../css/style.css">
-  <title>Login</title>
+  <title>Bookmark Article</title>
 </head>
 
 <body>
   <div class="container shadow-2 radius-3">
     <div class="center">
       <h1 class="primary text-white radius-2 uppercase large-padding center-align">
-        Login
+        Bookmark Article
       </h1>
       <div class="large-padding">
         <div class="radius-2 medium-padding card">
           <input type="url" id="url" class="shadow-4 radius-2 medium-padding card medium-text large-screen-3">
           <br>
           <select id="verb" class="shadow-4 radius-4 large-padding large-text right">
-            <option value="POST">POST</option>
+            <option value="GET">GET</option>
+            <option value="PATCH">PATCH</option>
+            <option value="DELETE">DELETE</option>
           </select>
         </div>
         <br>
-        <div class="card">
-          <hr>
-        </div>
-        <input type="email" name="email" id="email" class="shadow-4 radius-2 medium-padding card"
-          placeholder="enter your email">
-        <input type="password" name="password" id="password" class="shadow-4 radius-2 medium-padding card"
-          placeholder="enter your password">
         <div class="radius-2 medium-padding card">
           <button type="button" id="submit" class="radius-4 primary text-white center-align large-h-padding large-text">
             Submit
@@ -45,30 +40,52 @@
     </div>
   </div>
   <script>
-    async function login(data) {
-      const URL = document.querySelector("#url").value;
-      const result = await sendData('POST', URL, data, 'json');
+    async function getBookmarkArticles(URL) {
+      let result = await getData(URL, 'json', localStorage.token);
 
       if (result) {
-        if (result) {
-          document.querySelector('#response').innerHTML = JSON.stringify(result, null, 4)
-        }
+        document.querySelector('#response').innerHTML = JSON.stringify(result, null, 4)
       }
     }
 
+    async function addBookmarkArticles(URL) {
+      let result = await sendData('PATCH', URL, {}, 'json', localStorage.token);
+
+      if (result) {
+        document.querySelector('#response').innerHTML = JSON.stringify(result, null, 4)
+      }
+    }
+
+    async function removeBookmarkArticles(URL) {
+      let result = await sendData('DELETE', URL, {}, 'json', localStorage.token);
+
+      if (result) {
+        document.querySelector('#response').innerHTML = JSON.stringify(result, null, 4)
+      }
+    }
     window.document.addEventListener('DOMContentLoaded', () => {
       if (document.querySelector("#url")) {
-        document.querySelector("#url").value = `${HOST}/api/v1/auth/login`;
+        document.querySelector("#url").value = `${HOST}/api/v1/articles/bookmarked`;
       }
       document.querySelector('#submit').onclick = async (e) => {
         startLoadingButton();
-        const email = document.querySelector("#email").value;
-        const password = document.querySelector("#password").value;
-        if (email && password) {
-          await login({
-            email,
-            password
-          });
+        document.querySelector('#response').innerHTML = '';
+        const URL = document.querySelector("#url").value;
+        const verb = document.querySelector("#verb").value;
+
+        switch (verb) {
+          case 'GET':
+            await getBookmarkArticles(URL)
+            break;
+          case 'PATCH':
+            await addBookmarkArticles(URL)
+            break;
+          case 'DELETE':
+            await removeBookmarkArticles(URL)
+            break;
+          default:
+            await getBookmarkArticles(URL)
+            break;
         }
         endLoadingButton();
       }

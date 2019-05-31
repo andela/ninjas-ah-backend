@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
 /* eslint-disable require-jsdoc */
 const HOST = `${window.location.protocol}//${window.location.hostname}:${window.location.port}`;
 
@@ -50,6 +52,17 @@ async function sendData(METHOD, URL, data = {}, resType = 'text', token = '') {
     return result;
   } catch (e) {
     throw Error(e);
+  }
+}
+
+function startLoadingButton() {
+  if (document.querySelector('#submit')) {
+    document.querySelector('#submit').innerHTML = 'Loading...';
+  }
+}
+function endLoadingButton() {
+  if (document.querySelector('#submit')) {
+    document.querySelector('#submit').innerHTML = 'Submit';
   }
 }
 

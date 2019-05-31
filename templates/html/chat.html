@@ -11,18 +11,39 @@
 </head>
 
 <body>
-  <div class="container shadow-2 radius-3 large-padding">
-    <div class="bold loggedInUser"></div>
-    <div id="message"></div>
-    <h1 class="primary text-white radius-2 uppercase large-padding center-align">
-      CHAT
-    </h1>
-    <br>
-    <textarea id="chat" class="shadow-4 radius-2 medium-padding card" rows="5" placeholder="Type something"></textarea>
-    <div class="center-align">
-      <button type="button" id="send" class="radius-2 primary text-white center-align large-h-padding large-text">
-        Send
-      </button>
+  <div class="container shadow-2 radius-3">
+    <div class="center">
+      <div id="message"></div>
+      <h1 class="primary text-white radius-2 uppercase large-padding center-align">
+        Chat
+      </h1>
+      <div class="large-padding">
+        <div class="bold loggedInUser"></div>
+        <div class="radius-2 medium-padding card">
+          <input type="url" id="url" class="shadow-4 radius-2 medium-padding card medium-text large-screen-3">
+          <br>
+          <select id="verb" class="shadow-4 radius-4 large-padding large-text right">
+            <option value="GET">GET</option>
+            <option value="POST">POST</option>
+            <option value="DELETE">DELETE</option>
+          </select>
+        </div>
+        <br>
+        <div class="card">
+          <hr>
+        </div>
+        <textarea id="chat" class="shadow-4 radius-2 medium-padding card" rows="5"
+          placeholder="Type something"></textarea>
+        <div class="radius-2 medium-padding card">
+          <button type="button" id="submit" class="radius-4 primary text-white center-align large-h-padding large-text">
+            Submit
+          </button>
+        </div>
+      </div>
+      <div class="primary large-padding">
+        <span class="small-h-padding large-text white radius-2">Response</span>
+        <pre id="response" class="white shadow-4 radius-2 medium-padding card"></pre>
+      </div>
     </div>
   </div>
   <br>
@@ -42,7 +63,7 @@
     }
 
     async function sendChat(message) {
-      const URL = `${HOST}/api/v1/chats`;
+      const URL = document.querySelector("#url").value;
       let result = await sendData('POST', URL, message, 'json', localStorage.token);
 
       if (result) {
@@ -54,12 +75,12 @@
           </div>`;
         } else {
           document.querySelector('#message').innerHTML = '';
+          document.querySelector('#response').innerHTML = JSON.stringify(result, null, 4)
         }
       }
     }
 
-    async function getChats() {
-      const URL = `${HOST}/api/v1/chats`;
+    async function getChats(URL) {
       let result = await getData(URL, 'json', localStorage.token);
 
       if (result) {
@@ -70,6 +91,7 @@
           </div>`;
         } else {
           document.querySelector('#message').innerHTML = '';
+          document.querySelector('#response').innerHTML = JSON.stringify(result, null, 4)
           displayChats(result.chats);
         }
       }
@@ -134,10 +156,9 @@
       return '';
     }
 
-    async function deleteChat(chatId) {
-      // document.querySelector(`#chat${chatId}`).remove();
-      const URL = `${HOST}/api/v1/chats/${chatId}`;
-      let result = await sendData('DELETE', URL, {}, 'json', localStorage.token);
+    async function deleteChat(chatId, URL) {
+      const endpoint = URL || `${HOST}/api/v1/chats/${chatId}`;
+      let result = await sendData('DELETE', endpoint, {}, 'json', localStorage.token);
       console.log(result);
 
       if (result) {
@@ -148,7 +169,11 @@
           </div>`;
         } else {
           document.querySelector('#message').innerHTML = '';
-          document.querySelector(`#chat${chatId}`).remove();
+          document.querySelector('#response').innerHTML = JSON.stringify(result, null, 4)
+
+          if (chatId) {
+            document.querySelector(`#chat${chatId}`).remove();
+          }
         }
       }
     }
@@ -158,15 +183,45 @@
       const socket = io();
       socket.on("message", addChat)
 
-      document.querySelector('#send').onclick = (e) => {
+      if (document.querySelector("#url")) {
+        document.querySelector("#url").value = `${HOST}/api/v1/chats`;
+      }
+
+      document.querySelector('#submit').onclick = async (e) => {
+        startLoadingButton();
+        document.querySelector('#response').innerHTML = '';
+        const URL = document.querySelector("#url").value;
+        const verb = document.querySelector("#verb").value;
+
         if (document.querySelector("#chat").value) {
-          sendChat({
+          await sendChat({
             message: document.querySelector("#chat").value
           });
           document.querySelector("#chat").value = ''; // clear text area
         }
+
+        switch (verb) {
+          case 'GET':
+            document.querySelector('#chats').innerHTML = '';
+            await getChats(URL)
+            break;
+          case 'POST':
+            if (document.querySelector("#chat").value) {
+              await sendChat({
+                message: document.querySelector("#chat").value
+              });
+              document.querySelector("#chat").value = ''; // clear text area
+            }
+            break;
+          case 'DELETE':
+            await deleteChat(null, URL)
+            break;
+          default:
+            await getArticles(URL)
+            break;
+        }
+        endLoadingButton();
       }
-      getChats()
     });
   </script>
   <script src="../js/index.js"></script>
