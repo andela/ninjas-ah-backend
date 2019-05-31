@@ -53,6 +53,11 @@
         if (result) {
           document.querySelector('#response').innerHTML = JSON.stringify(result, null, 4)
         }
+
+        if (result.token && result.user) {
+          localStorage.token = result.token;
+          localStorage.user = JSON.stringify(result.user);
+        }
       }
     }
 
