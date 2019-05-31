@@ -5,17 +5,20 @@ import asyncHandler from '../../middlewares/asyncHandler';
 import checkArticleBySlug from '../../middlewares/checkArticleBySlug';
 import verifyToken from '../../middlewares/verifyToken';
 import shareArticle from '../../middlewares/shareArticle';
+import { multerUploads } from '../../middlewares/multer';
 
 const articles = Router();
 // create article
 articles.post(
-  '/articles/',
+  '/articles',
   verifyToken,
+  multerUploads,
   validateArticle.create,
   asyncHandler(ArticleController.saveArticle)
 );
 
-articles.get('/articles/bookmarked', verifyToken, ArticleController.getBookmarks);
+articles.get('/articles/bookmarked', verifyToken, ArticleController.getBookmarksOrFavorites);
+articles.get('/articles/favorited', verifyToken, ArticleController.getBookmarksOrFavorites);
 
 articles.get(
   '/articles',
@@ -81,10 +84,28 @@ articles.patch(
   '/articles/:slug/bookmark',
   verifyToken,
   checkArticleBySlug,
-  ArticleController.bookmark
+  ArticleController.bookmarkOrFavorite
+);
+articles.patch(
+  '/articles/:slug/favorite',
+  verifyToken,
+  checkArticleBySlug,
+  ArticleController.bookmarkOrFavorite
 );
 
-articles.delete('/articles/:slug/bookmark', verifyToken, ArticleController.removeBookmark);
+articles.delete(
+  '/articles/:slug/bookmark',
+  verifyToken,
+  checkArticleBySlug,
+  ArticleController.removeBookmarkOrFavorite
+);
+
+articles.delete(
+  '/articles/:slug/favorite',
+  verifyToken,
+  checkArticleBySlug,
+  ArticleController.removeBookmarkOrFavorite
+);
 
 articles.get(
   '/articles/:slug/share/facebook',

@@ -10,6 +10,7 @@ import parameters from './parameters';
 import clearInvalidToken from './clearInvalidToken';
 import generator from './generator';
 import * as filters from './searchArticleFilters';
+import upload from './upload';
 
 export {
   isUser,
@@ -23,5 +24,6 @@ export {
   clearInvalidToken,
   token,
   generator,
-  filters
+  filters,
+  upload
 };

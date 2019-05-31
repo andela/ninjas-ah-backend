@@ -95,7 +95,7 @@ describe('Bookmark article', () => {
       });
   });
 
-  it('should throw an error', (done) => {
+  it('should throw an error when bookmarking an article', (done) => {
     const invalidUserAccessToken = jwt.sign(
       { id: {}, role: createdUser.role, permissions: createdUser.permissions },
       process.env.SECRET_KEY,
@@ -136,7 +136,7 @@ describe('Bookmark article', () => {
       });
   });
 
-  it('should throw an error', (done) => {
+  it('should throw an error when getting bookmarked articles', (done) => {
     const invalidUserAccessToken = jwt.sign(
       { id: {}, role: createdUser.role, permissions: createdUser.permissions },
       process.env.SECRET_KEY,
@@ -154,7 +154,7 @@ describe('Bookmark article', () => {
   });
 
   // delete bookmarked articles
-  it('should delete a bookmark', (done) => {
+  it('should delete a bookmarked article', (done) => {
     chai
       .request(app)
       .delete(`/api/v1/articles/${createdArticle.slug}/bookmark`)
@@ -166,7 +166,7 @@ describe('Bookmark article', () => {
       });
   });
 
-  it('should not delete a bookmark if it has already been deleted by the same user', (done) => {
+  it('should not delete a bookmarked article if it has already been deleted', (done) => {
     chai
       .request(app)
       .delete(`/api/v1/articles/${createdArticle.slug}/bookmark`)
@@ -178,7 +178,7 @@ describe('Bookmark article', () => {
       });
   });
 
-  it('should not delete a bookmark if the user is not authenticated', (done) => {
+  it('should not delete a bookmarked article if the user is not authenticated', (done) => {
     chai
       .request(app)
       .delete(`/api/v1/articles/${createdArticle.slug}/bookmark`)
@@ -189,7 +189,7 @@ describe('Bookmark article', () => {
       });
   });
 
-  it('should throw an error', (done) => {
+  it('should throw an error when deleting a bookmarked article', (done) => {
     const invalidUserAccessToken = jwt.sign(
       { id: {}, role: createdUser.role, permissions: createdUser.permissions },
       process.env.SECRET_KEY,
@@ -198,6 +198,170 @@ describe('Bookmark article', () => {
     chai
       .request(app)
       .delete(`/api/v1/articles/${createdArticle.slug}/bookmark`)
+      .set('access-token', invalidUserAccessToken)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(status.SERVER_ERROR);
+        expect(res.body).to.include.keys('errors');
+        done();
+      });
+  });
+
+  // favorite an article
+  it('should favorite an article', (done) => {
+    chai
+      .request(app)
+      .patch(`/api/v1/articles/${createdArticle.slug}/favorite`)
+      .set('access-token', accessToken)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(status.CREATED);
+        expect(res.body).to.not.include.keys('errors');
+        done();
+      });
+  });
+
+  it('should not favorite an article if it has already been favorited by the same user', (done) => {
+    chai
+      .request(app)
+      .patch(`/api/v1/articles/${createdArticle.slug}/favorite`)
+      .set('access-token', accessToken)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(status.EXIST);
+        expect(res.body).to.include.keys('errors');
+        done();
+      });
+  });
+
+  it('should not favorite an article if the user is not authenticated', (done) => {
+    chai
+      .request(app)
+      .patch(`/api/v1/articles/${createdArticle.slug}/favorite`)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(status.UNAUTHORIZED);
+        expect(res.body).to.include.keys('errors');
+        done();
+      });
+  });
+
+  it("should not favorite an article if the user doesn't exist", (done) => {
+    const invalidUserAccessToken = jwt.sign(
+      { id: 0, role: createdUser.role, permissions: createdUser.permissions },
+      process.env.SECRET_KEY,
+      { expiresIn: '1d' }
+    );
+    chai
+      .request(app)
+      .patch(`/api/v1/articles/${createdArticle.slug}/favorite`)
+      .set('access-token', invalidUserAccessToken)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(status.UNAUTHORIZED);
+        expect(res.body).to.include.keys('errors');
+        done();
+      });
+  });
+
+  it('should throw an error when favoriteing an article', (done) => {
+    const invalidUserAccessToken = jwt.sign(
+      { id: {}, role: createdUser.role, permissions: createdUser.permissions },
+      process.env.SECRET_KEY,
+      { expiresIn: '1d' }
+    );
+    chai
+      .request(app)
+      .patch(`/api/v1/articles/${createdArticle.slug}/favorite`)
+      .set('access-token', invalidUserAccessToken)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(status.SERVER_ERROR);
+        expect(res.body).to.include.keys('errors');
+        done();
+      });
+  });
+
+  // get favorited articles
+  it('should get all favorited articles', (done) => {
+    chai
+      .request(app)
+      .get('/api/v1/articles/favorited')
+      .set('access-token', accessToken)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(status.OK);
+        expect(res.body).to.not.include.keys('errors');
+        done();
+      });
+  });
+
+  it('should not get all favorited articles if the user is not authenticated', (done) => {
+    chai
+      .request(app)
+      .get('/api/v1/articles/favorited')
+      .end((err, res) => {
+        expect(res.status).to.be.equal(status.UNAUTHORIZED);
+        expect(res.body).to.include.keys('errors');
+        done();
+      });
+  });
+
+  it('should throw an error when getting favorited articles', (done) => {
+    const invalidUserAccessToken = jwt.sign(
+      { id: {}, role: createdUser.role, permissions: createdUser.permissions },
+      process.env.SECRET_KEY,
+      { expiresIn: '1d' }
+    );
+    chai
+      .request(app)
+      .get('/api/v1/articles/favorited')
+      .set('access-token', invalidUserAccessToken)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(status.SERVER_ERROR);
+        expect(res.body).to.include.keys('errors');
+        done();
+      });
+  });
+
+  // delete favorited articles
+  it('should delete a favorited article', (done) => {
+    chai
+      .request(app)
+      .delete(`/api/v1/articles/${createdArticle.slug}/favorite`)
+      .set('access-token', accessToken)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(status.OK);
+        expect(res.body).to.not.include.keys('errors');
+        done();
+      });
+  });
+
+  it('should not delete a favorited article if it has already been deleted', (done) => {
+    chai
+      .request(app)
+      .delete(`/api/v1/articles/${createdArticle.slug}/favorite`)
+      .set('access-token', accessToken)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(status.BAD_REQUEST);
+        expect(res.body).to.include.keys('errors');
+        done();
+      });
+  });
+
+  it('should not delete a favorited article if the user is not authenticated', (done) => {
+    chai
+      .request(app)
+      .delete(`/api/v1/articles/${createdArticle.slug}/favorite`)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(status.UNAUTHORIZED);
+        expect(res.body).to.include.keys('errors');
+        done();
+      });
+  });
+
+  it('should throw an error when deleting a favorited article', (done) => {
+    const invalidUserAccessToken = jwt.sign(
+      { id: {}, role: createdUser.role, permissions: createdUser.permissions },
+      process.env.SECRET_KEY,
+      { expiresIn: '1d' }
+    );
+    chai
+      .request(app)
+      .delete(`/api/v1/articles/${createdArticle.slug}/favorite`)
       .set('access-token', invalidUserAccessToken)
       .end((err, res) => {
         expect(res.status).to.be.equal(status.SERVER_ERROR);
