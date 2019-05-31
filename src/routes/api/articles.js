@@ -5,12 +5,14 @@ import asyncHandler from '../../middlewares/asyncHandler';
 import checkArticleBySlug from '../../middlewares/checkArticleBySlug';
 import verifyToken from '../../middlewares/verifyToken';
 import shareArticle from '../../middlewares/shareArticle';
+import { multerUploads } from '../../middlewares/multer';
 
 const articles = Router();
 // create article
 articles.post(
   '/articles',
   verifyToken,
+  multerUploads,
   validateArticle.create,
   asyncHandler(ArticleController.saveArticle)
 );

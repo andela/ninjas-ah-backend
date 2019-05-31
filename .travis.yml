@@ -13,10 +13,10 @@ env:
     - GOOGLE_CONSUMER_SECRET=GoogleSecret
 language: node_js
 node_js:
-  - "stable"
+  - 'stable'
 cache:
   directories:
-    - "node_modules"
+    - 'node_modules'
 services:
   - postgresql
 before_script:

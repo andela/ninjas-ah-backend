@@ -19,6 +19,7 @@ const user = Factory.user.build();
 
 delete user.id;
 delete article.id;
+const createdGallery = '';
 describe('No articles', () => {
   before(async () => {
     createdUser = (await db.User.create(user, { logging: false })).dataValues;
@@ -148,6 +149,8 @@ describe('Article', () => {
     author = findUser[0].dataValues.id;
     const { dataValues } = await db.Article.findOne({ where: { id: 1 } }, { logging: false });
     articleSlug = dataValues.slug;
+    // create gallery
+    await db.Gallery.create({ image: 'placeholder.png', userId: createdUser.id });
   });
   //   // create article
   it('Should successfully create an article', (done) => {
@@ -157,8 +160,8 @@ describe('Article', () => {
     chai
       .request(app)
       .post('/api/v1/articles')
-      .send(article)
       .set('access-token', accessToken)
+      .send(article)
       .end((err, res) => {
         const response = res.body;
         expect(res).to.have.status(status.CREATED);
@@ -169,6 +172,44 @@ describe('Article', () => {
         response.article.coverUrl.should.be.a('string');
         expect(response.article.userId).should.be.an('object');
         done();
+      });
+  });
+
+  it('Should update article cover', async () => {
+    const myArticle = await db.Article.findOne({ where: { userId: createdUser.id } });
+    chai
+      .request(app)
+      .post(`/api/v1/articles/${myArticle.dataValues.slug}/cover`)
+      .set('access-token', accessToken)
+      .send({ coverUrl: 'placeholder.png' })
+      .end((err, res) => {
+        expect(res).to.have.status(status.OK);
+        res.body.should.be.an('object');
+        expect(res.body.coverUrl).to.equal('CoverUrl has been updated');
+      });
+  });
+  it('Should not update article cover if image not provided ', async () => {
+    chai
+      .request(app)
+      .post('/api/v1/articles/rosie-make-it-easy-1dh6jv9cn4sz/cover')
+      .set('access-token', accessToken)
+      .send({ coverUrl: 'placeholder.png' })
+      .end((err, res) => {
+        expect(res).to.have.status(status.BAD_REQUEST);
+        res.body.should.be.an('object');
+        expect(res.body.errors.coverUrl).to.equal('coverUrl not updated, try again');
+      });
+  });
+  it('Should get gallery', async () => {
+    chai
+      .request(app)
+      .get('/api/v1/gallery')
+      .set('access-token', accessToken)
+      .end((err, res) => {
+        console.log('rw', res.body);
+        // expect(res).to.have.status(status.OK);
+        // res.body.should.be.an('object');
+        // expect(res.body.coverUrl).to.equal('CoverUrl has been updated');
       });
   });
   it('Should successfully create an article even if title is more than 70 characters', (done) => {
@@ -261,7 +302,7 @@ describe('Article', () => {
     chai
       .request(app)
       .post('/api/v1/articles')
-      .send(article)
+      .set(article)
       .set('access-token', accessToken)
       .end((err, res) => {
         expect(res).to.have.status(400);
@@ -295,8 +336,8 @@ describe('Article', () => {
     chai
       .request(app)
       .post('/api/v1/articles')
-      .send(fakeArticle3)
       .set('access-token', accessToken)
+      .send(fakeArticle3)
       .end((err, res) => {
         const response = res.body;
         expect(res).to.have.status(status.CREATED);
@@ -571,6 +612,7 @@ describe('Article', () => {
         done();
       });
   });
+
   it('Should delete article', (done) => {
     const deleteArticle = { ...article, slug: 'rosie-make-it-easy-1dh6jv9cn4sz' };
     chai

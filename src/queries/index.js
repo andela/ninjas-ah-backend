@@ -4,7 +4,8 @@ import * as ArticleBookmark from './articleBookmarks';
 import * as Token from './tokens';
 import * as Tag from './tags';
 import * as Chat from './chats';
+import * as Gallery from './gallery';
 
 export {
-  User, Article, Token, Tag, ArticleBookmark, Chat
+  User, Article, Token, Tag, ArticleBookmark, Chat, Gallery
 };

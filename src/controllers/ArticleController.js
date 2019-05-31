@@ -2,7 +2,6 @@ import status from '../config/status';
 import * as helpers from '../helpers';
 
 import { Article } from '../queries';
-
 /**
  * A class to handle actions performed on articles
  */
@@ -13,14 +12,14 @@ export default class ArticleController {
    * @returns {object} Object representing the response returned
    */
   static async saveArticle(req, res) {
-    const { coverUrl, tagList } = req.body;
+    const { tagList } = req.body;
     const newArticle = await Article.create({
       userId: req.user.id || 0,
       slug: helpers.generator.slug(req.body.title),
       title: req.body.title.trim(),
       description: req.body.description.trim(),
       body: req.body.body.trim(),
-      coverUrl,
+      coverUrl: req.body.coverUrl || '/templates/images/image.png',
       tagList,
       readTime: helpers.generator.readtime(req.body.body)
     });

@@ -4,6 +4,7 @@ import comments from './comments';
 import tags from './tags';
 import users from './users';
 import chats from './chats';
+import upload from './upload';
 
 const router = express.Router();
 
@@ -12,5 +13,6 @@ router.use(tags);
 router.use('/articles', comments);
 router.use('/users', users);
 router.use('/chats', chats);
+router.use(upload);
 
 export default router;
