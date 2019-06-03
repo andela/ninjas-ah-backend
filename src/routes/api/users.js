@@ -9,6 +9,6 @@ const router = Router();
 
 router.put('/', verifyToken, validateUser, checkUpdateUserPermission, UserController.update); // update user profile
 router.put('/:id', verifyToken, validateUser, checkUpdateUserPermission, UserController.update); // update user profile by id
-router.get('/', verifyToken, asyncHandler(UserController.getAllUser));
+router.get('/', verifyToken, asyncHandler(UserController.getAllAuthors));
 
 export default router;
