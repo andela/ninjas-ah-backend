@@ -32,4 +32,18 @@ export default class UserController {
       user: updatedUser
     });
   }
+
+  /**
+   * @param  {object} req
+   * @param  {object} res
+   * @return {object} return all users in database
+   */
+  static async getAllUser(req, res) {
+    const role = 'normal';
+    const findAll = await User.getAllUser({ role });
+    return res.status(status.OK).json({
+      message: 'All authors fetched successfully',
+      Authors: findAll
+    });
+  }
 }
