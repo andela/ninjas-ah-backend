@@ -6,7 +6,18 @@ import article from './article';
 import readtime from './readtime';
 import token from './token';
 import comment from './comment';
+import report from './report';
+import editComment from './editComment';
 
 export {
-  user, userFacebook, userTwitter, userGoogle, article, comment, readtime, token
+  user,
+  userFacebook,
+  userTwitter,
+  userGoogle,
+  article,
+  comment,
+  readtime,
+  token,
+  report,
+  editComment
 };

@@ -19,7 +19,7 @@ describe('src/models/Comment', () => {
   checkModelName(Comment)('Comment');
 
   context('properties', () => {
-    ['id', 'articleId', 'userId', 'body', 'createdAt', 'updatedAt'].forEach(
+    ['id', 'articleSlug', 'userId', 'body', 'createdAt', 'updatedAt'].forEach(
       checkPropertyExists(comment)
     );
   });

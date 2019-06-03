@@ -6,5 +6,5 @@ import * as Tag from './tags';
 import * as Chat from './chats';
 
 export {
-  User, Article, Token, Tag, ArticleBookmark, Chat
+  User, Article, Token, Tag, Chat, ArticleBookmark
 };

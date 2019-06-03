@@ -1,9 +1,8 @@
 /* eslint-disable import/named */
 import status from '../config/status';
-import { create } from '../queries/comments/createComment';
-import { getAll } from '../queries/comments/getAllComments';
-import { updateElement } from '../queries/comments/updateComment';
-import { deleteElement } from '../queries/comments/deleteComment';
+import * as comment from '../queries/comments';
+import * as editcomment from '../queries/comments/edits';
+
 /**
  * comment controller class
  */
@@ -15,26 +14,17 @@ export default class CommentController {
    * @returns { object } the return object.
    */
   static async create(req, res) {
-    try {
-      const userId = req.userId || req.body.userId || req.params.userId || null;
-      const comment = await create({
-        articleId: req.params.articleId,
-        userId,
-        body: req.body.body
-      });
+    const userId = req.user.id;
+    const createdComment = await comment.createComment({
+      articleSlug: req.params.articleSlug,
+      userId,
+      body: req.body.body
+    });
 
-      return res.status(status.CREATED).send({
-        status: status.CREATED,
-        message: 'Comment successfully created',
-        data: comment
-      });
-    } catch (error) {
-      return res.status(status.SERVER_ERROR).send({
-        status: status.SERVER_ERROR,
-        message: 'Ooops, something went wrong',
-        error
-      });
-    }
+    return res.status(status.CREATED).send({
+      message: 'Comment successfully created',
+      comment: createdComment
+    });
   }
 
   /**
@@ -44,40 +34,10 @@ export default class CommentController {
    * @returns { object } the return object.
    */
   static async getAll(req, res) {
-    const { articleId } = req.params;
-    const response = await getAll({
-      articleId
-    });
-    // check if there is comment in the database
-    if (response && response.length === 0) {
-      return res.status(status.NOT_FOUND).send({
-        status: status.NOT_FOUND,
-        message: 'No comments for this article so far'
-      });
-    }
+    const response = await comment.getAllComments({ articleSlug: req.params.articleSlug });
     return res.status(status.OK).send({
-      status: status.OK,
       message: 'Comments fetched successfully',
-      data: response
-    });
-  }
-
-  /**
-   * Edit one comment
-   * @param { object } req the request.
-   * @param { object } res The response.
-   * @returns { object } the return object.
-   */
-  static async edit(req, res) {
-    await updateElement(
-      { body: req.body.body },
-      {
-        id: req.params.id
-      }
-    );
-    return res.status(status.OK).send({
-      status: status.OK,
-      message: 'Comment edited successfully'
+      Comments: response
     });
   }
 
@@ -88,10 +48,76 @@ export default class CommentController {
    * @returns { object } the return object.
    */
   static async delete(req, res) {
-    await deleteElement({ id: req.params.id });
+    await comment.deleteComment({ id: req.params.commentId });
     return res.status(status.OK).send({
-      status: status.OK,
       message: 'Comment successfully deleted'
+    });
+  }
+
+  /**
+   * Edit one comment
+   * @param { object } req the request.
+   * @param { object } res The response.
+   * @returns { object } the return object.
+   */
+  static async editComment(req, res) {
+    const userId = req.user.id;
+    const { articleSlug, commentId } = req.params;
+    const findComment = await comment.getSingleComment({ articleSlug, id: commentId, userId });
+    await editcomment.create({
+      articleSlug: findComment.articleSlug,
+      userId: findComment.userId,
+      body: findComment.body,
+      commentId: findComment.id
+    });
+    await comment.updateComment({ body: req.body.body }, { id: req.params.commentId });
+
+    return res.status(status.OK).send({
+      message: 'Comment edited successfully'
+    });
+  }
+
+  /**
+   * Get all edits
+   * @param { object } req the request.
+   * @param { object } res The response.
+   * @returns { object } the return object.
+   */
+  static async getAllEdit(req, res) {
+    const userId = req.user.id;
+    const { articleSlug, commentId } = req.params;
+    const newComment = { articleSlug, commentId, userId };
+    const findComment = await comment.getSingleComment({ articleSlug, id: commentId, userId });
+    const findAllEdit = await editcomment.getAll(newComment);
+    if (findAllEdit.length === 0) {
+      return res.status(status.OK).send({
+        message: 'All previous',
+        Comments: findComment
+      });
+    }
+    return res.status(status.OK).send({
+      message: 'All previous comments',
+      Comments: findAllEdit
+    });
+  }
+
+  /**
+   * Delete one edit from comment history.
+   * @param { object } req the request.
+   * @param { object } res The response.
+   * @returns { object } the return object.
+   */
+  static async remove(req, res) {
+    const { id } = req.params;
+    let message = 'Comment removed from history successfully';
+    const findEdit = await editcomment.getSingle({ id });
+    if (!findEdit) {
+      message = 'Comment is not in history';
+      return res.status(status.NOT_FOUND).json({ error: { message } });
+    }
+    await editcomment.remove({ id });
+    return res.status(status.OK).send({
+      message
     });
   }
 }

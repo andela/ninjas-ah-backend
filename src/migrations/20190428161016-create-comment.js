@@ -6,12 +6,12 @@ export default {
       primaryKey: true,
       type: Sequelize.INTEGER
     },
-    articleId: {
-      type: Sequelize.INTEGER,
+    articleSlug: {
+      type: Sequelize.STRING,
       allowNull: false,
       references: {
         model: 'Articles',
-        key: 'id'
+        key: 'slug'
       },
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE'
@@ -29,6 +29,10 @@ export default {
     body: {
       type: Sequelize.TEXT,
       allowNull: false
+    },
+    likes: {
+      type: Sequelize.INTEGER,
+      allowNull: true
     },
     createdAt: {
       allowNull: false,

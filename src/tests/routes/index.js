@@ -5,3 +5,7 @@ import './articles.test';
 import './users.test';
 import './chats.test';
 import './userArticles.test';
+import './commentLikes.test';
+import './articleLike.test';
+import './report.test';
+import './editComment.test';

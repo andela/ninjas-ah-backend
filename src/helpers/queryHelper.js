@@ -1,4 +1,4 @@
-const dbFindSingle = async (model, whereCondition) => model.findOne({
+const dbFindSingle = async (model, whereCondition = {}) => model.findOne({
   where: whereCondition,
   logging: false
 });
@@ -14,19 +14,10 @@ const dbDelete = async (model, whereCondition) => model.destroy({
   where: whereCondition,
   logging: false
 });
+const dbUpdate = async (model, condition, whereCondition = {}) => {
+  model.update(condition, { where: whereCondition, logging: false });
+};
 
-const dbUpdate = async (model, condition, whereCondition) => model.update(
-  { condition },
-  {
-    where: whereCondition,
-    logging: false
-  }
-);
-
-module.exports = {
-  dbFindSingle,
-  dbFindAll,
-  dbCreate,
-  dbDelete,
-  dbUpdate
+export {
+  dbFindSingle, dbFindAll, dbCreate, dbDelete, dbUpdate
 };
