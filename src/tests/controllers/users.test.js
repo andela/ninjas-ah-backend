@@ -8,8 +8,12 @@ import * as Factory from '../../helpers/factory';
 
 chai.should();
 chai.use(chaiHttp);
-const user = Factory.user.build();
-delete user.id;
+const userNormal = Factory.userNormal.build();
+const userAdmin = Factory.userAdmin.build();
+delete userNormal.id;
+delete userAdmin.id;
+delete userNormal.role;
+delete userNormal.permissions;
 
 // user test
 describe('user tests', () => {
@@ -30,7 +34,7 @@ describe('user tests', () => {
       chai
         .request(app)
         .post('/api/v1/auth/signup')
-        .send(user)
+        .send(userNormal)
         .end((err, res) => {
           res.status.should.equal(status.CREATED);
           res.body.should.be.an('object');
@@ -38,11 +42,22 @@ describe('user tests', () => {
           done();
         });
     });
+    it('Should not register a new user', (done) => {
+      chai
+        .request(app)
+        .post('/api/v1/auth/signup')
+        .send(userAdmin)
+        .end((err, res) => {
+          res.status.should.equal(status.UNAUTHORIZED);
+          res.body.should.be.an('object');
+          done();
+        });
+    });
     it('Should fail to register new user if exists', (done) => {
       chai
         .request(app)
         .post('/api/v1/auth/signup')
-        .send(user)
+        .send(userNormal)
         .end((err, res) => {
           res.body.should.be.an('object');
           res.status.should.be.equal(status.EXIST);
@@ -54,8 +69,8 @@ describe('user tests', () => {
   // test sign in
   describe('user sign in', () => {
     const userSignIn = {
-      email: user.email,
-      password: user.password
+      email: userNormal.email,
+      password: userNormal.password
     };
     // test user sign in
     it('sign in user', (done) => {
@@ -77,7 +92,7 @@ describe('user tests', () => {
         .post('/api/v1/auth/login')
         .send({
           email: 'sengayirepr@gmail.com',
-          password: user.pasword
+          password: userNormal.pasword
         })
         .end((err, res) => {
           res.body.should.be.an('object');
@@ -103,7 +118,7 @@ describe('user tests', () => {
         .request(app)
         .post('/api/v1/auth/login')
         .send({
-          email: user.email,
+          email: userNormal.email,
           password: '12313223123'
         })
         .end((err, res) => {

@@ -10,3 +10,5 @@ import './articleLike.test';
 import './report.test';
 import './editComment.test';
 import './allUser.test';
+import './roles.test';
+import './permission.test';

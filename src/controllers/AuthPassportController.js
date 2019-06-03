@@ -30,6 +30,7 @@ export default class AuthPassportController {
     return Object.keys(profile).length
       ? {
         ...user,
+        permissions: profile.permissions,
         image: profile.photos[0].value,
         accountProvider: profile.provider,
         accountProviderUserId: profile.id

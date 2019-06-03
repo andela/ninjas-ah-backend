@@ -18,6 +18,7 @@ export default class AuthLocalController {
     const {
       firstName, lastName, username, email
     } = req.body;
+
     const isUser = await helper.isUser({ email });
     if (isUser) {
       return res.status(status.EXIST).send({ error: 'Sorry, this account already exists' });
@@ -27,13 +28,13 @@ export default class AuthLocalController {
       lastName,
       username,
       email,
-      password: helper.password.hash(req.body.password)
+      password: helper.password.hash(req.body.password),
+      permissions: req.body.permissions
     });
     if (!newUser.errors && newUser && Object.keys(newUser).length > 0) {
       delete newUser.password;
       return res.status(status.CREATED).send({
-        user: newUser,
-        token: helper.token.generate({ email, role: req.body.isAdmin })
+        user: newUser, token: helper.token.generate({ email, role: req.body.isAdmin })
       });
     }
   }
@@ -55,7 +56,9 @@ export default class AuthLocalController {
             message: 'The credentials you provided is incorrect'
           });
         }
-        const payload = { id: checkUser.id, role: checkUser.role };
+        const payload = {
+          id: checkUser.id, role: checkUser.role, permissions: checkUser.permissions
+        };
         const token = helper.token.generate(payload);
         delete checkUser.password;
         return res.status(status.OK).send({
@@ -63,9 +66,7 @@ export default class AuthLocalController {
           token
         });
       }
-      return res
-        .status(status.UNAUTHORIZED)
-        .send({ error: `User with ${email} email doesn't exist!!!` });
+      return res.status(status.UNAUTHORIZED).send({ error: `User with ${email} email doesn't exist!!!` });
     } catch (error) {
       return res.status(500).send({ error });
     }

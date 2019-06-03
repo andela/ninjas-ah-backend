@@ -1,7 +1,5 @@
-import db from '../models';
 import status from '../config/status';
-
-const { User } = db;
+import isUser from '../helpers/isUser';
 
 /**
  *
@@ -12,13 +10,10 @@ const { User } = db;
  * @param {void} next
  * @returns {void}
  */
+export default async (req, res, next) => {
+  const id = req.user ? req.user.id : 0;
 
-const verifyAdminUser = async (req, res, next) => {
-  const { user } = req;
-
-  const requestUser = await User.findOne({
-    where: { id: user.id, role: 'admin' }
-  });
+  const requestUser = await isUser({ id, role: 'admin' });
 
   if (!requestUser) {
     return res.status(status.ACCESS_DENIED).json({
@@ -28,5 +23,3 @@ const verifyAdminUser = async (req, res, next) => {
   }
   return next();
 };
-
-export default verifyAdminUser;
