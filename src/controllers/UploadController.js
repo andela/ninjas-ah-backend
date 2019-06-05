@@ -12,12 +12,13 @@ export default class UploadController {
    * @returns {object} Object representing the response returned
    */
   static async save(req, res) {
-    const image = await upload(req);
-    return image
-      ? res.status(status.CREATED).json({
-        image
-      })
-      : res.status(status.BAD_REQUEST).json({
+    const response = req.file && (await upload(req));
+    return typeof response === 'object'
+      ? (await Gallery.save({ image: response.image.original, userId: req.user.id }))
+          && res.status(status.CREATED).json({
+            response
+          })
+      : res.status(!req.file ? status.BAD_REQUEST : status.SERVER_ERROR).json({
         errors: {
           image: 'Whoops, something went wrong while uploading your image. try again!'
         }
