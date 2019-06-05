@@ -11,7 +11,6 @@ export default class ArticleController {
    * @returns {object} Object representing the response returned
    */
   static async saveArticle(req, res) {
-    const image = await helpers.upload(req);
     const { tagList } = req.body;
     const newArticle = await Article.create({
       userId: req.user.id || 0,
@@ -19,7 +18,7 @@ export default class ArticleController {
       title: req.body.title.trim(),
       description: req.body.description.trim(),
       body: req.body.body.trim(),
-      coverUrl: image.image.original,
+      coverUrl: req.body.coverUrl || '/templates/images/image.png',
       tagList,
       readTime: helpers.generator.readtime(req.body.body)
     });
