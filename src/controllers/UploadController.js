@@ -14,7 +14,7 @@ export default class UploadController {
    */
   static async save(req, res) {
     const response = req.file && (await upload(req));
-    return typeof response === 'object'
+    return typeof response === 'object' && typeof response !== 'boolean' && response !== null
       ? (await Gallery.save({ image: response.image.original, userId: req.user.id }))
           && res.status(status.CREATED).json({
             response
