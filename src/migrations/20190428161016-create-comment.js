@@ -30,10 +30,6 @@ export default {
       type: Sequelize.TEXT,
       allowNull: false
     },
-    likes: {
-      type: Sequelize.INTEGER,
-      allowNull: true
-    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE

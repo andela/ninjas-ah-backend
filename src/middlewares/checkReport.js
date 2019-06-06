@@ -14,7 +14,7 @@ const checkUserReport = async (req, res, next) => {
   const userId = req.user.id;
   const { articleSlug } = req.params;
   const newreport = { userId, articleSlug };
-  const findReport = await report.getSingleReport(newreport);
+  const findReport = await report.getSingle(newreport);
   if (findReport) {
     return res.status(status.OK).json({ message: 'You already reported the article' });
   }
@@ -23,7 +23,7 @@ const checkUserReport = async (req, res, next) => {
 const checkReportExist = async (req, res, next) => {
   const { articleSlug, reportId } = req.params;
   const newreport = { id: reportId, articleSlug };
-  const findReport = await report.getSingleReport(newreport);
+  const findReport = await report.getSingle(newreport);
   if (!findReport) {
     return res.status(status.BAD_REQUEST).json({ message: 'The report does not exist' });
   }

@@ -11,20 +11,13 @@ import * as article from '../queries/articles';
  * @param { function } next  return object
  */
 const checkArticle = async (req, res, next) => {
-  try {
-    const findArticle = await article.get({
-      slug: req.params.articleSlug
-    });
-    if (!findArticle) {
-      return res.status(status.NOT_FOUND).send({
-        message: 'That article does not exist'
-      });
-    }
-    next();
-  } catch (error) {
-    return res.status(status.SERVER_ERROR).send({
-      message: 'Ooops, something went wrong'
-    });
+  const { articleSlug } = req.params;
+  const findArticle = await article.get({ slug: articleSlug });
+  if (!findArticle) {
+    return res
+      .status(status.NOT_FOUND)
+      .json({ errors: { message: 'That article does not exist' } });
   }
+  next();
 };
 export default checkArticle;

@@ -16,7 +16,7 @@ class Error {
     result.error.details.forEach((value) => {
       errorArray.push(value.message.replace(/"/g, ''));
     });
-    return res.status(status.BAD_REQUEST).send({
+    return res.status(status.BAD_REQUEST).json({
       errors: errorArray
     });
   }

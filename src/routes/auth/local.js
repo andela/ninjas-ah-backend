@@ -3,14 +3,14 @@ import AuthLocalController from '../../controllers/AuthLocalController';
 import asyncHandler from '../../middlewares/asyncHandler';
 import verifyToken from '../../middlewares/verifyToken';
 import validateUser from '../../middlewares/validateUser';
-import checkSingUpPermission from '../../middlewares/checkSingUpPermission';
+// import checkSingUpPermission from '../../middlewares/checkSingUpPermission';
 
 const router = express.Router();
 
 router.post(
   '/signup',
   validateUser,
-  checkSingUpPermission,
+  // checkSingUpPermission,
   asyncHandler(AuthLocalController.signup)
 );
 

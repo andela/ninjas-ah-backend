@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-/* eslint-disable import/no-extraneous-dependencies */
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import jwt from 'jsonwebtoken';
@@ -152,7 +150,7 @@ describe('COMMENTS', () => {
       .set('access-token', accessToken)
       .send(newComment)
       .end((err, res) => {
-        res.should.have.status(status.BAD_REQUEST);
+        res.should.have.status(status.NOT_FOUND);
         done();
       });
   });
