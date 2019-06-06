@@ -48,7 +48,7 @@ describe('All users', () => {
   it('should let a user see all authors', (done) => {
     chai
       .request(app)
-      .get('/api/v1/users')
+      .get('/api/v1/users/authors')
       .set('access-token', accessToken)
       .end((err, res) => {
         res.should.have.status(status.OK);

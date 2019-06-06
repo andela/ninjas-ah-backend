@@ -161,26 +161,6 @@ describe('user tests', () => {
           done();
         });
     });
-
-    // reste pasword
-    it('should reset a password', (done) => {
-      const resetAccessToken = jwt.sign(
-        {
-          email: user.email,
-          expiresIn: '2h'
-        },
-        process.env.SECRET_KEY,
-        { expiresIn: '1d' }
-      );
-      chai
-        .request(app)
-        .get(`/api/v1/auth/reset/${resetAccessToken}`)
-        .end((err, res) => {
-          res.status.should.be.equal(status.OK);
-          done();
-        });
-    });
-
     it(' should fail if password not match', (done) => {
       chai
         .request(app)
@@ -300,7 +280,6 @@ describe('user tests', () => {
         .patch(`/api/v1/users/${username}/follow`)
         .set('access-token', userToken)
         .end((err, res) => {
-          console.log(username, '=====>>>>', res.body, '======>>>>', createdUser.isActive);
           res.status.should.be.equal(status.CREATED);
           done();
         });
@@ -420,6 +399,18 @@ describe('user tests', () => {
         .set('access-token', userToken)
         .end((err, res) => {
           res.status.should.be.equal(status.BAD_REQUEST);
+          done();
+        });
+    });
+
+    it('return all users', (done) => {
+      chai
+        .request(app)
+        .get('/api/v1/users?limit=1&offset=0')
+        .set('access-token', accessToken)
+        .end((err, res) => {
+          res.body.should.be.an('object');
+          res.status.should.be.equal(status.OK);
           done();
         });
     });

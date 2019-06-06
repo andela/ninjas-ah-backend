@@ -10,10 +10,10 @@ import report from './report';
 import createHighlight from './createHighlight';
 import createPermissions from './createPermissions';
 import notificationConfig from './notificationConfig';
+import name from './name';
 
+export { email, password, name };
 export {
-  email,
-  password,
   createArticle,
   updateArticle,
   createTag,

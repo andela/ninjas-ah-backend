@@ -24,7 +24,6 @@ export {
   token,
   generator,
   filters,
-  upload,
   notification,
   isActiveUser
 };

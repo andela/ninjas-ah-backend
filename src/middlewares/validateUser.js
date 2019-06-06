@@ -14,15 +14,17 @@ export default async (req, res, next) => {
     });
   }
 
-  const checkEmail = req.body.email ? validate.email(req.body.email, 'required') : [];
-  const checkPassword = req.body.password ? validate.password(req.body.password, 'required') : [];
+  Object.keys(req.body).forEach((key) => {
+    const validatedField = (['firstName', 'lastName', 'username'].includes(key)
+        && validate.name(req.body[key], null, key))
+      || (key === 'email' && validate.email(req.body.email, 'required')[0])
+      || (key === 'password' && validate.password(req.body.password, 'required')[0])
+      || null;
 
-  if (checkEmail.length) {
-    errors.email = errors.email || checkEmail[0];
-  }
-  if (checkPassword.length) {
-    errors.password = errors.password || checkPassword[0];
-  }
+    if (validatedField && validatedField !== true) {
+      errors[key] = errors[key] || validatedField;
+    }
+  });
 
   return Object.keys(errors).length ? res.status(status.BAD_REQUEST).json({ errors }) : next();
 };

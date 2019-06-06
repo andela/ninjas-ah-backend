@@ -9,7 +9,12 @@ import checkSingUpPermission from '../../middlewares/checkSignUpPermission';
 
 const router = express.Router();
 
-router.post('/signup', checkSingUpPermission, validateUser, AuthLocalController.signup);
+router.post(
+  '/signup',
+  checkSingUpPermission,
+  validateUser,
+  asyncHandler(AuthLocalController.signup)
+);
 
 // user login route
 router.post('/login', validateLogin, isActiveUser, AuthLocalController.login);

@@ -11,7 +11,7 @@ import verifyAdmin from '../../middlewares/verifyAdmin';
 const router = Router();
 
 router.put('/', verifyToken, checkUpdateUserPermission, validateUser, UserController.update); // update user profile
-router.get('/', verifyToken, asyncHandler(UserController.getAllAuthors));
+router.get('/authors', verifyToken, asyncHandler(UserController.getAllAuthors));
 router.put(
   '/:id',
   verifyToken,
@@ -21,12 +21,12 @@ router.put(
   UserController.update
 ); // update user profile by id
 
-router.get('/', verifyToken, asyncHandler(UserController.getAll));
+router.get('/', verifyToken, verifyAdmin, asyncHandler(UserController.getAll));
 // user followers
-router.get('/followers', verifyToken, AuthLocalController.followers);
+router.get('/followers', verifyToken, UserController.followers);
 
 // user following
-router.get('/following', verifyToken, AuthLocalController.following);
+router.get('/following', verifyToken, UserController.following);
 router.delete(
   '/:id',
   verifyToken,
@@ -34,9 +34,9 @@ router.delete(
   isActiveUser,
   AuthLocalController.deactivateAccount
 );
-router.patch('/:username/unfollow', verifyToken, AuthLocalController.unfollow);
+router.patch('/:username/unfollow', verifyToken, UserController.unfollow);
 
 router.get('/:id', verifyToken, verifyAdmin, checkUpdateUserPermission, AuthLocalController.getOne);
 router.post('/', verifyToken, verifyAdmin, validateUser, AuthLocalController.create);
-router.patch('/:username/follow', verifyToken, isActiveUser, AuthLocalController.follow);
+router.patch('/:username/follow', verifyToken, isActiveUser, UserController.follow);
 export default router;

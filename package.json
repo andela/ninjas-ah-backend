@@ -11,7 +11,7 @@
     "dev": "concurrently \"npm run db:seed\"  \"nodemon src/index.js --exec babel-node --presets @babel/preset-env\"",
     "scss": "npm-sass templates/sass/style.scss templates/css/style.css",
     "db:migrate": "./node_modules/.bin/sequelize db:migrate",
-    "db:seed": "./node_modules/.bin/sequelize db:seed --seed 20190605075225-permissions",
+    "db:seed": "./node_modules/.bin/sequelize db:seed:all",
     "db:migrate:undo:all": "./node_modules/.bin/sequelize db:migrate:undo:all",
     "db:migrate:test": "NODE_ENV=test ./node_modules/.bin/sequelize db:migrate",
     "db:migrate:seed:test": "NODE_ENV=test ./node_modules/.bin/sequelize db:seed:all",
