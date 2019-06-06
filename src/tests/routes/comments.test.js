@@ -152,7 +152,7 @@ describe('COMMENTS', () => {
       .set('access-token', accessToken)
       .send(newComment)
       .end((err, res) => {
-        res.should.have.status(status.BAD_REQUEST);
+        res.should.have.status(status.NOT_FOUND);
         done();
       });
   });

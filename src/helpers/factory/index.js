@@ -13,6 +13,8 @@ import editComment from './editComment';
 import permissionsNormal from './permissionsNormal';
 import permissionsAdmin from './permissionsAdmin';
 import highlight from './highlight';
+import notification from './notification';
+import notificationConfig from './notificationConfig';
 
 export {
   user,
@@ -29,5 +31,7 @@ export {
   editComment,
   permissionsNormal,
   permissionsAdmin,
-  highlight
+  highlight,
+  notification,
+  notificationConfig
 };

@@ -1,8 +1,8 @@
-import createReport from './createReport';
-import deleteReport from './deleteReport';
-import getAllReports from './getAllReports';
-import getSingleReport from './getSingleReport';
+import create from './create';
+import remove from './remove';
+import getAll from './getAll';
+import getSingle from './getSingle';
 
 export {
-  createReport, deleteReport, getAllReports, getSingleReport
+  create, remove, getAll, getSingle
 };

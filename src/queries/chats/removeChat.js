@@ -1,7 +1,7 @@
 import db from '../../models';
 
 /**
- * @param {int} chatId the id of the user
+ * @param {int} chatId the id of the chat
  * @param {int} userId the id of the user
  * @returns {int} return the number of affected rows
  */

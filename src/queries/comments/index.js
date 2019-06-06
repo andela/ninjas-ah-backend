@@ -1,9 +1,9 @@
-import createComment from './createComment';
-import deleteComment from './deleteComment';
-import getAllComments from './getAllComments';
-import getSingleComment from './getSingleComment';
-import updateComment from './updateComment';
+import create from './create';
+import remove from './remove';
+import getAll from './getAll';
+import getSingle from './getSingle';
+import update from './update';
 
 export {
-  createComment, deleteComment, getAllComments, getSingleComment, updateComment
+  create, remove, getAll, getSingle, update
 };
