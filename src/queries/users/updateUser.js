@@ -3,8 +3,8 @@ import db from '../../models';
 /**
  * @param {object} value what to update
  * @param {object} condition where to update
- * @returns {object|boolean} return an object containig updated user information
- * when successfuly updated otherwise false
+ * @returns {object} return an object containing updated user information
+ * when successfully updated otherwise false
  */
 export default async (value = {}, condition = {}) => {
   try {

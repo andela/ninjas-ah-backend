@@ -4,7 +4,8 @@ env:
     - NODE_ENV=test
     - CC_TEST_REPORTER_ID=d570e2625aaffa20e7828eaddfbec748c525e866b6d413472bc26e188cb2bc6a
     - DATABASE_URL_TEST=postgres://postgres@localhost:5432/authorhavens_test
-    - APP_URL=http://localhost:3000
+    - APP_URL_BACKEND = http://localhost:3000
+    - APP_URL_FRONTEND=http://localhost:3000/api/v1
     - FACEBOOK_APP_ID=FacebookId
     - FACEBOOK_APP_SECRET=FacebookSecret
     - TWITTER_CONSUMER_KEY=TwitterKey

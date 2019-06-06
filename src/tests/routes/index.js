@@ -13,3 +13,4 @@ import './allUser.test';
 import './roles.test';
 import './permission.test';
 import './highlight.test';
+import './notifications.test';

@@ -7,3 +7,5 @@ import './chats';
 import './favoriteArticles';
 import './permissions/createPermission.test';
 import './highlights';
+import './notifications';
+import './notificationsConfig';

@@ -5,7 +5,11 @@ import db from '../../models';
  * @param {object} slug unique slug to update article
  * @returns {object} Object representing the response returned
  */
-export default async (data = {}, slug) => {
-  const response = await db.Article.update(data, { where: { slug }, logging: false });
+export default async (data = {}, slug = '') => {
+  const response = await db.Article.update(data, {
+    where: { slug },
+    logging: false,
+    individualHooks: true
+  });
   return response;
 };

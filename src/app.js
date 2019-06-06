@@ -11,6 +11,7 @@ import passport from 'passport';
 import socketIo from 'socket.io';
 import routes from './routes';
 import * as swaggerDocument from '../swagger.json';
+import './helpers/eventListener';
 
 const app = express();
 const server = http.createServer(app);

@@ -1,3 +1,5 @@
+import eventEmitter from '../helpers/eventEmitter';
+
 export default (sequelize, DataTypes) => {
   const Article = sequelize.define(
     'Article',
@@ -79,7 +81,20 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.DATE
       }
     },
-    {}
+    {
+      hooks: {
+        afterUpdate: async (article) => {
+          const currentData = article.get();
+          const previousData = article.previous();
+
+          if (previousData && previousData.status) {
+            if (previousData.status === 'draft' && currentData.status === 'published') {
+              eventEmitter.emit('publishArticle', currentData.userId, currentData.slug);
+            }
+          }
+        }
+      }
+    }
   );
   Article.associate = (models) => {
     Article.belongsTo(models.User, { foreignKey: 'userId', as: 'author' });
