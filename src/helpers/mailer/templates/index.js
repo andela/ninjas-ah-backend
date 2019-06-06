@@ -1,4 +1,7 @@
 import notification from './notification';
+import signup from './signup';
+import resetPassword from './resetPassword';
+import accountActivatedMsg from './accountActivatedMsg';
 
-// eslint-disable-next-line import/prefer-default-export
 export { notification };
+export { signup, resetPassword, accountActivatedMsg };

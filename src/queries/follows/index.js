@@ -1,4 +1,5 @@
+import add from './followUser';
+import remove from './unFollowUser';
 import getAll from './getAllFollowers';
 
-// eslint-disable-next-line import/prefer-default-export
-export { getAll };
+export { add, remove, getAll };

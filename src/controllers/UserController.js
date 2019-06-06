@@ -23,7 +23,7 @@ export default class UserController {
     const updatedUser = await User.update(req.body, { id: userId });
     if (updatedUser.errors) {
       const errors = helper.checkCreateUpdateUserErrors(updatedUser.errors);
-      return res.status(errors.code).json(errors);
+      return res.status(errors.code).json({ errors: errors.errors });
     }
     delete updatedUser.password;
     return res.status(status.OK).json({
@@ -48,6 +48,29 @@ export default class UserController {
     );
     return res.status(status.OK).json({
       authors
+    });
+  }
+
+  /**
+   * @param  {object} req
+   * @param  {object} res
+   * @return {object} return all users in database
+   */
+  static async getAll(req, res) {
+    const role = req.user.role === 'normal' ? 'normal' : null;
+    const [offset, limit] = [req.query.offset || 0, req.query.limit || 20];
+    const findAll = role
+      ? await User.getAllUser({ role }, offset, limit)
+      : await User.getAllUser({}, offset, limit);
+
+    return res.status(status.OK).json({
+      [req.user.role === 'normal' ? 'authors' : 'users']:
+        findAll
+        && Array.isArray(findAll)
+        && findAll.map((author) => {
+          delete author.get().password;
+          return author;
+        })
     });
   }
 

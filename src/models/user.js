@@ -49,7 +49,12 @@ export default (sequelize, DataTypes) => {
       },
       permissions: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
+      },
+      isActive: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
       },
       accountProvider: {
         type: DataTypes.ENUM('facebook', 'twitter', 'google'),
@@ -87,11 +92,6 @@ export default (sequelize, DataTypes) => {
       onDelete: 'CASCADE'
     });
     User.hasMany(models.ArticleBookmark, {
-      foreignKey: 'userId',
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE'
-    });
-    User.hasMany(models.FavoriteArticle, {
       foreignKey: 'userId',
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE'

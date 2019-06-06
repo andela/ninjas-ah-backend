@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="../css/style.css" />
+    <title>Admin</title>
+  </head>
+
+  <body>
+    <div class="container shadow-2 radius-3">
+      <div class="center">
+        <h1
+          class="primary text-white radius-2 uppercase large-padding center-align"
+        >
+          Admin
+        </h1>
+        <div class="large-padding">
+          <div class="radius-2 medium-padding card">
+            <input
+              type="url"
+              id="url"
+              class="shadow-4 radius-2 medium-padding card medium-text large-screen-3"
+            />
+            <br />
+            <select
+              id="verb"
+              class="shadow-4 radius-4 large-padding large-text right"
+            >
+              <option value="POST">POST</option>
+              <option value="GET">GET</option>
+              <option value="PUT">PUT</option>
+              <option value="DELETE">DELETE</option>
+            </select>
+          </div>
+          <br />
+          <div class="card">
+            <hr />
+          </div>
+          <input
+            type="text"
+            name="firstName"
+            id="firstName"
+            class="shadow-4 radius-2 medium-padding card"
+            placeholder="First name"
+          />
+          <input
+            type="text"
+            name="lastName"
+            id="lastName"
+            class="shadow-4 radius-2 medium-padding card"
+            placeholder="Last name"
+          />
+          <input
+            type="text"
+            name="username"
+            id="username"
+            class="shadow-4 radius-2 medium-padding card"
+            placeholder="Username"
+          />
+          <input
+            type="email"
+            name="email"
+            id="email"
+            class="shadow-4 radius-2 medium-padding card"
+            placeholder="Email"
+          />
+          <input
+            type="password"
+            name="password"
+            id="password"
+            class="shadow-4 radius-2 medium-padding card"
+            placeholder="Password"
+          />
+          <input
+            type="text"
+            name="role"
+            id="role"
+            class="shadow-4 radius-2 medium-padding card"
+            placeholder="Role"
+          />
+          <input
+            type="text"
+            name="permission"
+            id="permission"
+            class="shadow-4 radius-2 medium-padding card"
+            placeholder="Permission"
+          />
+          <input type="radio" name="isActive" id="activate" />
+          Activate <br />
+          <input type="radio" name="isActive" id="deactivate" />
+          Deactivate <br />
+          <input type="radio" name="isActive" id="none" />
+          None <br />
+          <div class="radius-2 medium-padding card">
+            <button
+              type="button"
+              id="submit"
+              class="radius-4 primary text-white center-align large-h-padding large-text"
+            >
+              Submit
+            </button>
+          </div>
+        </div>
+        <div class="primary large-padding">
+          <span class="small-h-padding large-text white radius-2"
+            >Response</span
+          >
+          <pre
+            id="response"
+            class="white shadow-4 radius-2 medium-padding card"
+          ></pre>
+        </div>
+      </div>
+    </div>
+    <script>
+      async function create(URL, data) {
+        const result = await sendData(
+          'POST',
+          URL,
+          data,
+          'json',
+          localStorage.token
+        );
+
+        if (result) {
+          if (result) {
+            document.querySelector('#response').innerHTML = JSON.stringify(
+              result,
+              null,
+              4
+            );
+          }
+        }
+      }
+
+      async function update(URL, data) {
+        const result = await sendData(
+          'PUT',
+          URL,
+          data,
+          'json',
+          localStorage.token
+        );
+
+        if (result) {
+          if (result) {
+            document.querySelector('#response').innerHTML = JSON.stringify(
+              result,
+              null,
+              4
+            );
+          }
+        }
+      }
+
+      async function getAll(URL) {
+        let result = await getData(URL, 'json', localStorage.token);
+
+        if (result) {
+          document.querySelector('#response').innerHTML = JSON.stringify(
+            result,
+            null,
+            4
+          );
+        }
+      }
+
+      async function remove(URL) {
+        let result = await sendData(
+          'DELETE',
+          URL,
+          {},
+          'json',
+          localStorage.token
+        );
+
+        if (result) {
+          document.querySelector('#response').innerHTML = JSON.stringify(
+            result,
+            null,
+            4
+          );
+        }
+      }
+
+      window.document.addEventListener('DOMContentLoaded', () => {
+        if (document.querySelector('#url')) {
+          document.querySelector('#url').value = `${HOST}/api/v1/users`;
+        }
+        document.querySelector('#submit').onclick = async e => {
+          startLoadingButton();
+          document.querySelector('#response').innerHTML = '';
+          const URL = document.querySelector('#url').value;
+          const verb = document.querySelector('#verb').value;
+          const user = {
+            firstName: document.querySelector('#firstName').value,
+            lastName: document.querySelector('#lastName').value,
+            username: document.querySelector('#username').value,
+            email: document.querySelector('#email').value,
+            password: document.querySelector('#password').value,
+            role: document.querySelector('#role').value,
+            permissions: document.querySelector('#permission').value,
+            isActive: document.querySelector('#activate').checked
+          };
+
+          Object.keys(user).forEach(key => {
+            if (!user[key]) {
+              delete user[key];
+            }
+          });
+
+          if (document.querySelector('#deactivate').checked) {
+            user.isActive = false;
+          }
+          switch (verb) {
+            case 'PUT':
+              await update(URL, user);
+              break;
+            case 'POST':
+              await create(URL, user);
+              break;
+            case 'DELETE':
+              await remove(URL);
+              break;
+            default:
+              await getAll(URL);
+              break;
+          }
+          endLoadingButton();
+        };
+      });
+    </script>
+    <script src="../js/index.js"></script>
+  </body>
+</html>

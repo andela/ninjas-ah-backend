@@ -57,7 +57,44 @@ describe('Users routes', () => {
       throw error;
     }
   });
-
+  // activate user account
+  it('should activate user account', (done) => {
+    const userTwoAccessToken = jwt.sign(
+      {
+        email: createdUserOne.email,
+        expiresIn: '2h'
+      },
+      process.env.SECRET_KEY,
+      { expiresIn: '1d' }
+    );
+    chai
+      .request(app)
+      .get(`/api/v1/auth/activate/${userTwoAccessToken}`)
+      .set('access-token', userTwoAccessToken)
+      .end((err, res) => {
+        res.status.should.be.equal(status.OK);
+        done();
+      });
+  });
+  // activate account for user two
+  it('should activate user account', (done) => {
+    const userAccessToken = jwt.sign(
+      {
+        email: createdUserTwo.email,
+        expiresIn: '2h'
+      },
+      process.env.SECRET_KEY,
+      { expiresIn: '1d' }
+    );
+    chai
+      .request(app)
+      .get(`/api/v1/auth/activate/${userAccessToken}`)
+      .set('access-token', userAccessToken)
+      .end((err, res) => {
+        res.status.should.be.equal(status.OK);
+        done();
+      });
+  });
   // update user profile
   it('should update the user profile', (done) => {
     chai
@@ -101,7 +138,7 @@ describe('Users routes', () => {
     chai
       .request(app)
       .put(`/api/v1/users/${createdUserTwo.id}`)
-      .send({ email: 'aaa@bbb.com', role: 'admin' })
+      .send({ role: 'admin', permissions: 'create' })
       .set('access-token', accessTokenNormalUser)
       .end((err, res) => {
         expect(res.status).to.be.equal(status.UNAUTHORIZED);
@@ -165,6 +202,27 @@ describe('Users routes', () => {
       .set('access-token', accessTokenAdmin)
       .end((err, res) => {
         expect(res.status).to.be.equal(status.BAD_REQUEST);
+        done();
+      });
+  });
+  it('should fetch one user by id', (done) => {
+    chai
+      .request(app)
+      .get(`/api/v1/users/${createdUserTwo.id}`)
+      .set('access-token', accessTokenAdmin)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(status.OK);
+        done();
+      });
+  });
+  it('should not fetch one user by if id is wrong', (done) => {
+    const id = 0;
+    chai
+      .request(app)
+      .get(`/api/v1/users/${id}`)
+      .set('access-token', accessTokenAdmin)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(status.NOT_FOUND);
         done();
       });
   });
