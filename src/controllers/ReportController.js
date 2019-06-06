@@ -14,7 +14,7 @@ export default class ReportController {
     const userId = req.user.id;
     const { articleSlug } = req.params;
     const { title, body, type } = req.body;
-    const newReport = await report.createReport({
+    const newReport = await report.create({
       userId,
       articleSlug,
       title,
@@ -34,11 +34,11 @@ export default class ReportController {
    * @returns {object} a response to the client
    */
   static async getAll(req, res) {
-    const { articleSlug } = req.params;
-    const findAllReport = await report.getAllReports({ articleSlug });
-    return res
-      .status(status.OK)
-      .json({ message: 'fetched all reports successfully', Reports: findAllReport });
+    const findAllReport = await report.getAll({ articleSlug: req.params.articleSlug });
+    return res.status(status.OK).json({
+      message: 'fetched all reports successfully',
+      Reports: findAllReport
+    });
   }
 
   /**
@@ -50,7 +50,7 @@ export default class ReportController {
   static async getSingle(req, res) {
     const { articleSlug, reportId } = req.params;
     const newreport = { articleSlug, id: reportId };
-    const findSingle = await report.getSingleReport(newreport);
+    const findSingle = await report.getSingle(newreport);
     return res
       .status(status.OK)
       .json({ message: 'Report fetched Successfully', Report: findSingle });
@@ -64,7 +64,7 @@ export default class ReportController {
    */
   static async deleteSingle(req, res) {
     const { articleSlug, reportId } = req.params;
-    const deleteSingle = await report.deleteReport({ articleSlug, id: reportId });
+    const deleteSingle = await report.remove({ articleSlug, id: reportId });
     return res
       .status(status.OK)
       .json({ message: 'Report deleted Successfully', Report: deleteSingle });

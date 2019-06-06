@@ -3,10 +3,10 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const appURL = process.env.APP_URL;
-const facebookShareURL = `https://web.facebook.com/sharer/sharer.php?u=${appURL}/api/v1/articles/`;
-const twitterShareURL = `https://twitter.com/intent/tweet?text=${appURL}/api/v1/articles/`;
-const linkedinShareURL = `https://www.linkedin.com/sharing/share-offsite/?url=${appURL}/api/v1/articles/`;
+const { APP_URL_FRONTEND } = process.env.APP_URL_FRONTEND;
+const facebookShareURL = `https://web.facebook.com/sharer/sharer.php?u=${APP_URL_FRONTEND}/articles/`;
+const twitterShareURL = `https://twitter.com/intent/tweet?text=${APP_URL_FRONTEND}/articles/`;
+const linkedinShareURL = `https://www.linkedin.com/sharing/share-offsite/?url=${APP_URL_FRONTEND}/articles/`;
 
 export default async (req, res, next) => {
   const { article } = req;
@@ -17,9 +17,12 @@ export default async (req, res, next) => {
   } else if (req.url.search(/\/linkedin/g) > 0) {
     await open(`${linkedinShareURL}${article.slug}`, { wait: false });
   } else if (req.url.search(/\/gmail/g) > 0) {
-    await open(`mailto:?subject=${article.title}&body=${appURL}/api/v1/articles/${article.slug}`, {
-      wait: false
-    });
+    await open(
+      `mailto:?subject=${article.title}&body=${APP_URL_FRONTEND}/articles/${article.slug}`,
+      {
+        wait: false
+      }
+    );
   }
 
   next();

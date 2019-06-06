@@ -6,10 +6,7 @@ export default (comment) => {
     body: Joi.string()
       .min(3)
       .required()
-      .error(commentErrors),
-    userId: Joi.number()
-      .integer()
-      .min(1)
+      .trim()
       .error(commentErrors)
   };
 

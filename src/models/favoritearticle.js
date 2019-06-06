@@ -28,7 +28,7 @@ export default (sequelize, DataTypes) => {
     {}
   );
   FavoriteArticle.associate = (models) => {
-    FavoriteArticle.belongsTo(models.User, { foreignKey: 'userId' });
+    FavoriteArticle.belongsTo(models.User, { foreignKey: 'userId', as: 'favoritedBy' });
   };
   return FavoriteArticle;
 };

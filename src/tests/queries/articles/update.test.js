@@ -30,7 +30,7 @@ describe('Query to edit an article', () => {
       slug
     );
     response.should.be.an('array');
-    response[0].should.equal(1);
+    response[1].should.be.an('array');
   });
   it('should fail to edit article', async () => {
     // find article to update

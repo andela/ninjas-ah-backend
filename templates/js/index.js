@@ -55,6 +55,16 @@ async function sendData(METHOD, URL, data = {}, resType = 'text', token = '') {
   }
 }
 
+function displayUser() {
+  const user = localStorage.user ? JSON.parse(localStorage.user) : null;
+
+  if (user) {
+    document.querySelector('.loggedInUser').innerHTML = `(${user.firstName} ${user.lastName})`;
+  } else {
+    document.querySelector('.loggedInUser').innerHTML = '';
+  }
+}
+
 function startLoadingButton() {
   if (document.querySelector('#submit')) {
     document.querySelector('#submit').innerHTML = 'Loading...';
@@ -66,4 +76,6 @@ function endLoadingButton() {
   }
 }
 
-window.document.addEventListener('DOMContentLoaded', () => {});
+window.document.addEventListener('DOMContentLoaded', () => {
+  displayUser();
+});

@@ -9,6 +9,7 @@ import updateUser from './updateUser';
 import report from './report';
 import createHighlight from './createHighlight';
 import createPermissions from './createPermissions';
+import notificationConfig from './notificationConfig';
 
 export {
   email,
@@ -21,5 +22,6 @@ export {
   updateUser,
   report,
   createHighlight,
-  createPermissions
+  createPermissions,
+  notificationConfig
 };

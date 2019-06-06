@@ -174,7 +174,12 @@ export default class ArticleController {
 
     return result.errors
       ? res.status(status.SERVER_ERROR).json({ errors: 'oops, something went wrong' })
-      : res.status(status.OK).json({ [[`${resourceAction}s`]]: result });
+      : res.status(status.OK).json({
+        [[`${resourceAction}s`]]: result.map((value) => {
+          delete value.get().favoritedBy;
+          return value;
+        })
+      });
   }
 
   /**

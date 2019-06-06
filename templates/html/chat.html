@@ -51,17 +51,6 @@
     <div id="chats" class="container primary card radius-2"></div>
   </div>
   <script>
-    function displayUser() {
-      const user = localStorage.user ? JSON.parse(localStorage.user) : null;
-
-      if (user) {
-        document.querySelector('.loggedInUser').innerHTML = `(${user.firstName} ${user.lastName})`;
-      } else {
-        window.location.replace(`${HOST}/mockups/login.html`)
-        document.querySelector('.loggedInUser').innerHTML = '';
-      }
-    }
-
     async function sendChat(message) {
       const URL = document.querySelector("#url").value;
       let result = await sendData('POST', URL, message, 'json', localStorage.token);
