@@ -5,8 +5,9 @@ import getAll from './getAll';
 import * as bookmark from '../articleBookmarks';
 import * as favorite from '../favoriteArticles';
 import getUserArticles from './getUserArticles';
+import updateCover from './updateCover';
 
 export { favorite, bookmark };
 export {
-  create, update, get, getAll, getUserArticles
+  create, update, get, getAll, getUserArticles, updateCover
 };

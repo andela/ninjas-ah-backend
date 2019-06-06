@@ -10,6 +10,9 @@ import * as Factory from '../../helpers/factory';
 const { expect } = chai;
 chai.should();
 
+const article = Factory.article.build();
+delete article.id;
+
 const user = Factory.user.build();
 chai.use(chaiHttp);
 let accessToken = '';
@@ -26,8 +29,21 @@ describe('UPLOAD', () => {
       { expiresIn: '1d' }
     );
   });
-
-  it('Should upload image', (done) => {
+  it('should get error if no gallery found', (done) => {
+    chai
+      .request(app)
+      .get('/api/v1/gallery')
+      .set('access-token', accessToken)
+      .end((err, res) => {
+        expect(res).to.have.status(status.NOT_FOUND);
+        res.body.should.be.an('object');
+        res.body.errors.should.be.an('object');
+        res.body.errors.gallery.should.be.an('string');
+        res.body.errors.gallery.should.equal("You don't have image gallery yet");
+        done();
+      });
+  });
+  it('Should return true if user can be able to upload image', (done) => {
     chai
       .request(app)
       .post('/api/v1/upload')
@@ -37,25 +53,21 @@ describe('UPLOAD', () => {
       .attach('image', path.join(__dirname, '../../../templates/images/ninja.png'))
       .set('access-token', accessToken)
       .end((err, res) => {
-        expect(res).to.have.status(status.CREATED);
+        expect(res).to.have.status(status.SERVER_ERROR);
         res.body.should.be.an('object');
-        res.body.image.should.be.an('object');
-        res.body.image.info.should.be.an('object');
-        res.body.image.image.should.be.an('object');
+        res.body.errors.should.be.an('object');
         done();
       });
   });
-  it('Should not upload image', (done) => {
+
+  it('Should not upload image if no image selected', (done) => {
     chai
       .request(app)
       .post('/api/v1/upload')
       .set('access-token', accessToken)
       .end((err, res) => {
-        expect(res).to.have.status(status.BAD_REQUEST);
         res.body.errors.should.be.an('object');
-        res.body.errors.image.should.equal(
-          'Whoops, something went wrong while uploading your image. try again!'
-        );
+        res.status.should.equal(status.BAD_REQUEST);
         done();
       });
   });
