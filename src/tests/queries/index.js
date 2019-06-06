@@ -6,3 +6,4 @@ import './articleBookmarks';
 import './chats';
 import './favoriteArticles';
 import './permissions/createPermission.test';
+import './highlights';

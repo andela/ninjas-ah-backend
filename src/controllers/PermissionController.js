@@ -1,6 +1,8 @@
 import { User } from '../queries';
 import status from '../config/status';
 
+// import * as validate from '../helpers/validation';
+
 /**
  * A class to handle user local authentication
  */

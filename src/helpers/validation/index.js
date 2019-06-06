@@ -7,6 +7,8 @@ import createTag from './createTag';
 import queryParameters from './queryParameters';
 import updateUser from './updateUser';
 import report from './report';
+import createHighlight from './createHighlight';
+import createPermissions from './createPermissions';
 
 export {
   email,
@@ -17,5 +19,7 @@ export {
   newUser,
   queryParameters,
   updateUser,
-  report
+  report,
+  createHighlight,
+  createPermissions
 };
