@@ -15,7 +15,6 @@ let createdUser = {};
 let createdArticle = {};
 
 let reportId;
-let articleSlug;
 
 const newUser = Factory.user.build();
 const newArticle = Factory.article.build();
@@ -52,7 +51,6 @@ describe('Reports', () => {
         { expiresIn: '1d' }
       );
       createdArticle = await db.Article.create(newArticle, { logging: false });
-      articleSlug = createdArticle.slug;
     } catch (err) {
       throw err;
     }
@@ -60,13 +58,12 @@ describe('Reports', () => {
   it('should let user create report', (done) => {
     chai
       .request(app)
-      .post(`/api/v1/article/${articleSlug}/report`)
+      .post(`/api/v1/article/${createdArticle.slug}/report`)
       .set('access-token', accessToken)
       .send(newReport)
       .end((err, res) => {
         reportId = res.body.Report.id;
         res.should.have.status(status.CREATED);
-        res.should.have.property('status');
         done();
       });
   });
