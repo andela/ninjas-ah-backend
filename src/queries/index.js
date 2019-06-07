@@ -5,9 +5,12 @@ import * as Tag from './tags';
 import * as Notification from './notifications';
 import * as Chat from './chats';
 import * as Gallery from './gallery';
+import { getAllRatings, createRatings } from './readingStats';
 
 export {
-  User, Token, Chat, Notification
+  User, Token, Chat, Notification, Gallery
 };
 
-export { Article, Tag, Gallery };
+export {
+  Tag, getAllRatings, Article, createRatings
+};
