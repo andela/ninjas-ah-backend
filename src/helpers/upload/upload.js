@@ -1,15 +1,21 @@
+import dotenv from 'dotenv';
 import { cloudinaryConfig, uploader } from '../../config/cloudinaryConfig';
 import { dataUri } from '../../middlewares/multer';
 
+dotenv.config();
 export default async (req) => {
-  await cloudinaryConfig();
-  let response = '';
-  let result = '';
-  if (req.file) {
-    const file = dataUri(req).content;
-    response = await uploader.upload(file);
-    const { IMAGE_BASE_URL } = process.env;
-    result = {
+  const { IMAGE_BASE_URL, NODE_ENV } = process.env;
+  const cdnConnect = await cloudinaryConfig();
+
+  const file = dataUri(req).content;
+
+  const response = cdnConnect.cloud_name
+    && cdnConnect.api_key
+    && cdnConnect.api_secret
+    && NODE_ENV !== 'test'
+    && (await uploader.upload(file));
+  return (
+    !response || {
       info: {
         image_version: `v${response.version}`,
         image_id: response.public_id,
@@ -27,7 +33,6 @@ export default async (req) => {
           response.version
         }/${response.public_id}.${response.format}`
       }
-    };
-  }
-  return result;
+    }
+  );
 };
