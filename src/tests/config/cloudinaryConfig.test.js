@@ -1,8 +1,11 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import chai from 'chai';
 import chaiHttp from 'chai-http';
+import dotenv from 'dotenv';
 import { cloudinaryConfig } from '../../config/cloudinaryConfig';
+import * as helpers from '../helpers';
 
+dotenv.config();
 const { expect } = chai;
 
 chai.use(chaiHttp);

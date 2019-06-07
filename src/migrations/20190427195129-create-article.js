@@ -44,7 +44,7 @@ export default {
     },
     coverUrl: {
       type: Sequelize.TEXT,
-      allowNull: false
+      allowNull: true
     },
     readTime: {
       type: Sequelize.STRING,
