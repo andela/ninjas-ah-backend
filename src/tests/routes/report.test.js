@@ -66,6 +66,7 @@ describe('Reports', () => {
       .end((err, res) => {
         reportId = res.body.Report.id;
         res.should.have.status(status.CREATED);
+        res.should.have.property('status');
         done();
       });
   });
