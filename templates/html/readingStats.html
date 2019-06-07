@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="../css/style.css" />
+    <title>Reading Stats</title>
+  </head>
+
+  <body>
+    <div class="container shadow-2 radius-3">
+      <div class="center">
+        <h1
+          class="primary text-white radius-2 uppercase large-padding center-align"
+        >
+          Reading Stats
+        </h1>
+        <div class="large-padding">
+          <div class="radius-2 medium-padding card">
+            <input
+              type="url"
+              id="url"
+              class="shadow-4 radius-2 medium-padding card medium-text large-screen-3"
+            />
+            <br />
+            <select
+              id="verb"
+              class="shadow-4 radius-4 large-padding large-text right"
+            >
+              <option value="POST">POST</option>
+              <option value="GET">GET</option>
+            </select>
+          </div>
+          <br />
+          <div class="card">
+            <hr />
+          </div>
+
+          <div class="radius-2 medium-padding card">
+            <button
+              type="button"
+              id="submit"
+              class="radius-4 primary text-white center-align large-h-padding large-text"
+            >
+              Submit
+            </button>
+          </div>
+        </div>
+        <div class="primary large-padding">
+          <span class="small-h-padding large-text white radius-2"
+            >Response</span
+          >
+          <pre
+            id="response"
+            class="white shadow-4 radius-2 medium-padding card"
+          ></pre>
+        </div>
+      </div>
+    </div>
+    <script>
+      async function create(URL, data) {
+        const result = await sendData(
+          'POST',
+          URL,
+          data,
+          'json',
+          localStorage.token
+        );
+
+        if (result) {
+          if (result) {
+            document.querySelector('#response').innerHTML = JSON.stringify(
+              result,
+              null,
+              4
+            );
+          }
+        }
+      }
+
+      async function getAll(URL) {
+        let result = await getData(URL, 'json', localStorage.token);
+
+        if (result) {
+          document.querySelector('#response').innerHTML = JSON.stringify(
+            result,
+            null,
+            4
+          );
+        }
+      }
+
+      window.document.addEventListener('DOMContentLoaded', () => {
+        if (document.querySelector('#url')) {
+          document.querySelector(
+            '#url'
+          ).value = `${HOST}/api/v1/user/profile/:articleSlug/stats`;
+        }
+        document.querySelector('#submit').onclick = async e => {
+          startLoadingButton();
+          document.querySelector('#response').innerHTML = '';
+          const URL = document.querySelector('#url').value;
+          const verb = document.querySelector('#verb').value;
+
+          switch (verb) {
+            case 'POST':
+              await create(URL);
+              break;
+
+            default:
+              await getAll(URL);
+              break;
+          }
+          endLoadingButton();
+        };
+      });
+    </script>
+    <script src="../js/index.js"></script>
+  </body>
+</html>

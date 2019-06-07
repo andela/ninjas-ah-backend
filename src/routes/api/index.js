@@ -12,6 +12,7 @@ import permissions from './permissions';
 import highlights from './highlights';
 import notifications from './notifications';
 import rating from './rating';
+import readingStats from './readingStats';
 
 const router = express.Router();
 
@@ -28,5 +29,6 @@ router.use('/permissions', permissions);
 router.use(highlights);
 router.use('/notifications', notifications);
 router.use(rating);
+router.use('/user', readingStats);
 
 export default router;
