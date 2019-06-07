@@ -39,12 +39,15 @@ export default class UserController {
    * @param  {object} res
    * @return {object} return all users in database
    */
-  static async getAllUser(req, res) {
+  static async getAllAuthors(req, res) {
     const role = 'normal';
-    const findAll = await User.getAllUser({ role });
+    const offset = req.query.offset || 0;
+    const limit = req.query.limit || 20;
+    const authors = (await User.getAllUser({ role }, offset, limit)).map(
+      author => delete author.get().password && author
+    );
     return res.status(status.OK).json({
-      message: 'All authors fetched successfully',
-      Authors: findAll
+      authors
     });
   }
 

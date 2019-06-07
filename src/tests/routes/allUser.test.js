@@ -20,6 +20,7 @@ delete userTwo.id;
 
 userTwo.email = 'email@gmail.ccom';
 userTwo.username = 'newuser';
+userTwo.role = 'normal';
 
 describe('All users', () => {
   before(async () => {
@@ -34,7 +35,6 @@ describe('All users', () => {
       accessToken = jwt.sign(
         {
           id: createdUserOne.id,
-          role: 'normal',
           permissions: createdUserOne.permissions
         },
         process.env.SECRET_KEY,
@@ -49,7 +49,6 @@ describe('All users', () => {
     chai
       .request(app)
       .get('/api/v1/users')
-      .send()
       .set('access-token', accessToken)
       .end((err, res) => {
         res.should.have.status(status.OK);

@@ -3,7 +3,9 @@ const dbFindSingle = async (model, whereCondition = {}) => model.findOne({
   logging: false
 });
 
-const dbFindAll = async (model, whereCondition) => model.findAll({
+const dbFindAll = async (model, whereCondition, offset = 0, limit = 20) => model.findAll({
+  offset,
+  limit,
   where: whereCondition,
   logging: false
 });
