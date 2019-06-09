@@ -1,4 +1,3 @@
-import Joi from 'joi';
 import Error from '../../helpers/errorHandler';
 import * as validate from '../../helpers';
 
@@ -38,17 +37,12 @@ class articles {
    * @returns {object} Object representing the response returned
    */
   static slug(req, res, next) {
-    const schema = Joi.object().keys({
-      slug: Joi.string()
-        .min(16)
-        .max(85)
-        .required()
-    });
-    const result = Joi.validate(req.params, schema, { abortEarly: false });
-    if (!result.error) {
-      return next();
+    const response = validate.validation.articleSlug(req.params);
+    if (response.error) {
+      Error.joiErrorHandler(res, response);
+    } else {
+      next();
     }
-    return Error.joiErrorHandler(res, result);
   }
 
   /**

@@ -10,3 +10,4 @@ import './highlights';
 import './notifications';
 import './notificationsConfig';
 import './gallery';
+import './ratings';

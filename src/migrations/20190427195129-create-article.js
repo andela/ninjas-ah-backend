@@ -60,6 +60,11 @@ export default {
       allowNull: true,
       defaultValue: 0
     },
+    rating: {
+      type: Sequelize.INTEGER,
+      allowNull: true,
+      defaultValue: 0
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE

@@ -11,6 +11,7 @@ import roles from './roles';
 import permissions from './permissions';
 import highlights from './highlights';
 import notifications from './notifications';
+import rating from './rating';
 
 const router = express.Router();
 
@@ -26,5 +27,6 @@ router.use('/article', report);
 router.use('/permissions', permissions);
 router.use(highlights);
 router.use('/notifications', notifications);
+router.use(rating);
 
 export default router;

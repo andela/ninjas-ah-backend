@@ -58,14 +58,6 @@ articles.put(
 );
 
 articles.put(
-  '/articles/:slug/publish',
-  verifyToken,
-  validateArticle.slug,
-  checkArticleBySlug,
-  asyncHandler(ArticleController.update)
-);
-
-articles.put(
   '/articles/:slug/unpublish',
   verifyToken,
   validateArticle.slug,
@@ -77,7 +69,6 @@ articles.delete(
   '/articles/:slug',
   verifyToken,
   checkArticleBySlug,
-  validateArticle.slug,
   asyncHandler(ArticleController.update)
 );
 

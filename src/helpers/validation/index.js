@@ -11,6 +11,7 @@ import createHighlight from './createHighlight';
 import createPermissions from './createPermissions';
 import notificationConfig from './notificationConfig';
 import name from './name';
+import articleSlug from './articleSlug';
 
 export { email, password, name };
 export {
@@ -23,5 +24,6 @@ export {
   report,
   createHighlight,
   createPermissions,
-  notificationConfig
+  notificationConfig,
+  articleSlug
 };
