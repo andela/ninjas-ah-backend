@@ -8,23 +8,10 @@ import * as Comment from '../queries/comments';
  * @param { function } next  return object
  */
 export default async function checkComment(req, res, next) {
-  try {
-    const condition = {
-      id: req.params.commentId,
-      articleSlug: req.params.articleSlug
-    };
-    const comment = await Comment.getSingleComment(condition);
-    if (!comment) {
-      const notFoundMessage = {
-        message: 'The comment does not exist'
-      };
-      return res.status(status.BAD_REQUEST).send(notFoundMessage);
-    }
-    next();
-  } catch (error) {
-    const response = {
-      error: 'Ooops, something went wrong'
-    };
-    return res.status(status.SERVER_ERROR).send(response);
+  const { articleSlug, commentId } = req.params;
+  const comment = await Comment.getSingle({ id: commentId, articleSlug });
+  if (!comment) {
+    return res.status(status.NOT_FOUND).json({ errors: { message: 'Comment not found' } });
   }
+  next();
 }
