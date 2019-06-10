@@ -12,13 +12,16 @@ export default class ArticleController {
    */
   static async saveArticle(req, res) {
     const { tagList } = req.body;
+    const coverUrl = req.files && req.files[0].originalname
+      ? `${req.files[0].version}/${req.files[0].public_id}.${req.files[0].format}`
+      : null;
     const newArticle = await Article.create({
       userId: req.user.id || 0,
       slug: helpers.generator.slug(req.body.title),
       title: req.body.title.trim(),
       description: req.body.description.trim(),
       body: req.body.body.trim(),
-      coverUrl: req.body.coverUrl || null,
+      coverUrl,
       tagList,
       readTime: helpers.generator.readtime(req.body.body)
     });

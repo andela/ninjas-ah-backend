@@ -2,13 +2,28 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import jwt from 'jsonwebtoken';
 import path from 'path';
+import express from 'express';
+import cloudinary from 'cloudinary';
 import app from '../../app';
 import status from '../../config/status';
 import db from '../../models';
 import * as Factory from '../../helpers/factory';
+import UploadController from '../../controllers/UploadController';
 
 const { expect } = chai;
 chai.should();
+
+const appLocal = express();
+const router = express.Router();
+
+appLocal.use(express.json());
+appLocal.use(
+  express.urlencoded({
+    extended: false
+  })
+);
+
+appLocal.use('/api/v1/upload', router.post('/', UploadController.save));
 
 const article = Factory.article.build();
 delete article.id;
@@ -43,30 +58,12 @@ describe('UPLOAD', () => {
         done();
       });
   });
-  it('Should return true if user can be able to upload image', (done) => {
-    chai
-      .request(app)
-      .post('/api/v1/upload')
-      .send()
-      .field('Content-Type', 'multipart/form-data')
-      .field('fileName', 'ninja.png')
-      .attach('image', path.join(__dirname, '../../../templates/images/ninja.png'))
-      .set('access-token', accessToken)
-      .end((err, res) => {
-        expect(res).to.have.status(status.SERVER_ERROR);
-        res.body.should.be.an('object');
-        res.body.errors.should.be.an('object');
-        done();
-      });
-  });
-
   it('Should not upload image if no image selected', (done) => {
     chai
-      .request(app)
+      .request(appLocal)
       .post('/api/v1/upload')
       .set('access-token', accessToken)
       .end((err, res) => {
-        res.body.errors.should.be.an('object');
         res.status.should.equal(status.BAD_REQUEST);
         done();
       });

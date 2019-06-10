@@ -1,7 +1,9 @@
+import dotenv from 'dotenv';
 import status from '../config/status';
 import { Gallery, Article } from '../queries';
-import { upload } from '../helpers';
 
+dotenv.config();
+const { IMAGE_BASE_URL, NODE_ENV } = process.env;
 /**
  * A class to upload image
  */
@@ -13,23 +15,29 @@ export default class UploadController {
    * @returns {object} Object representing the response returned
    */
   static async save(req, res) {
-    const response = req.file && (await upload(req));
-    return typeof response === 'object' && typeof response !== 'boolean' && response !== null
-      ? (await Gallery.save({ image: response.image.original, userId: req.user.id }))
+    const image = req.files && req.files[0];
+    return typeof image === 'object' && typeof image !== 'boolean' && NODE_ENV !== 'test'
+      ? (await Gallery.save({
+        image: `${image.version}/${image.public_id}.${image.format}`,
+        userId: req.user.id
+      }))
           && res.status(status.CREATED).json({
-            response
+            image: {
+              original: `v${image.version}/${image.public_id}.${image.format}`,
+              thumbnail: `${IMAGE_BASE_URL}/w_600/v${image.version}/${image.public_id}.${
+                image.format
+              }`,
+              square: `${IMAGE_BASE_URL}/w_320,ar_1:1,c_fill,g_auto,e_art:hokusai/v${
+                image.version
+              }/${image.public_id}.${image.format}`,
+              circle: `${IMAGE_BASE_URL}/w_120,c_fill,ar_1:1,g_auto,r_max,bo_5px_solid_red,b_rgb:262c35/v${
+                image.version
+              }/${image.public_id}.${image.format}`
+            }
           })
-      : (!req.file
-          && res.status(status.BAD_REQUEST).json({
-            errors: {
-              image: 'sorry, you did not select image to be uploaded'
-            }
-          }))
-          || res.status(status.SERVER_ERROR).json({
-            errors: {
-              image: 'sorry, your file was not uploaded'
-            }
-          });
+      : res
+        .status(status.BAD_REQUEST)
+        .json({ errors: { image: 'sorry, you did not provide image to be uploaded' } });
   }
 
   /**

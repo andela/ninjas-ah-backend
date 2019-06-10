@@ -2,8 +2,7 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import dotenv from 'dotenv';
-import { cloudinaryConfig } from '../../config/cloudinaryConfig';
-import * as helpers from '../helpers';
+import cloudinaryConfig from '../../config/cloudinaryConfig';
 
 dotenv.config();
 const { expect } = chai;

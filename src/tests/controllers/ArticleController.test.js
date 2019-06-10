@@ -169,7 +169,6 @@ describe('Article', () => {
         response.article.title.should.be.a('string');
         response.article.body.should.be.a('string');
         response.article.slug.should.be.a('string');
-        response.article.coverUrl.should.be.a('string');
         expect(response.article.userId).should.be.an('object');
         done();
       });
@@ -231,7 +230,6 @@ describe('Article', () => {
         response.article.title.should.be.a('string');
         response.article.body.should.be.a('string');
         response.article.slug.should.be.a('string');
-        response.article.coverUrl.should.be.a('string');
         expect(response.article.userId).should.be.an('object');
         done();
       });
@@ -287,7 +285,6 @@ describe('Article', () => {
         response.article.title.should.be.a('string');
         response.article.body.should.be.a('string');
         response.article.slug.should.be.a('string');
-        response.article.coverUrl.should.be.a('string');
         expect(response.article.userId).should.be.an('object');
         done();
       });
@@ -343,7 +340,6 @@ describe('Article', () => {
         response.article.title.should.be.a('string');
         response.article.body.should.be.a('string');
         response.article.slug.should.be.a('string');
-        response.article.coverUrl.should.be.a('string');
         expect(response.article.userId).should.be.an('object');
         done();
       });
@@ -363,7 +359,6 @@ describe('Article', () => {
         response.articles[0].body.should.be.a('string');
         response.articles[0].description.should.be.a('string');
         response.articles[0].slug.should.be.a('string');
-        response.articles[0].coverUrl.should.be.a('string');
         done();
       });
   });
@@ -382,7 +377,6 @@ describe('Article', () => {
         response.articles[0].body.should.be.a('string');
         response.articles[0].description.should.be.a('string');
         response.articles[0].slug.should.be.a('string');
-        response.articles[0].coverUrl.should.be.a('string');
         done();
       });
   });
@@ -403,7 +397,6 @@ describe('Article', () => {
         response.articles[0].body.should.be.a('string');
         response.articles[0].description.should.be.a('string');
         response.articles[0].slug.should.be.a('string');
-        response.articles[0].coverUrl.should.be.a('string');
         done();
       });
   });

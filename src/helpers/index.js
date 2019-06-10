@@ -10,7 +10,6 @@ import parameters from './parameters';
 import clearInvalidToken from './clearInvalidToken';
 import generator from './generator';
 import * as filters from './searchArticleFilters';
-import upload from './upload';
 import * as notification from './notifications';
 
 export {
@@ -26,6 +25,5 @@ export {
   token,
   generator,
   filters,
-  upload,
   notification
 };
