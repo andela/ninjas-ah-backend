@@ -23,7 +23,7 @@ export default class UserController {
     const updatedUser = await User.update(req.body, { id: userId });
     if (updatedUser.errors) {
       const errors = helper.checkCreateUpdateUserErrors(updatedUser.errors);
-      return res.status(errors.code).json(errors);
+      return res.status(errors.code).json({ errors: errors.errors });
     }
     delete updatedUser.password;
     return res.status(status.OK).json({
@@ -48,6 +48,20 @@ export default class UserController {
     );
     return res.status(status.OK).json({
       authors
+    });
+  }
+
+  /**
+   * @param  {object} req
+   * @param  {object} res
+   * @return {object} return all users in database
+   */
+  static async getAll(req, res) {
+    const [offset, limit] = [req.query.offset || 0, req.query.limit || 20];
+    const users = await User.getAllUser({}, offset, limit);
+
+    return res.status(status.OK).json({
+      users: users.map(user => delete user.get().password && user)
     });
   }
 
@@ -77,5 +91,102 @@ export default class UserController {
     const updatedUser = await User.update({ role }, { username });
     delete updatedUser.password;
     return res.status(status.OK).json({ message: 'roles updated successfully', updatedUser });
+  }
+
+  // follow user
+  /**
+   * @description function to create user follows
+   * @param {object} req request from user
+   * @param {object} res server response
+   * @returns {object} true
+   */
+  static async follow(req, res) {
+    const { username } = req.params;
+    const checkUser = await User.findOne({ username });
+    if (checkUser.id === req.user.id) {
+      return res
+        .status(status.BAD_REQUEST)
+        .json({ errors: { follow: 'You can not follow your self ' } });
+    }
+    const follow = await User.follow.add({
+      followed: checkUser.id,
+      userId: req.user.id
+    });
+    if (follow.errors) {
+      return follow.errors.name === 'SequelizeUniqueConstraintError'
+        ? res
+          .status(status.EXIST)
+          .send({ errors: { follow: `You are already following "${username}"` } })
+        : res.status(status.SERVER_ERROR).json({ errors: 'oops, something went wrong' });
+    }
+    return res.status(status.CREATED).json({
+      message: `now you are following ${checkUser.username}`
+    });
+  }
+
+  // unFollow user
+  /**
+   * @description function to allow user to unfollow users
+   * @param {object} req user request
+   * @param {object} res response from server
+   * @returns {object} true
+   */
+  static async unfollow(req, res) {
+    const [username, user] = [req.params.username, req.user];
+    const checkUser = await User.findOne({ username });
+
+    const hasUnfollowed = Object.keys(checkUser).length
+      ? await User.follow.remove({ userId: user.id, followed: checkUser.id })
+      : null;
+
+    if (hasUnfollowed && hasUnfollowed.errors) {
+      return res.status(status.SERVER_ERROR).json({ errors: 'oops, something went wrong!!' });
+    }
+    return hasUnfollowed
+      ? res.status(status.OK).json({
+        message: `you unfollowed ${username}`
+      })
+      : res
+        .status(status.BAD_REQUEST)
+        .json({ errors: { follow: `you are not following "${username}"` } });
+  }
+
+  /**
+   * @description function to fetch users'followers
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} followers
+   */
+  static async followers(req, res) {
+    const { id } = req.user;
+    const followers = await User.follow.getAll({ followed: id });
+    return followers.length
+      ? res.status(status.OK).json({
+        message: 'Followers',
+        followers: followers.map(follower => delete follower.get().followedUser && follower)
+      })
+      : res.status(status.NOT_FOUND).json({
+        errors: { follows: "You don't have followers" }
+      });
+  }
+
+  /**
+   * @description function to fetch all authors who user follow
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} followers
+   */
+  static async following(req, res) {
+    const following = await User.follow.getAll({ userId: req.user.id });
+    const follows = following.map(followed => delete followed.get().follower && followed);
+    if (following.length) {
+      return res.status(status.OK).json({
+        message: 'Following',
+        following: follows
+      });
+    }
+    return res.status(status.NOT_FOUND).json({
+      errors: { follows: "You don't follow any one" }
+    });
   }
 }

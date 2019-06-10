@@ -14,7 +14,6 @@ export default async (req, res, next) => {
 
   req.user.permissions = (await getPermissions()).normal; // social media sign up permissions
   req.body.permissions = req.body.permissions || (await getPermissions()).normal; // local sign up
-
   return isAllowed
     ? next()
     : res.status(status.UNAUTHORIZED).json({

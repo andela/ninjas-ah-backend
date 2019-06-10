@@ -45,6 +45,11 @@ export default {
       type: Sequelize.ARRAY(Sequelize.STRING),
       allowNull: true
     },
+    isActive: {
+      type: Sequelize.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
+    },
     accountProvider: {
       type: Sequelize.STRING,
       allowNull: true

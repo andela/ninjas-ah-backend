@@ -10,68 +10,124 @@ dotenv.config();
  */
 export default class AuthLocalController {
   /**
-   * @param {object} req
-   * @param {object} res
+   * @description user signup function
+   * @param {object} req request from user
+   * @param {object} res response from server
    * @return {object} user information & token
    */
   static async signup(req, res) {
-    const {
-      firstName, lastName, username, email
-    } = req.body;
+    const { email, firstName, lastName } = req.body;
+    req.body.password = helper.password.hash(req.body.password);
+    const newUser = await User.create(req.body);
+    const errors = newUser.errors ? helper.checkCreateUpdateUserErrors(newUser.errors) : null;
 
-    const isUser = await helper.isUser({ email });
-    if (isUser) {
-      return res.status(status.EXIST).send({ error: 'Sorry, this account already exists' });
-    }
-    const newUser = await User.create({
-      firstName,
-      lastName,
-      username,
-      email,
-      password: helper.password.hash(req.body.password),
-      permissions: req.body.permissions
-    });
-    if (!newUser.errors && newUser && Object.keys(newUser).length > 0) {
-      delete newUser.password;
-      return res.status(status.CREATED).send({
-        user: newUser,
-        token: helper.token.generate({ email, role: req.body.isAdmin })
+    return errors
+      ? res.status(errors.code).json({ errors: errors.errors })
+      : (await helper.sendMail(email, 'signup', { email, firstName, lastName }))
+          && res.status(status.CREATED).json({
+            message: 'check your email to activate your account'
+          });
+  }
+
+  /**
+   * @description - login user function
+   * @param {object} req user request
+   * @param {object} res  response form server
+   * @returns {object} user token
+   */
+  static async login(req, res) {
+    const { email, password } = req.body;
+    const checkUser = await User.findOne({ email });
+    if (Object.keys(checkUser).length > 0) {
+      const comparePassword = helper.password.compare(password, checkUser.password);
+      if (!comparePassword) {
+        return res.status(status.UNAUTHORIZED).json({
+          message: 'The credentials you provided are incorrect'
+        });
+      }
+      const payload = { id: checkUser.id, role: checkUser.role };
+      const token = helper.token.generate(payload);
+      delete checkUser.password;
+      return res.status(status.OK).json({
+        message: 'signIn successfully',
+        user: checkUser,
+        token
       });
     }
   }
 
   /**
-   * @description - login user function
+   * @description function to delete user
+   * @param {object} req user request object
+   * @param {object} res response object from server
+   * @returns {object} return true if user deleted or false when user not deleted
+   */
+  static async deactivateAccount(req, res) {
+    const { id } = req.params;
+    const deactivateAccount = await User.update({ isActive: false }, { id });
+    return deactivateAccount
+      ? res.status(status.OK).json({ message: 'User account deleted successfully' })
+      : res.status(status.UNAUTHORIZED).json({ errors: 'Unauthorized access' });
+  }
+
+  /**
+   * @description methode to find one user
+   * @param {object} req user request object
+   * @param {object} res response object from server
+   * @returns {object} return all users
+   */
+  static async getOne(req, res) {
+    const id = Number.parseInt(req.params.id, 10);
+    const fetchUser = await User.findOne({ id: Number.isNaN(id) ? 0 : id });
+    delete fetchUser.password;
+    return Object.keys(fetchUser).length
+      ? res.status(status.OK).json({ fetchUser })
+      : res
+        .status(status.NOT_FOUND)
+        .json({ errors: { user: `sorry, user with id "${req.params.id}" not found!!` } });
+  }
+
+  /**
+   * @description function for admin to create user
+   * @param {object} req user request object
+   * @param {object} res response object from server
+   * @returns {object} return true if user created or flase when was not
+   */
+  static async create(req, res) {
+    const {
+      password, email, firstName, lastName
+    } = req.body;
+    req.body.password = helper.password.hash(req.body.password);
+    const newUser = await User.create(req.body);
+    if (newUser.errors) {
+      const errors = helper.checkCreateUpdateUserErrors(newUser.errors);
+      const { code } = errors;
+      delete errors.code;
+      return res.status(code).json(errors);
+    }
+    if (newUser) {
+      await helper.sendMail(email, 'resetPassword', { firstName, lastName, password });
+      return res.status(status.CREATED).json({
+        message: `activetion message sent to ${req.body.email}`
+      });
+    }
+  }
+
+  /**
+   * @description function to activate user account
    * @param {object} req
    * @param {object} res
-   * @returns {object} user token
+   * @returns {object} it return true if account activeted otherwise it return false
    */
-  static async login(req, res) {
-    try {
-      const { email, password } = req.body;
-      const checkUser = await User.findOne({ email });
-      if (Object.keys(checkUser).length > 0) {
-        if (!helper.password.compare(password, checkUser.password)) {
-          return res.status(status.UNAUTHORIZED).send({
-            message: 'The credentials you provided is incorrect'
-          });
-        }
-        delete checkUser.password;
-        return res.status(status.OK).send({
-          user: checkUser,
-          token: helper.token.generate({
-            id: checkUser.id,
-            role: checkUser.role,
-            permissions: checkUser.permissions
-          })
-        });
-      }
-      return res
-        .status(status.UNAUTHORIZED)
-        .send({ error: `User with ${email} email doesn't exist!!!` });
-    } catch (error) {
-      return res.status(500).send({ error });
-    }
+  static async activate(req, res) {
+    const { user } = req;
+    const activated = await User.update({ isActive: true }, { email: user.email });
+    await helper.sendMail(activated.email, 'accountActivatedMsg', {
+      firstName: activated.firstName
+    });
+    return res.status(status.OK).json({
+      message: 'Account successfully activated'
+    });
   }
 
   /**
@@ -83,14 +139,14 @@ export default class AuthLocalController {
     const { email } = req.body;
     const result = await User.findOne({ email }); // check if the email exist
     if (Object.keys(result).length <= 0) {
-      return res.status(404).send({
-        message: 'email not found..'
+      return res.status(status.NOT_FOUND).json({
+        errors: 'email not found..'
       });
     }
 
-    await helper.sendMail(email); // send mail
+    await helper.sendMail(email, 'resetPassword', { email, firstName: result.firstName }); // send mail
 
-    return res.status(200).json({
+    return res.status(status.OK).json({
       message: 'Email sent, please check your email'
     });
   }
@@ -104,26 +160,25 @@ export default class AuthLocalController {
     const token = req.body.token || req.params.token;
     const { passwordOne, passwordTwo } = req.body;
     if (passwordOne !== passwordTwo) {
-      return res.status(status.BAD_REQUEST).send({ message: 'Passwords are not matching' });
+      return res.status(status.BAD_REQUEST).json({ errors: 'Passwords are not matching' });
     }
 
     if (!req.body.passwordOne || !req.body.passwordTwo) {
-      return res.status(status.BAD_REQUEST).send({ message: 'the password can not be empty' });
+      return res.status(status.BAD_REQUEST).json({ errors: 'the password can not be empty' });
     }
 
     const isPasswordValid = validate.password(passwordOne, 'required');
     const isPasswordValidTwo = validate.password(passwordTwo, 'required');
 
     if (isPasswordValid.length || isPasswordValidTwo.length) {
-      return res.status(status.BAD_REQUEST).send({ message: isPasswordValid[0] });
+      return res.status(status.BAD_REQUEST).json({ message: isPasswordValid[0] });
     }
     const { email } = helper.token.decode(token);
-    const updatedUser = await User.update(
-      { password: helper.password.hash(passwordOne) },
-      { email }
-    );
-    return Object.keys(updatedUser).length
-      ? res.status(status.OK).send({ message: 'Success! your password has been changed.' })
-      : res.status(status.NOT_MODIFIED).send({ message: 'Password not updated' });
+    const isUpdated = await User.update({ password: helper.password.hash(passwordOne) }, { email });
+    return isUpdated
+      ? res
+        .status(status.OK)
+        .json({ isUpdated, message: 'Success! your password has been changed.' })
+      : res.status(status.NOT_MODIFIED).json({ errors: 'Password not updated' });
   }
 }

@@ -12,7 +12,6 @@ import isUser from '../helpers/isUser';
  */
 export default async (req, res, next) => {
   const id = req.user ? req.user.id : 0;
-
   const requestUser = await isUser({ id, role: 'admin' });
 
   if (!requestUser) {

@@ -29,7 +29,7 @@ export default (input) => {
       .max(100)
       .optional(),
     permissions: Joi.string()
-      .min(5)
+      .min(2)
       .max(255)
       .optional()
   });
