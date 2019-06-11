@@ -2,40 +2,48 @@ import chai from 'chai';
 import chaiHttp from 'chai-http';
 import { Article } from '../../../queries';
 import db from '../../../models';
+import * as Factory from '../../../helpers/factory';
 
 chai.use(chaiHttp);
+
+let createdUser = '';
+let createdArticle = '';
+
+const user = Factory.user.build();
+const article = Factory.article.build();
+
+delete user.id;
+delete article.id;
 // This is to test the query that is used to update data of a given article
 describe('Query to edit an article', () => {
+  before(async () => {
+    try {
+      await db.User.destroy({
+        truncate: true,
+        cascade: true,
+        logging: false
+      });
+      createdUser = (await db.User.create(user, { logging: false })).dataValues;
+      article.userId = createdUser.id;
+      createdArticle = (await db.Article.create(article, { logging: false })).dataValues;
+    } catch (error) {
+      throw error;
+    }
+  });
   it('should edit an article', async () => {
-    // find article to update
-    const findArticle = await db.Article.findAll({ limit: 1, logging: false });
-    const {
-      title,
-      body,
-      description,
-      readTime,
-      coverUrl,
-      slug,
-      userId
-    } = findArticle[0].dataValues;
     const response = await Article.update(
       {
-        userId,
-        title,
-        body,
-        description,
-        readTime,
-        coverUrl
+        title: 'aaaaavfff yyyy'
       },
-      slug
+      createdArticle.slug
     );
-    response.should.be.an('array');
-    response[1].should.be.an('array');
+    response.should.be.an('object');
+    Object.keys(response).length.should.above(0);
   });
   it('should fail to edit article', async () => {
     // find article to update
     const response = await Article.update();
-    response.should.be.an('array');
-    response[0].should.equal(0);
+    response.should.be.an('object');
+    Object.keys(response).length.should.equal(0);
   });
 });
