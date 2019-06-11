@@ -51,7 +51,7 @@
     
     window.document.addEventListener('DOMContentLoaded', () => {
       if (document.querySelector("#url")) {
-        document.querySelector("#url").value = `${HOST}/api/v1/users`;
+        document.querySelector("#url").value = `${HOST}/api/v1/users/authors`;
       }
       document.querySelector('#submit').onclick = async (e) => {
         startLoadingButton();

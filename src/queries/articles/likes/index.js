@@ -1,9 +1,9 @@
-import createLike from './createLike';
+import create from './create';
 import deleteLike from './deleteLike';
 import getAllLikes from './getAllLikes';
 import getSingleLike from './getSingleLike';
 import updateLike from './updateLike';
 
 export {
-  createLike, deleteLike, getAllLikes, getSingleLike, updateLike
+  create, deleteLike, getAllLikes, getSingleLike, updateLike
 };
