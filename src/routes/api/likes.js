@@ -9,12 +9,7 @@ import checkArticleLike from '../../middlewares/checkArticleLike';
 import checkCommentLike from '../../middlewares/checkCommentLike';
 
 const router = Router();
-router.get(
-  '/:articleSlug/Likes',
-  verifyToken,
-  checkArticle,
-  asyncHandler(ArticleLikeController.getAllLikes)
-);
+router.get('/:articleSlug/Likes', checkArticle, asyncHandler(ArticleLikeController.getAllLikes));
 router.post(
   '/:articleSlug/comments/:commentId/like',
   verifyToken,
@@ -25,7 +20,6 @@ router.post(
 );
 router.get(
   '/:articleSlug/comments/:commentId/likes',
-  verifyToken,
   checkArticle,
   checkComment,
   asyncHandler(CommentLikeController.getAll)

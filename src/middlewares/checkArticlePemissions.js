@@ -1,16 +1,12 @@
 import status from '../config/status';
 
-export const canDeleteOrUnpublishArticle = (req, res) => (req.user.id === req.article.userId || req.user.role === 'admin'
-  ? null
+const checkArticlePemissions = role => (req, res, next) => ((role[req.user.role] === 'self' && req.user.id === req.article.userId)
+  || role[req.user.role] === 'all'
+  ? next()
   : res.status(status.UNAUTHORIZED).json({
     errors: {
-      authorization: "sorry, you don't have the required permission to perform this action"
+      permission: "you don't have the required permission to perform this action"
     }
   }));
 
-export const canEditOrPublishArticle = (req, res) => req.user.id !== req.article.userId
-  && res.status(status.UNAUTHORIZED).json({
-    errors: {
-      authorization: "sorry, you don't have the required permission to perform this action"
-    }
-  });
+export default checkArticlePemissions;

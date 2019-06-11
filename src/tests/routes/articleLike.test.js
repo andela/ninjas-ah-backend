@@ -117,7 +117,6 @@ describe('Article likes', () => {
       .set('access-token', accessToken)
       .send()
       .end((err, res) => {
-        console.log(res);
         res.should.have.status(status.OK);
         done();
       });

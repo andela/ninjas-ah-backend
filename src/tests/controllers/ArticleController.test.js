@@ -19,11 +19,12 @@ const user = Factory.user.build();
 
 delete user.id;
 delete article.id;
-const createdGallery = '';
+let author = 0;
 describe('No articles', () => {
   before(async () => {
     createdUser = (await db.User.create(user, { logging: false })).dataValues;
     article.userId = createdUser.id;
+    author = createdUser.id;
     accessToken = jwt.sign(
       { id: createdUser.id, role: createdUser.role, permissions: createdUser.permissions },
       process.env.SECRET_KEY,
@@ -38,10 +39,9 @@ describe('No articles', () => {
   });
 
   describe('Test not-found articles', () => {
-    let author = 0;
     after(async () => {
-      const findUser = await db.User.findAll({ limit: 1, logging: false });
-      author = findUser[0].dataValues.id;
+      // const findUser = await db.User.findAll({ limit: 1, logging: false });
+      // author = findUser[0].dataValues.id;
       const initalArticle = article;
       delete initalArticle.id;
       initalArticle.userId = author;
@@ -147,16 +147,14 @@ describe('No articles', () => {
 });
 
 describe('Article', () => {
-  let author = 0;
-
   let articleSlug = '';
   before(async () => {
-    const findUser = await db.User.findAll({ limit: 1, logging: false });
-    author = findUser[0].dataValues.id;
+    // const findUser = await db.User.findAll({ limit: 1, logging: false });
+    // author = findUser[0].dataValues.id;
     const { dataValues } = await db.Article.findOne({ where: { id: 1 } }, { logging: false });
     articleSlug = dataValues.slug;
     // create gallery
-    await db.Gallery.create({ image: 'placeholder.png', userId: createdUser.id });
+    await db.Gallery.create({ image: 'placeholder.png', userId: author });
   });
   //   // create article
   it('Should successfully create an article', (done) => {
@@ -181,10 +179,10 @@ describe('Article', () => {
   });
 
   it('Should update article cover', async () => {
-    const myArticle = await db.Article.findOne({ where: { userId: createdUser.id } });
+    // const myArticle = await db.Article.findOne({ where: { userId: createdUser.id } });
     chai
       .request(app)
-      .post(`/api/v1/articles/${myArticle.dataValues.slug}/cover`)
+      .post(`/api/v1/articles/${articleSlug}/cover`)
       .set('access-token', accessToken)
       .send({ coverUrl: 'placeholder.png' })
       .end((err, res) => {
@@ -198,7 +196,6 @@ describe('Article', () => {
       .request(app)
       .post('/api/v1/articles/rosie-make-it-easy-1dh6jv9cn4sz/cover')
       .set('access-token', accessToken)
-      .send({ coverUrl: 'placeholder.png' })
       .end((err, res) => {
         expect(res).to.have.status(status.BAD_REQUEST);
         res.body.should.be.an('object');
@@ -217,6 +214,7 @@ describe('Article', () => {
   });
   it('Should successfully create an article even if title is more than 70 characters', (done) => {
     delete article.id;
+    delete article.userId;
     delete article.slug;
     delete article.readTime;
     const bigArticleTitle = {
@@ -371,7 +369,7 @@ describe('Article', () => {
   it('Should get all articles', (done) => {
     chai
       .request(app)
-      .get('/api/v1/profile/articles/drafts')
+      .get('/api/v1/articles/drafts')
       .set('access-token', accessToken)
       .end((err, res) => {
         const response = res.body;
@@ -533,10 +531,10 @@ describe('Article', () => {
       });
   });
   it('Should get one article', (done) => {
-    const getArticle = { ...article, slug: 'rosie-make-it-easy-1dh6jv9cn4sz' };
+    // const getArticle = { ...article, slug: 'rosie-make-it-easy-1dh6jv9cn4sz' };
     chai
       .request(app)
-      .get(`/api/v1/articles/${getArticle.slug}`)
+      .get(`/api/v1/articles/${articleSlug}`)
       .set('access-token', accessToken)
       .end((err, res) => {
         const response = res.body;
@@ -553,10 +551,10 @@ describe('Article', () => {
   });
   it('Should update the article', (done) => {
     delete article.id;
-    let updateArticle = { ...article };
+    const updateArticle = { ...article };
     delete updateArticle.slug;
     delete updateArticle.tagList;
-    updateArticle = { ...updateArticle, readTime: 0 };
+    delete updateArticle.readTime;
     chai
       .request(app)
       .put(`/api/v1/articles/${articleSlug}`)
@@ -570,10 +568,9 @@ describe('Article', () => {
       });
   });
   it('Should publish an article', (done) => {
-    const publishArticle = { ...article, slug: 'rosie-make-it-easy-1dh6jv9cn4sz' };
     chai
       .request(app)
-      .put(`/api/v1/articles/${publishArticle.slug}/publish`)
+      .put(`/api/v1/articles/${articleSlug}/publish`)
       .set('access-token', accessToken)
       .end((err, res) => {
         expect(res).to.have.status(status.OK);
@@ -600,7 +597,7 @@ describe('Article', () => {
     const unpublish = { ...article, slug: 'rosie-make-it-easy-1dh6jv9cn4sz' };
     chai
       .request(app)
-      .put(`/api/v1/articles/${unpublish.slug}/unpublish`)
+      .put(`/api/v1/articles/${articleSlug}/unpublish`)
       .set('access-token', accessToken)
       .end((err, res) => {
         expect(res).to.have.status(status.OK);
@@ -611,10 +608,10 @@ describe('Article', () => {
   });
 
   it('Should delete article', (done) => {
-    const deleteArticle = { ...article, slug: 'rosie-make-it-easy-1dh6jv9cn4sz' };
+    // const deleteArticle = { ...article, slug: 'rosie-make-it-easy-1dh6jv9cn4sz' };
     chai
       .request(app)
-      .delete(`/api/v1/articles/${deleteArticle.slug}`)
+      .delete(`/api/v1/articles/${articleSlug}`)
       .set('access-token', accessToken)
       .end((err, res) => {
         expect(res).to.have.status(status.OK);

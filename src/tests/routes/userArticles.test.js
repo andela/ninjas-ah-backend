@@ -40,7 +40,7 @@ describe('USER ARTICLES', () => {
     it('Should not get draft articles if a user does not have one', (done) => {
       chai
         .request(app)
-        .get('/api/v1/profile/articles/drafts')
+        .get('/api/v1/articles/drafts')
         .set('access-token', accessToken)
         .end((err, res) => {
           expect(res).to.have.status(status.NOT_FOUND);
@@ -52,7 +52,7 @@ describe('USER ARTICLES', () => {
     it('Should not get published articles if a user does not have one', (done) => {
       chai
         .request(app)
-        .get('/api/v1/profile/articles/published')
+        .get('/api/v1/articles/published')
         .set('access-token', accessToken)
         .end((err, res) => {
           expect(res).to.have.status(status.NOT_FOUND);
@@ -86,7 +86,7 @@ describe('USER ARTICLES', () => {
     it('Should get draft articles', (done) => {
       chai
         .request(app)
-        .get('/api/v1/profile/articles/drafts')
+        .get('/api/v1/articles/drafts')
         .set('access-token', accessToken)
         .end((err, res) => {
           expect(res).to.have.status(status.OK);
@@ -104,7 +104,7 @@ describe('USER ARTICLES', () => {
     it('Should get published articles', (done) => {
       chai
         .request(app)
-        .get('/api/v1/profile/articles/published')
+        .get('/api/v1/articles/published')
         .set('access-token', accessToken)
         .end((err, res) => {
           expect(res).to.have.status(status.OK);

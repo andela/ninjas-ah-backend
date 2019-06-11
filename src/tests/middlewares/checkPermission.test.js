@@ -20,7 +20,9 @@ chai.use(chaiHttp);
 const app = express();
 const router = express.Router();
 let createdUser = '';
+const createdUserTwo = '';
 let token = '';
+let tokenTwo = '';
 const user = Factory.user.build();
 delete user.id;
 
@@ -54,6 +56,15 @@ describe('Verify permission', () => {
       createdUser = (await db.User.create(user, { logging: false })).dataValues;
       token = jwt.sign(
         { id: createdUser.id, role: createdUser.role, permissions: user.permissions },
+        process.env.SECRET_KEY,
+        {
+          expiresIn: '1d'
+        }
+      );
+      const permissions = JSON.parse(user.permissions);
+      permissions.articles = ['read'];
+      tokenTwo = jwt.sign(
+        { id: createdUser.id, role: createdUser.role, permissions: JSON.stringify(permissions) },
         process.env.SECRET_KEY,
         {
           expiresIn: '1d'
@@ -95,7 +106,7 @@ describe('Verify permission', () => {
     chai
       .request(app)
       .put('/api/v1/articles')
-      .set('access-token', token)
+      .set('access-token', tokenTwo)
       .end((err, res) => {
         expect(res.status).to.equal(status.UNAUTHORIZED);
         done();
