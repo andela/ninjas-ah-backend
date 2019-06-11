@@ -6,8 +6,11 @@ import * as bookmark from '../articleBookmarks';
 import * as favorite from '../favoriteArticles';
 import getUserArticles from './getUserArticles';
 import updateCover from './updateCover';
+import * as rate from '../ratings';
 
-export { favorite, bookmark };
 export {
-  create, update, get, getAll, getUserArticles, updateCover
+  create, update, favorite, bookmark
+};
+export {
+  get, getAll, getUserArticles, updateCover, rate
 };

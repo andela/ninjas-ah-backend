@@ -12,7 +12,7 @@ export default class ArticleController {
    */
   static async saveArticle(req, res) {
     const { tagList } = req.body;
-    const coverUrl = req.files && req.files[0].originalname
+    const coverUrl = req.files && req.files[0] !== undefined && req.files[0].originalname
       ? `${req.files[0].version}/${req.files[0].public_id}.${req.files[0].format}`
       : null;
     const newArticle = await Article.create({

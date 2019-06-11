@@ -1,5 +1,4 @@
 import db from '../../models';
-// import status from '../../config/status';
 /**
  * @param {object} data inputs data to be saved in db
  * @param {object} slug unique slug to update article

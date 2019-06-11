@@ -8,7 +8,7 @@ export default (data) => {
   const token = generateToken({ email: data.email }, { expiresIn: '1h' });
   const appUrl = process.env.APP_URL;
   const link = `${appUrl}/api/v1/auth/reset/${token}`;
-  message.subject = 'Welcome to Authors Haven';
+  message.subject = 'Reset your password - Authors Haven';
   message.html = `Hello ${data.names} </br>,
   <p>You are receiving this because you (or someone else) have requested the reset of the password,<br>
    Click on the reset link bellow to complete the process<br>

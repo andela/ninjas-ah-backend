@@ -60,7 +60,7 @@ describe('No articles', () => {
           done();
         });
     });
-    it('Should not get articles if article table is empty', async () => {
+    it('Should not get articles if article table is empty', (done) => {
       chai
         .request(app)
         .get('/api/v1/articles')
@@ -69,9 +69,10 @@ describe('No articles', () => {
           expect(res).to.have.status(status.NOT_FOUND);
           res.body.should.be.an('object');
           res.body.message.should.equal('No articles found');
+          done();
         });
     });
-    it('Should not get articles if table is empty', async () => {
+    it('Should not get articles if table is empty', (done) => {
       chai
         .request(app)
         .get(`/api/v1/articles/${article.slug}`)
@@ -80,10 +81,11 @@ describe('No articles', () => {
           expect(res).to.have.status(status.NOT_FOUND);
           res.body.should.be.an('object');
           res.body.error.should.equal('No article found');
+          done();
         });
     });
 
-    it('Should not update if author does not exist', async () => {
+    it('Should not update if author does not exist', (done) => {
       delete article.id;
       const fakeArticle1 = { ...article, slug: 'fake-easy-opojvbldff' };
       delete fakeArticle1.userId;
@@ -97,9 +99,10 @@ describe('No articles', () => {
           expect(res).to.have.status(status.BAD_REQUEST);
           res.body.should.be.an('object');
           res.body.errors.should.be.an('array');
+          done();
         });
     });
-    it('Should not update if slug article is not valid', async () => {
+    it('Should not update if slug article is not valid', (done) => {
       delete article.id;
       const fakeArticle1 = { ...article, slug: 'fake-easy-opojvbldff' };
       delete fakeArticle1.userId;
@@ -113,9 +116,10 @@ describe('No articles', () => {
           expect(res).to.have.status(status.BAD_REQUEST);
           res.body.should.be.an('object');
           res.body.errors.should.be.an('array');
+          done();
         });
     });
-    it('Should not unpublish a non-existing article', async () => {
+    it('Should not unpublish a non-existing article', (done) => {
       chai
         .request(app)
         .put('/api/v1/articles/invali-6jv9cn4szf/unpublish')
@@ -124,9 +128,10 @@ describe('No articles', () => {
           expect(res).to.have.status(status.NOT_FOUND);
           res.body.should.be.a('object');
           res.body.error.should.equal('No article found');
+          done();
         });
     });
-    it('Should not publish a non-existing article', async () => {
+    it('Should not publish a non-existing article', (done) => {
       chai
         .request(app)
         .put('/api/v1/articles/invalid-1632jv5quc9c/publish')
@@ -135,6 +140,7 @@ describe('No articles', () => {
           expect(res).to.have.status(status.NOT_FOUND);
           res.body.should.be.a('object');
           res.body.error.should.equal('No article found');
+          done();
         });
     });
   });

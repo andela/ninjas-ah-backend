@@ -9,7 +9,7 @@ export default ({ email, firstName, lastName }) => {
   const appUrl = process.env.APP_URL;
   const singUpLink = `${appUrl}/api/v1/auth/activate/${token}`;
 
-  message.subject = 'Welcome to Authors Haven';
+  message.subject = 'Activate your account - Authors Haven';
   message.html = `Hello ${firstName} ${lastName} </br>,
   <p>
     You are receiving this because you requested to create an account on Authors Haven,
