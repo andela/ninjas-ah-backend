@@ -23,4 +23,19 @@ export default class CommentLikeController {
       like: likeComment
     });
   }
+
+  /**
+   * A method to display all likes on an article
+   * @param {object} req the request to get like
+   * @param {object} res the response of like from server
+   * @returns {object} the return after liking a particular article
+   */
+  static async getAll(req, res) {
+    const { articleSlug } = req.params;
+    const findAllLikes = await comment.getAllLikes({ articleSlug });
+    return res.status(status.OK).json({
+      likes: findAllLikes.length,
+      whoLiked: { userId: findAllLikes.map(value => value.userId) }
+    });
+  }
 }

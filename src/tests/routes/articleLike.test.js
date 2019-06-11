@@ -98,6 +98,7 @@ describe('Article likes', () => {
         done();
       });
   });
+
   it('Should let the user like an article once he deleted the like', (done) => {
     chai
       .request(app)
@@ -116,6 +117,18 @@ describe('Article likes', () => {
       .set('access-token', accessToken)
       .send()
       .end((err, res) => {
+        console.log(res);
+        res.should.have.status(status.OK);
+        done();
+      });
+  });
+  it('Should let a user see who disliked on article ', (done) => {
+    chai
+      .request(app)
+      .get(`/api/v1/articles/${newarticleSlug}/likes`)
+      .set('access-token', accessToken)
+      .send()
+      .end((err, res) => {
         res.should.have.status(status.OK);
         done();
       });
@@ -124,6 +137,17 @@ describe('Article likes', () => {
     chai
       .request(app)
       .post(`/api/v1/articles/${newarticleSlug}/like`)
+      .set('access-token', accessToken)
+      .send()
+      .end((err, res) => {
+        res.should.have.status(status.OK);
+        done();
+      });
+  });
+  it('Should let a user see who liked on article ', (done) => {
+    chai
+      .request(app)
+      .get(`/api/v1/articles/${newarticleSlug}/likes`)
       .set('access-token', accessToken)
       .send()
       .end((err, res) => {

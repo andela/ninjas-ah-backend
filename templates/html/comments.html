@@ -59,7 +59,7 @@
 
         if (result) {
           document.querySelector('#response').innerHTML =
-            JSON.stringify(result) || 'Oops, Something went wrong';
+            JSON.stringify(result,data,4) || 'Oops, Something went wrong';
         }
     }
 

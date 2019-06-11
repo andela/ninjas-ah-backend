@@ -94,6 +94,17 @@ describe('Comment likes', () => {
         done();
       });
   });
+  it('Should let a user see who liked the comment ', (done) => {
+    chai
+      .request(app)
+      .get(`/api/v1/articles/${newarticleSlug}/comments/${createdComment.id}/likes`)
+      .set('access-token', accessToken)
+      .send()
+      .end((err, res) => {
+        res.should.have.status(status.OK);
+        done();
+      });
+  });
 
   it('Should not let the user create a comment like again', (done) => {
     chai
