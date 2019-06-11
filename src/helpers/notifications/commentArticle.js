@@ -13,7 +13,13 @@ export default async (comment) => {
     favorites = !favorites.errors ? favorites.map(favorite => favorite.favoritedBy) : null;
 
     return favorites.map(async (favoritedBy) => {
-      const message = `
+      const url = `${APP_URL_FRONTEND}/articles/${comment.articleSlug}`;
+
+      const inAppMessage = `Hello ${favoritedBy.firstName} ${favoritedBy.lastName}, ${
+        author.firstName
+      } ${author.lastName} commented on a article you favorite`;
+
+      const emailMessage = `
         Hello ${favoritedBy.firstName} ${favoritedBy.lastName},
         <br>
         ${author.firstName} ${author.lastName} commented on a article you favorite
@@ -31,7 +37,9 @@ export default async (comment) => {
         resource: 'articles',
         action: 'comment',
         user: favoritedBy,
-        message
+        inAppMessage,
+        emailMessage,
+        url
       };
 
       await sendNotification(data);

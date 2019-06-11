@@ -224,6 +224,79 @@ describe('Notifications', () => {
       });
   });
 
+  // update notifications
+  it('should update the status notifications to "seen"', (done) => {
+    chai
+      .request(app)
+      .put('/api/v1/notifications/seen')
+      .set('access-token', accessToken)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(status.OK);
+        expect(res.body).to.not.include.keys('errors');
+        done();
+      });
+  });
+
+  it('should update the status notifications to "unseen"', (done) => {
+    chai
+      .request(app)
+      .put('/api/v1/notifications/unseen')
+      .set('access-token', accessToken)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(status.OK);
+        expect(res.body).to.not.include.keys('errors');
+        done();
+      });
+  });
+
+  it('should update the status of a notification to "seen"', (done) => {
+    chai
+      .request(app)
+      .put(`/api/v1/notifications/${createdNotification.id}/seen`)
+      .set('access-token', accessToken)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(status.OK);
+        expect(res.body).to.not.include.keys('errors');
+        done();
+      });
+  });
+
+  it('should update the status of a notification to "unseen"', (done) => {
+    chai
+      .request(app)
+      .put(`/api/v1/notifications/${createdNotification.id}/unseen`)
+      .set('access-token', accessToken)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(status.OK);
+        expect(res.body).to.not.include.keys('errors');
+        done();
+      });
+  });
+
+  it('should not update the status of a notification if the ID is not valid', (done) => {
+    chai
+      .request(app)
+      .put('/api/v1/notifications/{}/seen')
+      .set('access-token', accessToken)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(status.BAD_REQUEST);
+        expect(res.body).to.include.keys('errors');
+        done();
+      });
+  });
+
+  it('should not update the status of a notification if the ID is not valid', (done) => {
+    chai
+      .request(app)
+      .put('/api/v1/notifications/{}/unseen')
+      .set('access-token', accessToken)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(status.BAD_REQUEST);
+        expect(res.body).to.include.keys('errors');
+        done();
+      });
+  });
+
   // remove a notification
   it('should remove a notification', (done) => {
     chai

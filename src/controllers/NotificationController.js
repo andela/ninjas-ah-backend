@@ -1,8 +1,5 @@
-import dotenv from 'dotenv';
 import { Notification } from '../queries';
 import status from '../config/status';
-
-dotenv.config();
 
 /**
  * A class to handle all notifications
@@ -12,6 +9,7 @@ export default class NotificationController {
    * @param  {object} req
    * @param  {object} res
    * @return {object} return an object containing the updated profile
+   * @return {object} return an object containing set configuration
    */
   static async setConfig(req, res) {
     const config = await Notification.config.create(req.user.id, req.body.config);
@@ -34,7 +32,7 @@ export default class NotificationController {
   /**
    * @param  {object} req
    * @param  {object} res
-   * @return {object} return an object containing the updated profile
+   * @return {object} return an object containing set configuration
    */
   static async getConfig(req, res) {
     const config = await Notification.config.getOne(req.user.id);
@@ -51,7 +49,7 @@ export default class NotificationController {
   /**
    * @param  {object} req
    * @param  {object} res
-   * @return {object} return an object containing the updated profile
+   * @return {object} return an object containing the updated configuration
    */
   static async updateConfig(req, res) {
     const config = await Notification.config.update(req.user.id, req.body.config);
@@ -75,16 +73,11 @@ export default class NotificationController {
    * @return {array} return an array containing notifications
    */
   static async getAll(req, res) {
-    const [offset, limit] = [req.query.offset || 0, req.query.limit || 20];
-    let notificationStatus = null;
+    const { url, query, user } = req;
+    const [offset, limit] = [query.offset || 0, query.limit || 20];
+    const notificationStatus = (url.search(/\/unseen/g) >= 0 && 'unseen') || (url.search(/\/seen/g) >= 0 && 'seen');
 
-    if (req.url.search(/\/unseen/g) >= 0) {
-      notificationStatus = 'unseen';
-    } else if (req.url.search(/\/seen/g) >= 0) {
-      notificationStatus = 'seen';
-    }
-
-    const notifications = await Notification.getAll(req.user.id, notificationStatus, offset, limit);
+    const notifications = await Notification.getAll(user.id, notificationStatus, offset, limit);
 
     return !notifications.errors
       ? res.status(status.OK).json({ notifications })
@@ -100,20 +93,47 @@ export default class NotificationController {
    */
   static async getOne(req, res) {
     const notification = await Notification.getOne(req.user.id, req.params.notificationId);
+    const errors = notification.errors || null;
 
     return (
-      (notification.errors
-        && notification.errors.name === 'SequelizeDatabaseError'
+      (errors
+        && errors.name === 'SequelizeDatabaseError'
         && res.status(status.BAD_REQUEST).json({
-          errors: {
-            notification: 'the provided notification ID is not valid, it should be an integer'
-          }
+          errors: { notification: 'the provided notification ID should be an integer' }
         }))
-      || (notification.errors
-        && res
-          .status(status.SERVER_ERROR)
-          .json({ errors: 'Oops, something went wrong, please try again' }))
-      || res.status(status.OK).json(notification)
+      || (errors
+        && res.status(status.SERVER_ERROR).json({
+          errors: 'Oops, something went wrong, please try again'
+        }))
+      || res.status(status.OK).json({ notification })
+    );
+  }
+
+  /**
+   * @param  {object} req
+   * @param  {object} res
+   * @return {object} return an object containing the updated notification
+   */
+  static async update(req, res) {
+    const [notificationStatus, notificationId, preference] = [
+      (req.url.search(/\/unseen/g) >= 0 && 'unseen') || (req.url.search(/\/seen/g) >= 0 && 'seen'),
+      req.params.notificationId,
+      req.body.preference
+    ];
+    const notifications = await Notification.update(req.user.id, notificationId, {
+      status: notificationStatus,
+      preference
+    });
+    return (
+      (notifications.errors
+        && ((notifications.errors.name === 'SequelizeDatabaseError'
+          && res.status(status.BAD_REQUEST).json({
+            errors: { notification: 'the provided notification ID should be an integer' }
+          }))
+          || res.status(status.SERVER_ERROR).json({
+            errors: 'Oops, something went wrong, please try again'
+          })))
+      || res.status(notifications.length ? status.OK : status.NOT_FOUND).json({ notifications })
     );
   }
 
@@ -123,27 +143,23 @@ export default class NotificationController {
    * @returns {object} Object representing the response returned
    */
   static async delete(req, res) {
-    const deleted = req.user.role === 'admin'
-      ? await Notification.remove(req.params.notificationId)
-      : await Notification.remove(req.params.notificationId, req.user.id);
+    const deleted = await Notification.remove(req.params.notificationId, req.user.id);
+    const errors = deleted.errors || null;
 
-    if (deleted.errors) {
-      return (
-        (deleted.errors.name === 'SequelizeDatabaseError'
+    return errors
+      ? (errors.name === 'SequelizeDatabaseError'
           && res.status(status.BAD_REQUEST).json({
             errors: {
               notification: 'the provided notification ID is not valid, it should be an integer'
             }
           }))
-        || res
-          .status(status.SERVER_ERROR)
-          .json({ errors: 'Oops, something went wrong, please try again' })
-      );
-    }
-    return !deleted
-      ? res.status(status.NOT_FOUND).json({
-        errors: { notification: 'notification not deleted' }
-      })
-      : res.status(status.OK).json({ message: 'notification successfully deleted' });
+          || res
+            .status(status.SERVER_ERROR)
+            .json({ errors: 'Oops, something went wrong, please try again' })
+      : (!deleted
+          && res.status(status.NOT_FOUND).json({
+            errors: { notification: 'notification not deleted' }
+          }))
+          || res.status(status.OK).json({ message: 'notification successfully deleted' });
   }
 }
