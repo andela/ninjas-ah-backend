@@ -27,6 +27,14 @@ class articles {
    */
   static update(req, res, next) {
     const response = validate.validation.updateArticle(req.body);
+    req.body = {
+      title: req.body.title && req.body.title.trim(),
+      body: req.body.body && req.body.body.trim(),
+      description: req.body.description && req.body.description.trim(),
+      readTime: req.body.body && validate.generator.slug(req.body.body)
+    };
+
+    Object.keys(req.body).forEach(key => req.body[key] || delete req.body[key]);
     return !response.error ? next() : Error.joiErrorHandler(res, response);
   }
 

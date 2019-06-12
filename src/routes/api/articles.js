@@ -6,6 +6,8 @@ import checkArticleBySlug from '../../middlewares/checkArticleBySlug';
 import verifyToken from '../../middlewares/verifyToken';
 import shareArticle from '../../middlewares/shareArticle';
 import multerUploads from '../../middlewares/multerUploads';
+import checkPermissions from '../../middlewares/checkPermissions';
+import checkArticlePemissions from '../../middlewares/checkArticlePemissions';
 
 const articles = Router();
 
@@ -13,6 +15,10 @@ const articles = Router();
 articles.post(
   '/articles',
   verifyToken,
+  checkPermissions({
+    route: 'articles',
+    action: 'create'
+  }),
   multerUploads.array('coverUrl', 1),
   validateArticle.create,
   asyncHandler(ArticleController.saveArticle)
@@ -27,25 +33,38 @@ articles.get(
   asyncHandler(ArticleController.getAllArticles)
 );
 articles.get(
+  '/articles/drafts',
+  verifyToken,
+  checkPermissions({
+    route: 'articles',
+    action: 'read'
+  }),
+  asyncHandler(ArticleController.userArticleDrafts)
+);
+articles.get(
+  '/articles/published',
+  verifyToken,
+  checkPermissions({
+    route: 'articles',
+    action: 'read'
+  }),
+  asyncHandler(ArticleController.userArticlePublished)
+);
+articles.get(
   '/articles/:slug',
   checkArticleBySlug,
   asyncHandler(ArticleController.getSpecificArticle)
 );
-articles.get(
-  '/profile/articles/drafts',
-  verifyToken,
-  asyncHandler(ArticleController.userArticleDrafts)
-);
-articles.get(
-  '/profile/articles/published',
-  verifyToken,
-  asyncHandler(ArticleController.userArticlePublished)
-);
 articles.put(
   '/articles/:slug',
-  verifyToken,
   validateArticle.update,
+  verifyToken,
   checkArticleBySlug,
+  checkPermissions({ route: 'articles', action: 'edit' }),
+  checkArticlePemissions({
+    normal: 'self',
+    admin: 'self'
+  }),
   asyncHandler(ArticleController.update)
 );
 
@@ -54,14 +73,21 @@ articles.put(
   verifyToken,
   validateArticle.slug,
   checkArticleBySlug,
+  checkPermissions({ route: 'articles', action: 'edit' }),
+  checkArticlePemissions({ normal: 'self', admin: 'self' }),
   asyncHandler(ArticleController.update)
 );
 
 articles.put(
   '/articles/:slug/unpublish',
   verifyToken,
-  validateArticle.slug,
   checkArticleBySlug,
+  validateArticle.slug,
+  checkPermissions({ route: 'articles', action: 'edit' }),
+  checkArticlePemissions({
+    normal: 'self',
+    admin: 'all'
+  }),
   asyncHandler(ArticleController.update)
 );
 
@@ -69,6 +95,11 @@ articles.delete(
   '/articles/:slug',
   verifyToken,
   checkArticleBySlug,
+  checkPermissions({ route: 'articles', action: 'delete' }),
+  checkArticlePemissions({
+    normal: 'self',
+    admin: 'all'
+  }),
   asyncHandler(ArticleController.update)
 );
 

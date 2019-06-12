@@ -116,13 +116,7 @@ export default class ArticleController {
     let updateArticle = {};
     let message = '';
     if (Object.keys(req.body).length > 0) {
-      updateArticle = {
-        userId: req.userId || req.body.userId,
-        title: req.body.title.trim(),
-        body: req.body.body.trim(),
-        description: req.body.description.trim(),
-        readTime: helpers.generator.slug(req.body.body)
-      };
+      updateArticle = req.body;
       message = 'Article has been updated';
     } else if (req.url.search(/\/publish/g) > 0) {
       [updateArticle, message] = [{ status: 'published' }, 'Article has been published'];
@@ -131,8 +125,10 @@ export default class ArticleController {
     } else if (req.method === 'DELETE') {
       [updateArticle, message] = [{ status: 'deleted' }, 'Article has been deleted'];
     }
-    await Article.update(updateArticle, req.params.slug);
-    return res.status(status.OK).send({ message });
+    const updatedArticle = await Article.update(updateArticle, req.params.slug);
+    return res
+      .status(status.OK)
+      .send({ message, article: req.method === 'DELETE' ? null : updatedArticle });
   }
 
   /**

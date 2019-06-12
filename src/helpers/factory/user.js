@@ -15,9 +15,9 @@ export default Factory.define('user')
   .attr(
     'permissions',
     JSON.stringify({
-      articles: ['read', 'delete'],
-      comments: ['read', 'delete'],
-      tags: ['read', 'create', 'delete'],
+      articles: ['read', 'create', 'edit', 'delete'],
+      comments: ['read', 'create', 'edit', 'delete'],
+      tags: ['read', 'edit', 'create', 'delete'],
       users: ['read', 'create', 'edit', 'delete'],
       permissions: ['read', 'create', 'edit', 'delete']
     })

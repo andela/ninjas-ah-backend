@@ -4,6 +4,7 @@ import checkArticle from '../../middlewares/checkArticle';
 import verifyToken from '../../middlewares/verifyToken';
 import asyncHandler from '../../middlewares/asyncHandler';
 import { checkUserReport, checkReportExist, validateReport } from '../../middlewares/checkReport';
+import checkPermissions from '../../middlewares/checkPermissions';
 
 const router = Router();
 
@@ -18,6 +19,10 @@ router.post(
 router.get(
   '/:articleSlug/report',
   verifyToken,
+  checkPermissions({
+    route: 'articles',
+    action: 'read'
+  }),
   checkArticle,
   asyncHandler(ReportController.getAll)
 );

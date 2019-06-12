@@ -4,17 +4,22 @@ import asyncHandler from '../../middlewares/asyncHandler';
 import checkArticleBySlug from '../../middlewares/checkArticleBySlug';
 import validateRating from '../../middlewares/validation/validateRating';
 import verifyToken from '../../middlewares/verifyToken';
+import checkPermissions from '../../middlewares/checkPermissions';
 
-const tags = Router();
+const rating = Router();
 
-tags.post(
+rating.post(
   '/rating/:slug/article',
   verifyToken,
   checkArticleBySlug,
   validateRating.create,
+  checkPermissions({
+    route: 'articles',
+    action: 'create'
+  }),
   asyncHandler(RatingController.create)
 );
 
-tags.get('/rating/:slug/article', checkArticleBySlug, asyncHandler(RatingController.get));
+rating.get('/rating/:slug/article', checkArticleBySlug, asyncHandler(RatingController.get));
 
-export default tags;
+export default rating;

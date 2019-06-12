@@ -10,5 +10,5 @@ export default async (data = {}, slug = '') => {
     logging: false,
     individualHooks: true
   });
-  return response;
+  return response[0] ? response[1][0].get() : {};
 };

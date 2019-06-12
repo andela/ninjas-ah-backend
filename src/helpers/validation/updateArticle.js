@@ -5,29 +5,18 @@ export default (input) => {
     title: Joi.string()
       .min(5)
       .max(255)
-      .required(),
+      .optional(),
     description: Joi.string()
       .min(5)
       .max(255)
-      .required(),
+      .optional(),
     body: Joi.string()
       .min(5)
-      .required(),
-    tagList: Joi.array()
-      .min(2)
-      .max(255)
-      .optional(),
-    status: Joi.string()
-      .min(3)
-      .max(255)
       .optional(),
     coverUrl: Joi.string()
       .min(5)
       .max(255)
-      .optional(),
-    readTime: Joi.number()
-      .integer()
-      .required()
+      .optional()
   });
 
   return Joi.validate(input, schema, { abortEarly: false });
