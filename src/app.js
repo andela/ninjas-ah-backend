@@ -46,8 +46,8 @@ app.use((req, res, next) => {
 app.use(express.static(path.join(__dirname, '../templates')));
 app.use('/mockups', express.static(path.join(__dirname, '../templates/html')));
 
+app.use('/api/v1/documentation', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api/v1/', routes);
-app.use('/swagger-api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

@@ -1,219 +1,1922 @@
 {
   "swagger": "2.0",
   "info": {
+    "description": "A Social platform for the creative at heart",
     "version": "1.0.0",
-    "title": "Authors Haven - A Social platform for the creative at heart.",
-    "description": "Create a community of like minded authors to fosterwww inspiration and innovation by leveraging the modern web....",
+    "title": "Authors Haven",
     "license": {
-      "name": "MIT",
-      "url": "https://opensource.org/licenses/MIT"
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   },
-  "host": "localhost:3000",
+  "host": "ninjas-ah-backend.herokuapp.com",
   "basePath": "/api/v1",
-  "schemes": [
-    "https",
-    "http"
-  ],
-  "consumes": [
-    "application/json"
-  ],
-  "produces": [
-    "application/json"
- ],
   "tags": [
     {
-      "name": "Users",
-      "description": "API for users in the system"
+      "name": "auth",
+      "description": "Users Authentication"
     },
     {
-      "name": "Articles",
-      "description": "API for articles in the system"
+      "name": "users",
+      "description": "Operations about users"
     },
     {
-      "name": "Comments",
-      "description": "API for comments in the system"
+      "name": "articles",
+      "description": "Operations about articles"
+    },
+    {
+      "name": "notifications",
+      "description": "Operations about notifications"
+    },
+    {
+      "name": "chats",
+      "description": "Operations about chats"
     }
   ],
-  "schemes": [
-    "http"
-  ],
-  "consumes": [
-    "application/json"
-  ],
-  "produces": [
-    "application/json"
-  ],
+  "schemes": ["https", "http"],
   "paths": {
-    "/auth/users": {
+    "/auth/login": {
       "post": {
-        "tags": [
-          "Users"
-        ],
-        "summary": "Create a user in system",
-        "description": "Create a new user",
+        "tags": ["auth"],
+        "summary": "Authenticate a user",
+        "description": "Authenticate a user and send a token",
+        "operationId": "Login",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
-            "name": "user",
             "in": "body",
-            "description": "user that we want to create",
+            "name": "body",
+            "description": "Credentials to be sent to authenticate a user",
+            "required": true,
             "schema": {
-               "$ref": "#/definitions/User"
+              "type": "object",
+              "required": ["email", "password"],
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "user@domain.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "Abcd1234!"
+                }
+              }
             }
           }
         ],
-        "produces": [
-          "application/json"
-        ],
         "responses": {
           "200": {
-            "description": "New user is created",
-            "schema": {
-            }
-          }
-        }
-      },
-      "get": {
-        "tags": [
-          "Users"
-        ],
-        "summary": "Get all users in system",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-            }
+            "description": "Successfully authenticated"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Server error"
           }
         }
       }
     },
-
-    "/": {
+    "/auth/signup": {
       "post": {
-        "tags": [
-          "Articles"
-        ],
-        "summary": "Create a new article in system",
-        "description": "Create a new article",
+        "tags": ["auth"],
+        "summary": "Register a user",
+        "description": "Register a new user and send a activation email",
+        "operationId": "Signup",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
-            "name": "article",
             "in": "body",
-            "description": "user that we want to create",
+            "name": "body",
+            "description": "Information to be sent to register a new user",
+            "required": true,
             "schema": {
+              "type": "object",
+              "required": [
+                "firstName",
+                "lastName",
+                "username",
+                "email",
+                "password"
+              ],
+              "properties": {
+                "firstName": {
+                  "type": "string"
+                },
+                "lastName": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
             }
           }
         ],
-        "produces": [
-          "application/json"
-        ],
         "responses": {
-          "200": {
-            "description": "New article is created",
-            "schema": {
-            }
-          }
-        }
-      },
-      "get": {
-        "tags": [
-          "Articles"
-        ],
-        "summary": "Get all articles in system",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-            }
+          "201": {
+            "description": "Account Successfully created"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "409": {
+            "description": "User already exist"
+          },
+          "500": {
+            "description": "Server error"
           }
         }
       }
     },
-
-    "/comments/": {
-      "post": {
-        "tags": [
-          "Comments"
-        ],
-        "summary": "Create comment in system",
-        "description": "Create a comment",
+    "/auth/facebook": {
+      "get": {
+        "tags": ["auth"],
+        "summary": "Register/login a facebook user",
+        "description": "Register/login a facebook user and fetch the user profile",
+        "operationId": "Facebook",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "User successfully authenticated"
+          },
+          "201": {
+            "description": "Account Successfully created"
+          },
+          "409": {
+            "description": "User alredy exist"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/auth/google": {
+      "get": {
+        "tags": ["auth"],
+        "summary": "Register/login a google user",
+        "description": "Register/login a google user and fetch the user profile",
+        "operationId": "Google",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "User successfully authenticated"
+          },
+          "201": {
+            "description": "Account Successfully created"
+          },
+          "409": {
+            "description": "User alredy exist"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/auth/twitter": {
+      "get": {
+        "tags": ["auth"],
+        "summary": "Register/login a twitter user",
+        "description": "Register/login a twitter user and fetch the user profile",
+        "operationId": "Twitter",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "User successfully authenticated"
+          },
+          "201": {
+            "description": "Account Successfully created"
+          },
+          "409": {
+            "description": "User alredy exist"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "get": {
+        "tags": ["auth"],
+        "summary": "Logs out current logged in user",
+        "description": "Blacklist a token",
+        "operationId": "LogoutUser",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "User successfully logged out"
+          },
+          "401": {
+            "description": "User not authorized to blacklist a given token"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/users": {
+      "get": {
+        "tags": ["users"],
+        "summary": "Get all users",
+        "description": "Get users",
+        "operationId": "GetUsers",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Users successfully fetched"
+          },
+          "401": {
+            "description": "Not authorized to get users"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "put": {
+        "tags": ["users"],
+        "summary": "Update user profile",
+        "description": "Update user profile",
+        "operationId": "UpdateProfile",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
         "parameters": [
           {
-            "name": "comment",
             "in": "body",
-            "description": "create comment on an article",
+            "name": "body",
+            "description": "Information to be sent to update a user profile",
+            "required": true,
             "schema": {
+              "type": "object",
+              "properties": {
+                "firstName": {
+                  "type": "string"
+                },
+                "lastName": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "image": {
+                  "type": "string"
+                }
+              }
             }
           }
         ],
-        "produces": [
-          "application/json"
+        "responses": {
+          "200": {
+            "description": "Account Successfully updated"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "User not authorized to update a given profile"
+          },
+          "409": {
+            "description": "User already exist"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["users"],
+        "summary": "Register user",
+        "description": "Register user profile",
+        "operationId": "RegisterUser",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Information to be sent to register a user profile",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "firstName": {
+                  "type": "string"
+                },
+                "lastName": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "image": {
+                  "type": "string"
+                },
+                "role": {
+                  "type": "string"
+                },
+                "permissions": {
+                  "type": "object",
+                  "example": {
+                    "articles": ["read", "create", "delete", "edit"],
+                    "comments": ["read", "create", "delete", "edit"],
+                    "tags": ["read", "create", "delete"],
+                    "users": ["read", "create", "edit", "delete"]
+                  }
+                }
+              }
+            }
+          }
         ],
         "responses": {
           "200": {
-            "description": "New comment is created",
+            "description": "Account Successfully created"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "User not authorized to create an account"
+          },
+          "409": {
+            "description": "User already exist"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": ["users"],
+        "summary": "Get user",
+        "description": "Get user",
+        "operationId": "GetUser",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User successfully fetched"
+          },
+          "401": {
+            "description": "Not authorized to get user"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "put": {
+        "tags": ["users"],
+        "summary": "Update user profile",
+        "description": "Update user profile",
+        "operationId": "UpdateProfileById",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Information to be sent to update a user profile",
+            "required": true,
             "schema": {
+              "type": "object",
+              "properties": {
+                "firstName": {
+                  "type": "string"
+                },
+                "lastName": {
+                  "type": "string"
+                },
+                "username": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "image": {
+                  "type": "string"
+                }
+              }
             }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Account Successfully updated"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "User not authorized to update a given profile"
+          },
+          "409": {
+            "description": "User already exist"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["users"],
+        "summary": "Delete a user",
+        "description": "Delete a user",
+        "operationId": "DeleteUser",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User successfully deleted"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Not authorized to delete user"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/users/authors": {
+      "get": {
+        "tags": ["users"],
+        "summary": "Get all authors",
+        "description": "Get all authors",
+        "operationId": "GetAuthors",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Users successfully fetched"
+          },
+          "401": {
+            "description": "Not authorized to get users"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/users/followers": {
+      "get": {
+        "tags": ["users"],
+        "summary": "Get all followers",
+        "description": "Get all followers of a logged in user",
+        "operationId": "GetFollowers",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Followers successfully fetched"
+          },
+          "401": {
+            "description": "Not authorized to get followers"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/users/following": {
+      "get": {
+        "tags": ["users"],
+        "summary": "Get all followed users",
+        "description": "Get users followed by a logged in user",
+        "operationId": "GetFollowing",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Followed successfully fetched"
+          },
+          "401": {
+            "description": "Not authorized to get followed users"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/users/{username}/follow": {
+      "patch": {
+        "tags": ["users"],
+        "summary": "Follow user",
+        "description": "Follow user",
+        "operationId": "FollowUser",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "username",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User successfully followed"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Not authorized to follow user"
+          },
+          "409": {
+            "description": "User is already followed by the logged in user"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/users/{username}/unfollow": {
+      "patch": {
+        "tags": ["users"],
+        "summary": "Unfollow user",
+        "description": "Unfollow user",
+        "operationId": "UnfollowUser",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "username",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User successfully unfollowed"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Not authorized to unfollow user"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/notifications": {
+      "get": {
+        "tags": ["notifications"],
+        "summary": "Get notifications",
+        "description": "Get notifications",
+        "operationId": "GetNotifications",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Notifications successfully fetched"
+          },
+          "401": {
+            "description": "Not authorized to get notifications"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/notifications/seen": {
+      "get": {
+        "tags": ["notifications"],
+        "summary": "Get seen notifications",
+        "description": "Get seen notifications",
+        "operationId": "GetSeenNotifications",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Notifications successfully fetched"
+          },
+          "401": {
+            "description": "Not authorized to get notifications"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/notifications/unseen": {
+      "get": {
+        "tags": ["notifications"],
+        "summary": "Get unseen notifications",
+        "description": "Get unseen notifications",
+        "operationId": "GetUnseenNotifications",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Notifications successfully fetched"
+          },
+          "401": {
+            "description": "Not authorized to get notifications"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/notifications/{notificationId}": {
+      "get": {
+        "tags": ["notifications"],
+        "summary": "Get a notification",
+        "description": "Get a notification",
+        "operationId": "GetSpecificNotification",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "notificationId",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notification successfully fetched"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Not authorized to get notification"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "put": {
+        "tags": ["notifications"],
+        "summary": "Update a notification",
+        "description": "Update a notification",
+        "operationId": "UpdateSpecificNotification",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "notificationId",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "preference": {
+                  "type": "string",
+                  "example": "inApp"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notification successfully updated"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Not authorized to update notification"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["notifications"],
+        "summary": "Delete a notification",
+        "description": "Delete a notification",
+        "operationId": "DeleteSpecificNotification",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "notificationId",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notification successfully deleted"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Not authorized to delete notification"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/notifications/{notificationId}/seen": {
+      "put": {
+        "tags": ["notifications"],
+        "summary": "Update a notification status",
+        "description": "Update a notification",
+        "operationId": "UpdateSpecificNotificationStatusSeen",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "notificationId",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "preference": {
+                  "type": "string",
+                  "example": "inApp"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notification successfully updated"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Not authorized to update notification"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/notifications/{notificationId}/unseen": {
+      "put": {
+        "tags": ["notifications"],
+        "summary": "Update a notification status",
+        "description": "Update a notification",
+        "operationId": "UpdateSpecificNotificationStatusUnseen",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "notificationId",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "preference": {
+                  "type": "string",
+                  "example": "inApp"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notification successfully updated"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Not authorized to update notification"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/notifications/configuration": {
+      "post": {
+        "tags": ["notifications"],
+        "summary": "Create notification configuration",
+        "description": "Create notification configuration",
+        "operationId": "CreateNotificationConfiguration",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Information to be sent to configure notification",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NotificationConfig"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Configuration successfully set"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Not authorized to set notification configuration"
+          },
+          "409": {
+            "description": "Configuration already set"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "put": {
+        "tags": ["notifications"],
+        "summary": "Update notification configuration",
+        "description": "Update notification configuration",
+        "operationId": "UpdateNotificationConfiguration",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Information to be sent to update notification configuration",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NotificationConfig"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Configuration successfully updated"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Not authorized to set notification configuration"
+          },
+          "409": {
+            "description": "Configuration already set"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "get": {
+        "tags": ["notifications"],
+        "summary": "Get notification configuration",
+        "description": "Get notification configuration",
+        "operationId": "GetNotificationConfiguration",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Configuration successfully fetched"
+          },
+          "401": {
+            "description": "Not authorized to get notification configuration"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/chats": {
+      "post": {
+        "tags": ["chats"],
+        "summary": "Create a chat",
+        "description": "Create a chat",
+        "operationId": "CreateChat",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Message to be sent",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": ["message"],
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "Hello"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Message successfully sent"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Not authorized to send message"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "get": {
+        "tags": ["chats"],
+        "summary": "Get chats",
+        "description": "Get chats",
+        "operationId": "GetChats",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Chats successfully fetched"
+          },
+          "401": {
+            "description": "Not authorized to get chats"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/chats/{chatId}": {
+      "delete": {
+        "tags": ["chats"],
+        "summary": "Delete a chat",
+        "description": "Delete a chat",
+        "operationId": "DeleteChat",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "chatId",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Chat successfully deleted"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Not authorized to delete chat"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/articles": {
+      "get": {
+        "tags": ["articles"],
+        "summary": "Get articles",
+        "description": "Get articles",
+        "operationId": "GetArticles",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Articles successfully fetched"
+          },
+          "500": {
+            "description": "Server error"
           }
         }
       },
-      "get": {
-        "tags": [
-          "Comments"
-        ],
-        "summary": "Get all comment in system",
-        "responses": {
-          "200": {
-            "description": "OK",
+      "post": {
+        "tags": ["articles"],
+        "summary": "Create an article",
+        "description": "Create an article",
+        "operationId": "CreateArticle",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Information to be sent to create an article",
+            "required": true,
             "schema": {
+              "type": "object",
+              "required": ["title", "description", "body"],
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "body": {
+                  "type": "string"
+                },
+                "coverUrl": {
+                  "type": "string"
+                }
+              }
             }
           }
+        ],
+        "responses": {
+          "201": {
+            "description": "Article successfully created"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Not authorized to create an article"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/articles/{slug}": {
+      "get": {
+        "tags": ["articles"],
+        "summary": "Get articles",
+        "description": "Get articles",
+        "operationId": "GetArticle",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Article successfully fetched"
+          },
+          "404": {
+            "description": "Article not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
         }
+      },
+      "put": {
+        "tags": ["articles"],
+        "summary": "Update an article",
+        "description": "Update an article",
+        "operationId": "UpdateArticle",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Information to be sent to create an article",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": ["title", "description", "body"],
+              "properties": {
+                "title": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "body": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Article successfully updated"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Not authorized to update an article"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["articles"],
+        "summary": "Delete article",
+        "description": "Delete article",
+        "operationId": "DeleteArticle",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Article successfully deleted"
+          },
+          "401": {
+            "description": "Not authorized to delete article"
+          },
+          "404": {
+            "description": "Article not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/articles/{slug}/publish": {
+      "put": {
+        "tags": ["articles"],
+        "summary": "Publish an article",
+        "description": "Publish an article",
+        "operationId": "PublishArticle",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Article successfully published"
+          },
+          "401": {
+            "description": "Not authorized to publish article"
+          },
+          "404": {
+            "description": "Article not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/articles/{slug}/unpublish": {
+      "put": {
+        "tags": ["articles"],
+        "summary": "Unpublish an article",
+        "description": "Unpublish an article",
+        "operationId": "UnpublishArticle",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Article successfully unpublished"
+          },
+          "401": {
+            "description": "Not authorized to unpublish article"
+          },
+          "404": {
+            "description": "Article not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/articles/drafts": {
+      "get": {
+        "tags": ["articles"],
+        "summary": "Get drafts",
+        "description": "Get articles that have draft status",
+        "operationId": "GetDraftsArticles",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Drafts successfully fetched"
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/articles/published": {
+      "get": {
+        "tags": ["articles"],
+        "summary": "Get published articles",
+        "description": "Get published articles",
+        "operationId": "GetPublishedArticles",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Published articles successfully fetched"
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/articles/bookmarked": {
+      "get": {
+        "tags": ["articles"],
+        "summary": "Get bookmarked articles",
+        "description": "Get bookmarked articles",
+        "operationId": "GetBookmarkedArticles",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Bookmarked articles successfully fetched"
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/articles/{slug}/bookmark": {
+      "patch": {
+        "tags": ["articles"],
+        "summary": "Bookmark an article",
+        "description": "Bookmark an article",
+        "operationId": "BookmarkArticle",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Article successfully bookmarked"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Article not found"
+          },
+          "409": {
+            "description": "Article already bookmarked"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["articles"],
+        "summary": "Remove article from bookmarks",
+        "description": "Remove article from bookmarks",
+        "operationId": "RemoveBookmarkArticle",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Article successfully removed from bookmarks"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Article not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/articles/favorited": {
+      "get": {
+        "tags": ["articles"],
+        "summary": "Get favorited articles",
+        "description": "Get favorited articles",
+        "operationId": "GetFavoritedArticles",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Favorited articles successfully fetched"
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/articles/{slug}/favorite": {
+      "patch": {
+        "tags": ["articles"],
+        "summary": "Favorite an article",
+        "description": "Favorite an article",
+        "operationId": "FavoriteArticle",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Article successfully favorited"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Article not found"
+          },
+          "409": {
+            "description": "Article already favorited"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["articles"],
+        "summary": "Remove article from favorites",
+        "description": "Remove article from favorites",
+        "operationId": "RemoveFavoriteArticle",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Article successfully removed from favorites"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Article not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/articles/{slug}/share/facebook": {
+      "get": {
+        "tags": ["articles"],
+        "summary": "Share an article on facebook",
+        "description": "Share an article on facebook",
+        "operationId": "ShareArticleFacebook",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Article successfully fetched"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Article not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/articles/{slug}/share/twitter": {
+      "get": {
+        "tags": ["articles"],
+        "summary": "Share an article on twitter",
+        "description": "Share an article on twitter",
+        "operationId": "ShareArticleTwitter",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Article successfully fetched"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Article not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/articles/{slug}/share/gmail": {
+      "get": {
+        "tags": ["articles"],
+        "summary": "Share an article on gmail",
+        "description": "Share an article on gmail",
+        "operationId": "ShareArticleGmail",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Article successfully fetched"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Article not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/articles/{slug}/share/likedin": {
+      "get": {
+        "tags": ["articles"],
+        "summary": "Share an article on likedin",
+        "description": "Share an article on likedin",
+        "operationId": "ShareArticleLikedin",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Article successfully fetched"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Article not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
       }
     }
   },
   "securityDefinitions": {
-       "jsonwebtoken": {
-         "type": "apiKey",
-         "name": "Authorization",
-         "in": "header"
-       }
- },
+    "api_key": {
+      "type": "apiKey",
+      "name": "access-token",
+      "in": "header"
+    }
+  },
   "definitions": {
-    "User": {
-      "required": [
-        "firstName",
-        "lastName",
-        "username",
-        "email",
-        "password",
-        "role",
-        "permission"
-      ],
+    "NotificationConfig": {
+      "type": "object",
       "properties": {
-        "firstName": {
-          "type": "string"
-        },
-        "lastName": {
-          "type": "string"
-        },
-        "username": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string",
-          "uniqueItems": true
-        },
-        "password": {
-          "type": "string"
-        },
-        "role": {
-          "type": "string"
-        },
-        "permission": {
-          "type": "string"
+        "config": {
+          "type": "object",
+          "properties": {
+            "inApp": {
+              "type": "object",
+              "properties": {
+                "articles": {
+                  "type": "object",
+                  "properties": {
+                    "show": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "on": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": ["publish", "comment", "like"]
+                    }
+                  }
+                }
+              }
+            },
+            "email": {
+              "type": "object",
+              "properties": {
+                "articles": {
+                  "type": "object",
+                  "properties": {
+                    "show": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "on": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": ["publish", "comment", "like"]
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
   }
 }
