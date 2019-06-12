@@ -40,8 +40,6 @@ describe('No articles', () => {
 
   describe('Test not-found articles', () => {
     after(async () => {
-      // const findUser = await db.User.findAll({ limit: 1, logging: false });
-      // author = findUser[0].dataValues.id;
       const initalArticle = article;
       delete initalArticle.id;
       initalArticle.userId = author;
@@ -149,14 +147,12 @@ describe('No articles', () => {
 describe('Article', () => {
   let articleSlug = '';
   before(async () => {
-    // const findUser = await db.User.findAll({ limit: 1, logging: false });
-    // author = findUser[0].dataValues.id;
     const { dataValues } = await db.Article.findOne({ where: { id: 1 } }, { logging: false });
     articleSlug = dataValues.slug;
     // create gallery
     await db.Gallery.create({ image: 'placeholder.png', userId: author });
   });
-  //   // create article
+  // create article
   it('Should successfully create an article', (done) => {
     delete article.id;
     delete article.slug;
@@ -179,7 +175,6 @@ describe('Article', () => {
   });
 
   it('Should update article cover', async () => {
-    // const myArticle = await db.Article.findOne({ where: { userId: createdUser.id } });
     chai
       .request(app)
       .post(`/api/v1/articles/${articleSlug}/cover`)
@@ -531,7 +526,6 @@ describe('Article', () => {
       });
   });
   it('Should get one article', (done) => {
-    // const getArticle = { ...article, slug: 'rosie-make-it-easy-1dh6jv9cn4sz' };
     chai
       .request(app)
       .get(`/api/v1/articles/${articleSlug}`)
@@ -608,7 +602,6 @@ describe('Article', () => {
   });
 
   it('Should delete article', (done) => {
-    // const deleteArticle = { ...article, slug: 'rosie-make-it-easy-1dh6jv9cn4sz' };
     chai
       .request(app)
       .delete(`/api/v1/articles/${articleSlug}`)
