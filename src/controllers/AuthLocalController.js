@@ -179,6 +179,7 @@ export default class AuthLocalController {
     }
     const { email } = helper.token.decode(token);
     const isUpdated = await User.update({ password: helper.password.hash(passwordOne) }, { email });
+    delete isUpdated.password;
     return isUpdated
       ? res
         .status(status.OK)

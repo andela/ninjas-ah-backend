@@ -12,10 +12,13 @@ chai.use(chaiHttp);
 chai.should();
 let accessToken;
 let createdUser = {};
+let createdArticle = {};
 
 const newUser = Factory.user.build();
+const newArticle = Factory.article.build();
 
 delete newUser.id;
+delete newArticle.id;
 
 describe('Reading Stats', () => {
   before(async () => {
@@ -32,6 +35,8 @@ describe('Reading Stats', () => {
         process.env.SECRET_KEY,
         { expiresIn: '1d' }
       );
+      newArticle.userId = createdUser.id;
+      createdArticle = (await db.Article.create(newArticle, { logging: false })).dataValues;
     } catch (err) {
       throw err;
     }
@@ -40,7 +45,7 @@ describe('Reading Stats', () => {
   it('Should let the user save a reading stats', (done) => {
     chai
       .request(app)
-      .post('/api/v1/user/profile/comming-to-benin-republic/stats')
+      .post(`/api/v1/user/profile/${createdArticle.slug}/stats`)
       .set('access-token', accessToken)
       .end((err, res) => {
         res.should.have.status(status.OK);
