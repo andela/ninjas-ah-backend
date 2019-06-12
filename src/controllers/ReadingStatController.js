@@ -13,11 +13,11 @@ export default class ReadingStat {
    */
   static async create(req, res) {
     const userId = req.user.id;
-    const { articleSlug } = req.params;
+    const { slug } = req.params;
 
     const saveStat = await createRatings({
       userId,
-      articleSlug
+      articleSlug: slug
     });
 
     return res.status(status.OK).json({
