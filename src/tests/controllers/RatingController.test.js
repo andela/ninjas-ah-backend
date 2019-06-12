@@ -131,4 +131,24 @@ describe('ARTICLE RATINGS', () => {
         done();
       });
   });
+  it('sort articles by rating', (done) => {
+    chai
+      .request(app)
+      .get('/api/v1/rating/articles?limit=1&offset=0')
+      .end((err, res) => {
+        expect(res).to.have.status(status.OK);
+        res.body.should.be.an('object');
+        done();
+      });
+  });
+  it("sort article's rating", (done) => {
+    chai
+      .request(app)
+      .get(`/api/v1/rating/${createdArticle.dataValues.slug}/articles?limit=1&offset=0`)
+      .end((err, res) => {
+        expect(res).to.have.status(status.OK);
+        res.body.should.be.an('object');
+        done();
+      });
+  });
 });

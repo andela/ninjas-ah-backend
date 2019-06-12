@@ -7,5 +7,6 @@ import getAllUser from './getAllUser';
 import * as follow from '../follows';
 
 export {
-  create, findOne, update, findOrCreate, follow, getAllUser, permissions
+  create, findOne, update, findOrCreate
 };
+export { getAllUser, permissions, follow };
