@@ -1,8 +1,9 @@
+/* eslint-disable no-unused-expressions */
 /* eslint-disable import/no-extraneous-dependencies */
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import express from 'express';
-import status from '../../config/status';
+import 'dotenv/config';
 import db from '../../models';
 import * as Factory from '../../helpers/factory';
 import AuthPassportController from '../../controllers/AuthPassportController';
@@ -21,7 +22,14 @@ app.use(
   })
 );
 
-app.use('/api/v1/auth', router.post('/', AuthPassportController.loginOrSignup));
+app.use(
+  '/api/v1/auth',
+  (req, res, next) => {
+    req.user = req.body;
+    next();
+  },
+  router.post('/', AuthPassportController.loginOrSignup)
+);
 
 const userFacebook = Factory.userFacebook.build();
 const userTwitter = Factory.userTwitter.build();
@@ -46,7 +54,8 @@ describe('Passport Authentication controller', () => {
       .post('/api/v1/auth')
       .send(Factory.userFacebook.build({ name: { familyName: null, givenName: null } }))
       .end((err, res) => {
-        expect(res.body).to.include.keys('errors');
+        expect(res).to.redirect;
+        expect(res.redirects[0].indexOf('code=400')).to.be.above(0);
         done();
       });
   });
@@ -57,7 +66,9 @@ describe('Passport Authentication controller', () => {
       .post('/api/v1/auth')
       .send(userFacebook)
       .end((err, res) => {
-        expect(res.status).to.equal(status.CREATED);
+        expect(res).to.redirect;
+        expect(res.redirects[0].indexOf('id=')).to.be.above(0);
+        expect(res.redirects[0].indexOf('token=')).to.be.above(0);
         done();
       });
   });
@@ -68,7 +79,9 @@ describe('Passport Authentication controller', () => {
       .post('/api/v1/auth')
       .send(userFacebook)
       .end((err, res) => {
-        expect(res.status).to.equal(status.OK);
+        expect(res).to.redirect;
+        expect(res.redirects[0].indexOf('id=')).to.be.above(0);
+        expect(res.redirects[0].indexOf('token=')).to.be.above(0);
         done();
       });
   });
@@ -79,7 +92,9 @@ describe('Passport Authentication controller', () => {
       .post('/api/v1/auth')
       .send(userTwitter)
       .end((err, res) => {
-        expect(res.status).to.equal(status.CREATED);
+        expect(res).to.redirect;
+        expect(res.redirects[0].indexOf('id=')).to.be.above(0);
+        expect(res.redirects[0].indexOf('token=')).to.be.above(0);
         done();
       });
   });
@@ -90,7 +105,9 @@ describe('Passport Authentication controller', () => {
       .post('/api/v1/auth')
       .send(userTwitter)
       .end((err, res) => {
-        expect(res.status).to.equal(status.OK);
+        expect(res).to.redirect;
+        expect(res.redirects[0].indexOf('id=')).to.be.above(0);
+        expect(res.redirects[0].indexOf('token=')).to.be.above(0);
         done();
       });
   });
@@ -101,7 +118,9 @@ describe('Passport Authentication controller', () => {
       .post('/api/v1/auth')
       .send(userGoogle)
       .end((err, res) => {
-        expect(res.status).to.equal(status.CREATED);
+        expect(res).to.redirect;
+        expect(res.redirects[0].indexOf('id=')).to.be.above(0);
+        expect(res.redirects[0].indexOf('token=')).to.be.above(0);
         done();
       });
   });
@@ -112,7 +131,9 @@ describe('Passport Authentication controller', () => {
       .post('/api/v1/auth')
       .send(userGoogle)
       .end((err, res) => {
-        expect(res.status).to.equal(status.OK);
+        expect(res).to.redirect;
+        expect(res.redirects[0].indexOf('id=')).to.be.above(0);
+        expect(res.redirects[0].indexOf('token=')).to.be.above(0);
         done();
       });
   });
@@ -123,7 +144,8 @@ describe('Passport Authentication controller', () => {
       .post('/api/v1/auth')
       .send({ ...userFacebook, provider: 'another' })
       .end((err, res) => {
-        expect(res.status).to.equal(status.EXIST);
+        expect(res).to.redirect;
+        expect(res.redirects[0].indexOf('email=409')).to.be.above(0);
         done();
       });
   });
@@ -134,7 +156,8 @@ describe('Passport Authentication controller', () => {
       .post('/api/v1/auth')
       .send({ ...userTwitter, provider: 'another' })
       .end((err, res) => {
-        expect(res.status).to.equal(status.EXIST);
+        expect(res).to.redirect;
+        expect(res.redirects[0].indexOf('username=409')).to.be.above(0);
         done();
       });
   });
@@ -145,7 +168,8 @@ describe('Passport Authentication controller', () => {
       .post('/api/v1/auth')
       .send({})
       .end((err, res) => {
-        expect(res.status).to.equal(status.BAD_REQUEST);
+        expect(res).to.redirect;
+        expect(res.redirects[0].indexOf('code=400')).to.be.above(0);
         done();
       });
   });
@@ -156,7 +180,8 @@ describe('Passport Authentication controller', () => {
       .post('/api/v1/auth')
       .send(Factory.userFacebook.build({ provider: {} }))
       .end((err, res) => {
-        expect(res.body).to.include.keys('errors');
+        expect(res).to.redirect;
+        expect(res.redirects[0].indexOf('code=500')).to.be.above(0);
         done();
       });
   });

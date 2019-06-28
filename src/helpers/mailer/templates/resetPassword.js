@@ -6,8 +6,8 @@ dotenv.config();
 export default (data) => {
   const message = {};
   const token = generateToken({ email: data.email }, { expiresIn: '1h' });
-  const appUrl = process.env.APP_URL;
-  const link = `${appUrl}/api/v1/auth/reset/${token}`;
+  const appUrl = process.env.APP_URL_FRONTEND;
+  const link = `${appUrl}/reset-password/${token}`;
   message.subject = 'Reset your password - Authors Haven';
   message.html = `Hello ${data.names} </br>,
   <p>You are receiving this because you (or someone else) have requested the reset of the password,<br>
