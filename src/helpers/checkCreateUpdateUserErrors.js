@@ -17,5 +17,8 @@ export default (err = {}) => {
 
     return { errors, code: status.EXIST };
   }
-  return { errors: err.message, code: status.SERVER_ERROR };
+  return {
+    errors: err.message,
+    code: err.name === 'SequelizeValidationError' ? status.BAD_REQUEST : status.SERVER_ERROR
+  };
 };

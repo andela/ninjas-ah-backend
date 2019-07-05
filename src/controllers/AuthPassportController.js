@@ -1,7 +1,10 @@
+import 'dotenv/config';
 import status from '../config/status';
 import { User } from '../queries';
-import * as helper from '../helpers';
+import { checkCreateUpdateUserErrors, token as tokenHelper, urlHelper } from '../helpers';
 
+const { CI } = process.env;
+const { appUrl, travis } = urlHelper.frontend;
 /**
  * A class to handle users authentication using social media platform
  */
@@ -10,7 +13,7 @@ export default class AuthPassportController {
    * @param {object} profile social media user information
    * @returns {object} a user object
    */
-  static getSocialMediaUser(profile = {}) {
+  static getUser(profile = {}) {
     const user = {};
     if (profile.displayName) {
       const [firstName, lastName] = profile.displayName.split(' ');
@@ -39,35 +42,46 @@ export default class AuthPassportController {
   }
 
   /**
+   * @param {int} id
+   * @returns {string} a link to redirect the user
+   */
+  static redirectOnSuccess(id) {
+    const token = tokenHelper.generate({
+      id
+    });
+    return `${(CI && travis) || appUrl}/auth?id=${id}&token=${token}`;
+  }
+
+  /**
+   * @param {int} errorCode
+   * @param {object} errors
+   * @returns {string} a link to redirect the user
+   */
+  static redirectOnError(errorCode, errors) {
+    let URL = `${(CI && travis) || appUrl}/auth?code=${errorCode}`;
+    URL = errors.email ? `${URL}&email=${errorCode}` : URL;
+    URL = errors.username ? `${URL}&username=${errorCode}` : URL;
+    return URL;
+  }
+
+  /**
    * @param {object} req
    * @param {object} res
    * @returns {object} an object containing user information
    */
   static async loginOrSignup(req, res) {
-    const user = req.user || req.body || {};
-    if (!Object.keys(user).length) {
-      return res.status(status.BAD_REQUEST).json({ errors: { body: 'should not be empty' } });
+    if (req.user && !Object.keys(req.user).length) {
+      return res.redirect(`${(CI && travis) || appUrl}/auth?code=${status.BAD_REQUEST}`);
     }
-    const newOrExistingUser = await User.findOrCreate(
-      { accountProvider: user.provider, accountProviderUserId: user.id },
-      AuthPassportController.getSocialMediaUser(user)
+    const findOrCreateUser = await User.findOrCreate(
+      { accountProvider: req.user.provider, accountProviderUserId: req.user.id },
+      AuthPassportController.getUser(req.user)
     );
-
-    if (newOrExistingUser.errors) {
-      const errors = helper.checkCreateUpdateUserErrors(newOrExistingUser.errors);
-      const statusCode = errors.code;
-      delete errors.code;
-      return res.status(statusCode).json(errors);
+    const { errors, code } = checkCreateUpdateUserErrors(findOrCreateUser.errors);
+    if (errors && code) {
+      return res.redirect(AuthPassportController.redirectOnError(code, errors));
     }
-    delete newOrExistingUser[0].password;
 
-    return res.status(newOrExistingUser[1] ? status.CREATED : status.OK).json({
-      user: newOrExistingUser[0],
-      token: helper.token.generate({
-        id: newOrExistingUser[0].id,
-        role: newOrExistingUser[0].role,
-        permissions: newOrExistingUser[0].permissions
-      })
-    });
+    return res.redirect(AuthPassportController.redirectOnSuccess(findOrCreateUser[0].id));
   }
 }

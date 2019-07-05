@@ -11,6 +11,7 @@ import * as filters from './searchArticleFilters';
 import * as notification from './notifications';
 import sendMail from './mailer';
 import isActiveUser from './isActiveUser';
+import * as urlHelper from './urlHelper';
 
 export {
   isUser,
@@ -25,5 +26,6 @@ export {
   generator,
   filters,
   notification,
-  isActiveUser
+  isActiveUser,
+  urlHelper
 };

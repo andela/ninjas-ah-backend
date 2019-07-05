@@ -9,5 +9,6 @@ export default {
   TIMEOUT: 408,
   EXIST: 409,
   SERVER_ERROR: 500,
-  NOT_MODIFIED: 304
+  NOT_MODIFIED: 304,
+  REDIRECT: 302
 };
