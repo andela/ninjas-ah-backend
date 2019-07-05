@@ -57,6 +57,29 @@ describe('Users routes', () => {
       throw error;
     }
   });
+
+  it('should not get user information', (done) => {
+    chai
+      .request(app)
+      .get('/api/v1/auth/1')
+      .set('access-token', 'aaa')
+      .end((err, res) => {
+        expect(res.status).to.be.equal(status.UNAUTHORIZED);
+        done();
+      });
+  });
+
+  it('should get user information', (done) => {
+    chai
+      .request(app)
+      .get(`/api/v1/auth/${createdUserOne.id}`)
+      .set('access-token', accessTokenAdmin)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(status.OK);
+        done();
+      });
+  });
+
   // activate user account
   it('should activate user account', (done) => {
     const userTwoAccessToken = jwt.sign(

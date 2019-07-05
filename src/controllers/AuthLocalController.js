@@ -25,7 +25,8 @@ export default class AuthLocalController {
       ? res.status(errors.code).json({ errors: errors.errors })
       : (await helper.sendMail(email, 'signup', { email, firstName, lastName }))
           && res.status(status.CREATED).json({
-            message: 'check your email to activate your account'
+            message: 'check your email to activate your account',
+            user: newUser
           });
   }
 
@@ -42,7 +43,7 @@ export default class AuthLocalController {
       const comparePassword = helper.password.compare(password, checkUser.password);
       if (!comparePassword) {
         return res.status(status.UNAUTHORIZED).json({
-          message: 'The credentials you provided are incorrect'
+          errors: { credentials: 'The credentials you provided are incorrect' }
         });
       }
       const payload = {
@@ -85,7 +86,7 @@ export default class AuthLocalController {
     const fetchUser = await User.findOne({ id: Number.isNaN(id) ? 0 : id });
     delete fetchUser.password;
     return Object.keys(fetchUser).length
-      ? res.status(status.OK).json({ fetchUser })
+      ? res.status(status.OK).json({ user: fetchUser })
       : res
         .status(status.NOT_FOUND)
         .json({ errors: { user: `sorry, user with id "${req.params.id}" not found!!` } });
@@ -112,7 +113,7 @@ export default class AuthLocalController {
     if (newUser) {
       await helper.sendMail(email, 'resetPassword', { firstName, lastName, password });
       return res.status(status.CREATED).json({
-        message: `activetion message sent to ${req.body.email}`
+        message: `activation message sent to ${req.body.email}`
       });
     }
   }

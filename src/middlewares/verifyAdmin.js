@@ -16,8 +16,7 @@ export default async (req, res, next) => {
 
   if (!requestUser) {
     return res.status(status.ACCESS_DENIED).json({
-      message:
-        'Permission denied, you are not allowed to perform this action because you are not an admin'
+      message: 'Permission denied, you are not allowed to perform this action'
     });
   }
   return next();
