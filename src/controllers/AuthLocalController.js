@@ -146,7 +146,10 @@ export default class AuthLocalController {
       });
     }
 
-    await helper.sendMail(email, 'resetPassword', { email, firstName: result.firstName }); // send mail
+    await helper.sendMail(email, 'resetPassword', {
+      email,
+      names: `${result.firstName} ${result.lastName}`
+    }); // send mail
 
     return res.status(status.OK).json({
       message: 'Email sent, please check your email'
