@@ -43,11 +43,15 @@ export default class AuthPassportController {
 
   /**
    * @param {int} id
+   * @param {string} role
+   * @param {string} permissions
    * @returns {string} a link to redirect the user
    */
-  static redirectOnSuccess(id) {
+  static redirectOnSuccess({ id, role, permissions }) {
     const token = tokenHelper.generate({
-      id
+      id,
+      role,
+      permissions
     });
     return `${(CI && travis) || appUrl}/auth?id=${id}&token=${token}`;
   }
@@ -82,6 +86,6 @@ export default class AuthPassportController {
       return res.redirect(AuthPassportController.redirectOnError(code, errors));
     }
 
-    return res.redirect(AuthPassportController.redirectOnSuccess(findOrCreateUser[0].id));
+    return res.redirect(AuthPassportController.redirectOnSuccess(findOrCreateUser[0]));
   }
 }

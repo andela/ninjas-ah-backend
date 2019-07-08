@@ -1,12 +1,10 @@
-import dotenv from 'dotenv';
+import 'dotenv/config';
 import { generate as generateToken } from '../../tokens';
-
-dotenv.config();
 
 export default ({ email, firstName, lastName }) => {
   const message = {};
   const token = generateToken({ email }, { expiresIn: '1h' });
-  const appUrl = process.env.APP_URL;
+  const appUrl = process.env.APP_URL_BACKEND;
   const singUpLink = `${appUrl}/api/v1/auth/activate/${token}`;
 
   message.subject = 'Activate your account - Authors Haven';
