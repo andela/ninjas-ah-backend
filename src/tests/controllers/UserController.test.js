@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 /* eslint-disable import/no-extraneous-dependencies */
 import chai from 'chai';
 import chaiHttp from 'chai-http';
@@ -143,7 +144,7 @@ describe('user tests', () => {
         .get(`/api/v1/auth/activate/${userAccessToken}`)
         .set('access-token', userAccessToken)
         .end((err, res) => {
-          res.status.should.be.equal(status.OK);
+          chai.expect(res).to.redirect;
           done();
         });
     });

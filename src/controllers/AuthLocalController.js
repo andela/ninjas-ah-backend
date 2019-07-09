@@ -1,10 +1,12 @@
-import dotenv from 'dotenv';
+import 'dotenv/config';
 import { User } from '../queries';
 import * as helper from '../helpers';
 import * as validate from '../helpers/validation';
 import status from '../config/status';
 
-dotenv.config();
+const { CI } = process.env;
+const { appUrl, travis } = helper.urlHelper.frontend;
+
 /**
  * A class to handle user local authentication
  */
@@ -126,13 +128,8 @@ export default class AuthLocalController {
    */
   static async activate(req, res) {
     const { user } = req;
-    const activated = await User.update({ isActive: true }, { email: user.email });
-    await helper.sendMail(activated.email, 'accountActivatedMsg', {
-      firstName: activated.firstName
-    });
-    return res.status(status.OK).json({
-      message: 'Account successfully activated'
-    });
+    await User.update({ isActive: true }, { email: user.email });
+    return res.redirect(`${(CI && travis) || appUrl}/login`);
   }
 
   /**
