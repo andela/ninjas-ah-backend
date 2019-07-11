@@ -1,9 +1,12 @@
-import dotenv from 'dotenv';
+import 'dotenv/config';
 import { User } from '../queries';
-import * as helper from '../helpers';
 import status from '../config/status';
+import {
+  checkCreateUpdateUserErrors, sendMail, token as tokenHelper, urlHelper
+} from '../helpers';
 
-dotenv.config();
+const { CI } = process.env;
+const { appUrl, travis } = urlHelper.frontend;
 
 /**
  * A class to handle user local authentication
@@ -16,20 +19,24 @@ export default class UserController {
    */
   static async update(req, res) {
     const userId = req.userId || req.user.id;
-
-    if (req.body.password) {
-      req.body.password = helper.password.hash(req.body.password);
-    }
     const updatedUser = await User.update(req.body, { id: userId });
+
     if (updatedUser.errors) {
-      const errors = helper.checkCreateUpdateUserErrors(updatedUser.errors);
+      const errors = checkCreateUpdateUserErrors(updatedUser.errors);
       return res.status(errors.code).json({ errors: errors.errors });
     }
+
     delete updatedUser.password;
+
+    if (req.changeEmail.newEmail) {
+      await sendMail(req.changeEmail.newEmail, 'updateEmail', {
+        userId,
+        email: req.changeEmail.newEmail
+      });
+    }
+
     return res.status(status.OK).json({
-      message: Object.keys(updatedUser).length
-        ? 'profile successfully updated'
-        : "this account doesn't exist",
+      message: `Profile successfully updated. ${req.changeEmail.message}`,
       user: updatedUser
     });
   }
@@ -188,5 +195,22 @@ export default class UserController {
     return res.status(status.NOT_FOUND).json({
       errors: { follows: "You don't follow any one" }
     });
+  }
+
+  /**
+   * @description confirm email update
+   * @param {object} req
+   * @param {object} res
+   * @returns {object} redirection link
+   */
+  static async confirmEmailUpdate(req, res) {
+    const redirectUrl = (CI && travis) || appUrl;
+    const decodedToken = tokenHelper.decode(req.params.token);
+
+    if (!decodedToken.errors || decodedToken.email) {
+      await User.update({ email: decodedToken.email }, { id: decodedToken.userId });
+      return res.redirect(`${redirectUrl}/profile?email=${decodedToken.email}`);
+    }
+    return res.redirect(`${redirectUrl}/profile?token=${status.UNAUTHORIZED}`);
   }
 }

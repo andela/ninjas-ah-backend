@@ -7,10 +7,19 @@ import asyncHandler from '../../middlewares/asyncHandler';
 import AuthLocalController from '../../controllers/AuthLocalController';
 import isActiveUser from '../../middlewares/isActiveUser';
 import verifyAdmin from '../../middlewares/verifyAdmin';
+import checkUpdateUser from '../../middlewares/checkUpdateUser';
 
 const router = Router();
 
-router.put('/', verifyToken, checkUpdateUserPermission, validateUser, UserController.update); // update user profile
+router.put(
+  '/',
+  verifyToken,
+  checkUpdateUserPermission,
+  validateUser,
+  checkUpdateUser,
+  UserController.update
+); // update user profile
+router.get('/email/confirm/:token', verifyToken, UserController.confirmEmailUpdate); // confirm email update
 router.get('/authors', verifyToken, asyncHandler(UserController.getAllAuthors));
 router.put(
   '/:id',
@@ -18,6 +27,7 @@ router.put(
   validateUser,
   isActiveUser,
   checkUpdateUserPermission,
+  checkUpdateUser,
   UserController.update
 ); // update user profile by id
 
