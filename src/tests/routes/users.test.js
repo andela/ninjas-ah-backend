@@ -124,12 +124,25 @@ describe('Users routes', () => {
     chai
       .request(app)
       .put('/api/v1/users')
-      .send({ username: 'anotherusername', password: 'Abcd1234!', email: 'aaa@bbb.com' })
-      .set('access-token', accessTokenAdmin)
+      .send({ username: 'anotherusername', password: 'Abcd1234!', email: 'email@email.com' })
+      .set('access-token', accessTokenNormalUser)
       .end((err, res) => {
         expect(res.status).to.be.equal(status.OK);
         expect(res.body).to.include.keys('user');
         expect(res.body).to.not.include.keys('errors');
+        done();
+      });
+  });
+  it('should not update the user profile if the email is already used', (done) => {
+    chai
+      .request(app)
+      .put('/api/v1/users')
+      .send({ email: createdUserTwo.email })
+      .set('access-token', accessTokenNormalUser)
+      .end((err, res) => {
+        expect(res.status).to.be.equal(status.EXIST);
+        expect(res.body).to.not.include.keys('user');
+        expect(res.body).to.include.keys('errors');
         done();
       });
   });
@@ -174,7 +187,7 @@ describe('Users routes', () => {
     chai
       .request(app)
       .put(`/api/v1/users/${createdUserTwo.id}`)
-      .send({ email: 'aaa@bbb.com' })
+      .send({ email: createdUserOne.email })
       .set('access-token', accessTokenAdmin)
       .end((err, res) => {
         expect(res.status).to.be.equal(status.EXIST);
@@ -229,6 +242,39 @@ describe('Users routes', () => {
         done();
       });
   });
+
+  it('should not update user email if the token is not valid', (done) => {
+    chai
+      .request(app)
+      .get('/api/v1/users/email/confirm/invalid-token')
+      .set('access-token', accessTokenNormalUser)
+      .end((err, res) => {
+        expect(res).to.redirect;
+        expect(res.redirects[0].indexOf(`token=${status.UNAUTHORIZED}`)).to.be.above(0);
+        done();
+      });
+  });
+
+  it('should update user email if the token is valid', (done) => {
+    const token = jwt.sign(
+      {
+        userId: createdUserOne.id,
+        email: 'new@email.com'
+      },
+      process.env.SECRET_KEY,
+      { expiresIn: '1d' }
+    );
+    chai
+      .request(app)
+      .get(`/api/v1/users/email/confirm/${token}`)
+      .set('access-token', accessTokenNormalUser)
+      .end((err, res) => {
+        expect(res).to.redirect;
+        expect(res.redirects[0].indexOf('email=new@email.com')).to.be.above(0);
+        done();
+      });
+  });
+
   it('should fetch one user by id', (done) => {
     chai
       .request(app)
