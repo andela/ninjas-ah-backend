@@ -7,7 +7,7 @@ import verifyToken from '../../middlewares/verifyToken';
 import shareArticle from '../../middlewares/shareArticle';
 import multerUploads from '../../middlewares/multerUploads';
 import checkPermissions from '../../middlewares/checkPermissions';
-import checkArticlePemissions from '../../middlewares/checkArticlePemissions';
+import checkArticlePermissions from '../../middlewares/checkArticlePermissions';
 
 const articles = Router();
 
@@ -53,6 +53,24 @@ articles.get(
 articles.get(
   '/articles/:slug',
   checkArticleBySlug,
+  (req, res, next) => (req.article.status !== 'published'
+      && res.status(404).json({
+        errors: {
+          article: 'article not found'
+        }
+      }))
+    || next(),
+  asyncHandler(ArticleController.getSpecificArticle)
+);
+articles.get(
+  '/profile/articles/:slug',
+  verifyToken,
+  checkArticleBySlug,
+  checkPermissions({ route: 'articles', action: 'read' }),
+  checkArticlePermissions({
+    normal: 'self',
+    admin: 'self'
+  }),
   asyncHandler(ArticleController.getSpecificArticle)
 );
 articles.put(
@@ -61,7 +79,7 @@ articles.put(
   verifyToken,
   checkArticleBySlug,
   checkPermissions({ route: 'articles', action: 'edit' }),
-  checkArticlePemissions({
+  checkArticlePermissions({
     normal: 'self',
     admin: 'self'
   }),
@@ -74,7 +92,7 @@ articles.put(
   validateArticle.slug,
   checkArticleBySlug,
   checkPermissions({ route: 'articles', action: 'edit' }),
-  checkArticlePemissions({ normal: 'self', admin: 'self' }),
+  checkArticlePermissions({ normal: 'self', admin: 'self' }),
   asyncHandler(ArticleController.update)
 );
 
@@ -84,7 +102,7 @@ articles.put(
   checkArticleBySlug,
   validateArticle.slug,
   checkPermissions({ route: 'articles', action: 'edit' }),
-  checkArticlePemissions({
+  checkArticlePermissions({
     normal: 'self',
     admin: 'all'
   }),
@@ -96,7 +114,7 @@ articles.delete(
   verifyToken,
   checkArticleBySlug,
   checkPermissions({ route: 'articles', action: 'delete' }),
-  checkArticlePemissions({
+  checkArticlePermissions({
     normal: 'self',
     admin: 'all'
   }),

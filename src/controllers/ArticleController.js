@@ -16,7 +16,7 @@ export default class ArticleController {
       ? `v${req.files[0].version}/${req.files[0].public_id}.${req.files[0].format}`
       : null;
     const newArticle = await Article.create({
-      userId: 1,
+      userId: req.user.id,
       slug: helpers.generator.slug(req.body.title),
       title: req.body.title.trim(),
       description: req.body.description.trim(),
@@ -86,6 +86,42 @@ export default class ArticleController {
     const published = await Article.getUserArticles(parseInt(limit, 0) || 20, offset || 0, {
       userId: req.user.id,
       status: 'published'
+    });
+    return published.length >= 1 && !!published
+      ? res.status(status.OK).send({
+        articles: published,
+        articlesCount: published.length
+      })
+      : res.status(status.NOT_FOUND).send({ message: 'No articles found' });
+  }
+
+  /**
+   * @param {object} req Request sent to the route
+   * @param {object} res Response from server
+   * @returns {object} Object representing the response returned
+   */
+  static async userArticleMyArticles(req, res) {
+    const { limit, offset } = req.query;
+    const published = await Article.getUserArticles(parseInt(limit, 0) || 20, offset || 0, {
+      userId: req.user.id
+    });
+    return published.length >= 1 && !!published
+      ? res.status(status.OK).send({
+        articles: published,
+        articlesCount: published.length
+      })
+      : res.status(status.NOT_FOUND).send({ message: 'No articles found' });
+  }
+
+  /**
+   * @param {object} req Request sent to the route
+   * @param {object} res Response from server
+   * @returns {object} Object representing the response returned
+   */
+  static async userArticleMyArticle(req, res) {
+    const { limit, offset } = req.query;
+    const published = await Article.getUserArticles(parseInt(limit, 0) || 20, offset || 0, {
+      userId: req.user.id
     });
     return published.length >= 1 && !!published
       ? res.status(status.OK).send({
