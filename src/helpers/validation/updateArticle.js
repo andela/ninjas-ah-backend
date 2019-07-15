@@ -13,10 +13,7 @@ export default (input) => {
     body: Joi.string()
       .min(5)
       .optional(),
-    coverUrl: Joi.string()
-      .min(5)
-      .max(255)
-      .optional()
+    coverUrl: Joi.any().optional()
   });
 
   return Joi.validate(input, schema, { abortEarly: false });

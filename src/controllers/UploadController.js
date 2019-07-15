@@ -19,7 +19,7 @@ export default class UploadController {
     return typeof image === 'object' && typeof image !== 'boolean' && NODE_ENV !== 'test'
       ? (await Gallery.save({
         image: `${image.version}/${image.public_id}.${image.format}`,
-        userId: req.user.id
+        userId: 1
       }))
           && res.status(status.CREATED).json({
             image: {

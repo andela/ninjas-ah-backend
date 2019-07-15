@@ -1,7 +1,7 @@
 import db from '../../models';
 
 export default (condition = {}) => {
-  let where = { status: { [db.Op.ne]: 'deleted' } };
+  let where = { status: { [db.Op.notIn]: ['deleted', 'draft'] } };
   if (condition.author !== undefined) {
     where = {
       ...where,
