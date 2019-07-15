@@ -164,6 +164,7 @@ export default class AuthLocalController {
   static async updatePassword(req, res) {
     const token = req.body.token || req.params.token;
     const { passwordOne, passwordTwo } = req.body;
+
     if (passwordOne !== passwordTwo) {
       return res.status(status.BAD_REQUEST).json({ errors: 'Passwords are not matching' });
     }
