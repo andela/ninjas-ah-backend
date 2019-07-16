@@ -48,6 +48,7 @@ describe('Query to get article by filters', () => {
     const OFFSET = 0;
     const response = await Article.getAll(LIMIT, OFFSET, condition);
     expect(Object.keys(response).length).to.be.above(0);
+
     expect(response[0]).to.include.keys('dataValues');
   });
   it('should get articles by author filter', async () => {
