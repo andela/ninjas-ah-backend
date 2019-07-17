@@ -22,7 +22,8 @@ export default {
     },
     chatGroupId: {
       type: Sequelize.INTEGER,
-      allowNull: true
+      allowNull: true,
+      defaultValue: 1
     },
     createdAt: {
       allowNull: false,
