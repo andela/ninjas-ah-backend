@@ -33,16 +33,6 @@ describe('Highlight on Article', () => {
         cascade: true,
         logging: false
       });
-      await db.Article.destroy({
-        truncate: true,
-        cascade: true,
-        logging: false
-      });
-      await db.Highlight.destroy({
-        truncate: true,
-        cascade: true,
-        logging: false
-      });
 
       createdUser = (await db.User.create(newUser, { logging: false })).dataValues;
       newArticle.userId = createdUser.id;
@@ -52,6 +42,7 @@ describe('Highlight on Article', () => {
         { expiresIn: '1d' }
       );
       createdArticle = (await db.Article.create(newArticle, { logging: false })).dataValues;
+      newHighlight.userId = createdArticle.userId;
       newHighlight.articleSlug = createdArticle.slug;
       createdHighlight = await db.Highlight.create(newHighlight, { logging: false });
       newArticleSlug = createdHighlight.articleSlug;
@@ -67,9 +58,10 @@ describe('Highlight on Article', () => {
       .post(`/api/v1/${newArticleSlug}/highlights`)
       .set('access-token', accessToken)
       .send({
+        anchorKey: 'anchorKey',
         highlightedText: 'on sera ensemble bientotssssss',
         startIndex: 0,
-        stopIndex: 29,
+        stopIndex: 30,
         comment: 'welcomme to the party'
       })
       .end((err, res) => {
@@ -97,9 +89,10 @@ describe('Highlight on Article', () => {
       .post(`/api/v1/${newArticleSlug}/highlights`)
       .set('access-token', accessToken)
       .send({
+        anchorKey: 'anchorKey',
         highlightedText: 'on sera ensemble bientotssssss',
         startIndex: 0,
-        stopIndex: 30,
+        stopIndex: 39,
         comment: 'welcomme to the party'
       })
       .end((err, res) => {

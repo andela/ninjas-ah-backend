@@ -12,30 +12,30 @@ export default class Highlights {
    * @returns {Object} response
    */
   static async create(req, res) {
-    const userId = req.user.id;
-    const { articleSlug } = req.params;
-    const {
-      highlightedText, startIndex, stopIndex, comment
-    } = req.body;
-
+    const [{ articleSlug }, userId] = [req.params, req.user.id];
+    const { startIndex, stopIndex } = req.body;
+    const { highlightedText, comment, anchorKey } = req.body;
     const contentLength = highlightedText.split('').length;
     const indexesLength = stopIndex - startIndex;
-    if (contentLength !== indexesLength + 1) {
+    if (contentLength !== indexesLength) {
       return res.status(status.BAD_REQUEST).json({
-        message: 'Sorry the length of your highlightedText does not match with start and end index'
+        message: 'Sorry the length of your highlighted text does not match with start and end index'
       });
     }
-
     const created = await findOrCreate({
       articleSlug,
       userId,
       highlightedText,
       startIndex,
       stopIndex,
-      comment
+      comment,
+      anchorKey
     });
-
-    return res.status(status.CREATED).json({ message: 'You have highlighted this text', created });
+    return (
+      (created.errors
+        && res.status(status.SERVER_ERROR).json({ message: 'Oops, something went wrong' }))
+      || res.status(status.CREATED).json({ message: 'You have highlighted this text', created })
+    );
   }
 
   /** ,
@@ -76,11 +76,11 @@ export default class Highlights {
     return (
       (!highlight
         && res.status(status.NOT_FOUND).json({
-          message: `the highlight with id ${id} does not exist`
+          message: 'Sorry, this highlight does not exist'
         }))
       || res.status(status.OK).json({
-        message: 'You have successfully remove your highlight',
-        highlight
+        message: 'You have successfully removed your highlight',
+        highlightId: id
       })
     );
   }

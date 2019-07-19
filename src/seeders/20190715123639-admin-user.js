@@ -8,9 +8,9 @@ const userAdmin = {
   email: 'admin@admin.com',
   password: password.hash('admin'),
   role: 'admin',
-  permissions: Factory.permissionsAdmin.build(),
-  createdAt: '2019-05-12T22:00:00',
-  updatedAt: '2019-05-12T22:00:00'
+  permissions: Factory.permissionsAdmin.build().permissions,
+  createdAt: new Date(),
+  updatedAt: new Date()
 };
 
 export default {
