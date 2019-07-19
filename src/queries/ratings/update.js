@@ -8,6 +8,6 @@ export default async (articleId) => {
   allRatings.forEach((value) => {
     total += value.dataValues.rating; // calculate current rating
   });
-  const rating = parseInt((total / allRatings.length).toFixed(0), 10);
+  const rating = parseFloat((total / allRatings.length).toFixed(1), 10);
   await db.Article.update({ rating }, { where: { id: articleId }, logging: false });
 };

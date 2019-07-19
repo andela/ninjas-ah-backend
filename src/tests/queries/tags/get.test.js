@@ -12,7 +12,6 @@ delete article.id;
 chai.use(chaiHttp);
 describe('Query to get tags', () => {
   it('should get one article', async () => {
-    console.log('matata');
     // const newArticle = await get({ slug: article.slug });
     // expect(Object.keys(newArticle).length).to.be.above(0);
   });

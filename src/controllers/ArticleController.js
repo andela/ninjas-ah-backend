@@ -100,42 +100,6 @@ export default class ArticleController {
    * @param {object} res Response from server
    * @returns {object} Object representing the response returned
    */
-  static async userArticleMyArticles(req, res) {
-    const { limit, offset } = req.query;
-    const published = await Article.getUserArticles(parseInt(limit, 0) || 20, offset || 0, {
-      userId: req.user.id
-    });
-    return published.length >= 1 && !!published
-      ? res.status(status.OK).send({
-        articles: published,
-        articlesCount: published.length
-      })
-      : res.status(status.NOT_FOUND).send({ message: 'No articles found' });
-  }
-
-  /**
-   * @param {object} req Request sent to the route
-   * @param {object} res Response from server
-   * @returns {object} Object representing the response returned
-   */
-  static async userArticleMyArticle(req, res) {
-    const { limit, offset } = req.query;
-    const published = await Article.getUserArticles(parseInt(limit, 0) || 20, offset || 0, {
-      userId: req.user.id
-    });
-    return published.length >= 1 && !!published
-      ? res.status(status.OK).send({
-        articles: published,
-        articlesCount: published.length
-      })
-      : res.status(status.NOT_FOUND).send({ message: 'No articles found' });
-  }
-
-  /**
-   * @param {object} req Request sent to the route
-   * @param {object} res Response from server
-   * @returns {object} Object representing the response returned
-   */
   static async getSpecificArticle(req, res) {
     const oneArticle = await Article.get({ slug: req.params.slug });
     return res.status(status.OK).send({

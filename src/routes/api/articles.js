@@ -112,8 +112,8 @@ articles.put(
 articles.delete(
   '/articles/:slug',
   verifyToken,
-  checkArticleBySlug,
   checkPermissions({ route: 'articles', action: 'delete' }),
+  checkArticleBySlug,
   checkArticlePermissions({
     normal: 'self',
     admin: 'all'
