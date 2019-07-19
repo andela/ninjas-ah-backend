@@ -1,10 +1,8 @@
 import socket from 'socket.io';
-import { verify } from 'jsonwebtoken';
+import * as tokenHelper from './tokens';
 import { Chat, User } from '../queries';
 
-const { SECRET_KEY } = process.env;
 export default (server) => {
-  // socket implementation
   const io = socket(server);
   io.sockets.on('connection', (sock) => {
     sock.on('connectedToChat', async () => {
@@ -33,8 +31,8 @@ export default (server) => {
 
     sock.on('message', async (data) => {
       const { message, token } = data;
-      const { id: userId } = verify(token, SECRET_KEY);
-      const created = await Chat.save(userId, message);
+      const { id: userId } = tokenHelper.decode(token);
+      const created = (userId && (await Chat.save(userId, message))) || null;
       if (created) {
         const findUser = await User.findOne({ id: userId });
         delete findUser.password;
