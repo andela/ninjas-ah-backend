@@ -18,6 +18,7 @@ delete user.id;
 user.email = 'ratingquery@haven.com';
 user.username = 'ratingquery123';
 article.slug = 'rosie-make-it-easy-gfkjfh1242';
+article.status = 'published';
 
 describe('Create rating query', () => {
   before(async () => {

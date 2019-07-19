@@ -174,6 +174,18 @@ describe('Article', () => {
       });
   });
 
+  it('Should publish an article', (done) => {
+    chai
+      .request(app)
+      .put(`/api/v1/articles/${articleSlug}/publish`)
+      .set('access-token', accessToken)
+      .end((err, res) => {
+        expect(res).to.have.status(status.OK);
+        res.body.should.be.a('object');
+        res.body.message.should.equal('Article has been published');
+        done();
+      });
+  });
   it('Should update article cover', async () => {
     chai
       .request(app)
@@ -558,18 +570,6 @@ describe('Article', () => {
         expect(res).to.have.status(status.OK);
         res.body.should.be.an('object');
         res.body.message.should.equal('Article has been updated');
-        done();
-      });
-  });
-  it('Should publish an article', (done) => {
-    chai
-      .request(app)
-      .put(`/api/v1/articles/${articleSlug}/publish`)
-      .set('access-token', accessToken)
-      .end((err, res) => {
-        expect(res).to.have.status(status.OK);
-        res.body.should.be.a('object');
-        res.body.message.should.equal('Article has been published');
         done();
       });
   });

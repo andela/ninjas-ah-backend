@@ -1,6 +1,6 @@
 import status from '../config/status';
 
-const checkArticlePemissions = role => (req, res, next) => ((role[req.user.role] === 'self' && req.user.id === req.article.userId)
+const checkArticlePermissions = role => (req, res, next) => ((role[req.user.role] === 'self' && req.user.id === req.article.userId)
   || role[req.user.role] === 'all'
   ? next()
   : res.status(status.UNAUTHORIZED).json({
@@ -9,4 +9,4 @@ const checkArticlePemissions = role => (req, res, next) => ((role[req.user.role]
     }
   }));
 
-export default checkArticlePemissions;
+export default checkArticlePermissions;

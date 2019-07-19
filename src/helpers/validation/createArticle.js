@@ -13,10 +13,7 @@ export default (input) => {
     body: Joi.string()
       .min(5)
       .required(),
-    coverUrl: Joi.string()
-      .min(5)
-      .max(255)
-      .optional(),
+    coverUrl: Joi.any().optional(),
     tagList: Joi.array()
       .min(2)
       .max(255)

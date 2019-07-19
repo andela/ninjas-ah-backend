@@ -12,7 +12,12 @@ describe('Query to get article', () => {
   it('should get all articles', async () => {
     const LIMIT = 2;
     const OFFSET = 0;
-    const newArticle = await getAll(LIMIT, OFFSET); // getAll() parameters: limit and offset
+    const data = {
+      keyword: undefined,
+      author: undefined,
+      tag: undefined
+    };
+    const newArticle = await getAll(LIMIT, OFFSET, data);
     expect(Object.keys(newArticle).length).to.be.above(0);
   });
 });
