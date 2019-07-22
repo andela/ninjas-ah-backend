@@ -14,6 +14,7 @@ describe('Query to create article', () => {
   it('should create aricle', async () => {
     const newUser = await User.create(user);
     article.userId = newUser.id;
+    article.status = 'published';
     article.slug = helpers.generator.slug(article.title);
     const response = await Article.create(article);
     expect(response).to.include.keys('dataValues');

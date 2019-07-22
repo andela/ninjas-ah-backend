@@ -1,7 +1,7 @@
 import notification from './notification';
 import signup from './signup';
 import resetPassword from './resetPassword';
-import accountActivatedMsg from './accountActivatedMsg';
+import updateEmail from './updateEmail';
 
-export { notification };
-export { signup, resetPassword, accountActivatedMsg };
+export { notification, updateEmail };
+export { signup, resetPassword };

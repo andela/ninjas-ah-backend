@@ -11,6 +11,7 @@ let article = helpers.factory.article.build();
 delete article.id;
 delete article.tagList;
 article.rating = 4;
+article.status = 'published';
 
 describe('Get rating query', () => {
   before(async () => {
