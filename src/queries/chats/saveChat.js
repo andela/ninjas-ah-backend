@@ -6,7 +6,7 @@ import db from '../../models';
  * @param {int} chatGroupId
  * @returns {object} return the saved chat
  */
-export default async (userId, message, chatGroupId = null) => {
+export default async (userId, message, chatGroupId = 1) => {
   try {
     const newChat = await db.Chat.create({ userId, message, chatGroupId }, { logging: false });
     return newChat.get();

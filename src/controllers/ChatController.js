@@ -18,7 +18,6 @@ export default class ChatController {
     }
 
     const savedChat = await Chat.save(req.user.id, req.body.message);
-
     if (savedChat.errors) {
       if (savedChat.errors.name === 'SequelizeForeignKeyConstraintError') {
         return res
