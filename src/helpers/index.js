@@ -12,6 +12,7 @@ import * as notification from './notifications';
 import sendMail from './mailer';
 import isActiveUser from './isActiveUser';
 import * as urlHelper from './urlHelper';
+import articles from './articles';
 
 export {
   isUser,
@@ -27,5 +28,6 @@ export {
   filters,
   notification,
   isActiveUser,
-  urlHelper
+  urlHelper,
+  articles
 };

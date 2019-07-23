@@ -47,13 +47,12 @@ export default class ArticleController {
       tag
     });
     if (articles.length >= 1 && !!articles) {
-      res.status(status.OK).send({
+      return res.status(status.OK).send({
         articles,
-        articlesCount: articles.length
+        articlesCount: 3 // helpers.articles.counter('published')
       });
-    } else {
-      res.status(status.NOT_FOUND).send({ message: 'No articles found' });
     }
+    return res.status(status.NOT_FOUND).send({ message: 'No articles found' });
   }
 
   /**

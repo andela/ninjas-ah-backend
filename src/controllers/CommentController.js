@@ -17,7 +17,9 @@ export default class CommentController {
     const userId = req.user.id;
     const { articleSlug } = req.params;
     const { body } = req.body;
-    const createdComment = await comment.create({ articleSlug, userId, body });
+    const response = await comment.create({ articleSlug, userId, body });
+    console.log('@#$', response.id);
+    const createdComment = await comment.getSingle(response.id);
     return res.status(status.CREATED).json({
       message: 'Comment successfully created',
       comment: createdComment
@@ -35,7 +37,7 @@ export default class CommentController {
     const allComments = await comment.getAll({ articleSlug });
     return res
       .status(status.OK)
-      .json({ message: 'Comments fetched successfully', Comments: allComments });
+      .json({ message: 'Comments fetched successfully', comments: allComments });
   }
 
   /**
