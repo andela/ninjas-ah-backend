@@ -17,7 +17,6 @@ router.post(
 
 router.get(
   '/:articleSlug/highlights',
-  verifyToken,
   checkArticle,
   asyncHandler(HighlightController.getHighlights)
 );
