@@ -6,6 +6,10 @@ import db from '../../models';
  */
 export default async (data) => {
   let stats = [];
-  stats = await db.ReadingStat.create(data, { logging: false });
+  stats = await db.ReadingStat.findOrCreate({
+    where: data,
+    defaults: 1,
+    logging: false
+  });
   return stats;
 };
