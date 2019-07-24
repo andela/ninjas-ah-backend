@@ -7,7 +7,17 @@ import db from '../../models';
 export default async (bookmarkedBy) => {
   try {
     const bookmarkedArticles = bookmarkedBy
-      ? await db.ArticleBookmark.findAll({ where: { userId: bookmarkedBy }, logging: false })
+      ? await db.ArticleBookmark.findAll({
+        where: { userId: bookmarkedBy },
+        logging: false,
+        include: [
+          {
+            model: db.Article,
+            as: 'article',
+            attributes: ['id', 'title', 'description', 'coverUrl', 'readTime']
+          }
+        ]
+      })
       : null;
 
     return bookmarkedArticles || [];

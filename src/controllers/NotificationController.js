@@ -81,7 +81,9 @@ export default class NotificationController {
 
     return !notifications.errors
       ? res.status(status.OK).json({ notifications })
-      : res.status(status.SERVER_ERROR).json({ errors: notifications.errors.message });
+      : res
+        .status(status.SERVER_ERROR)
+        .json({ errors: 'Oops, something went wrong, please try again' });
   }
 
   /**

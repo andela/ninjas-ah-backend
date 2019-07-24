@@ -29,6 +29,11 @@ export default (sequelize, DataTypes) => {
   );
   ArticleBookmark.associate = (models) => {
     ArticleBookmark.belongsTo(models.User, { foreignKey: 'userId' });
+    ArticleBookmark.belongsTo(models.Article, {
+      foreignKey: 'articleSlug',
+      targetKey: 'slug',
+      as: 'article'
+    });
   };
   return ArticleBookmark;
 };
