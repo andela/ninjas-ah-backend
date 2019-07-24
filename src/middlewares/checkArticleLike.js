@@ -7,28 +7,26 @@ const checkArticleLike = async (req, res, next) => {
   const { articleSlug } = req.params;
   const like = { userId, articleSlug };
   let message = 'You deleted your reaction';
-  const findLike = await article.getSingleLike(like);
 
+  const findLike = await article.getSingleLike(like);
   if (!findLike) {
-    next();
-    return true;
+    return next();
   }
   if (req.params.status === 'like' && findLike.status === 'dislike') {
     await article.updateLike({ status: req.params.status }, like);
-
     await updateArticleLikes(req);
-    return res.status(statusCode.OK).json({ message: { message: 'You liked the article' } });
+    return res
+      .status(statusCode.OK)
+      .json({ message: 'You liked the article', createLike: { userId } });
   }
   if (req.params.status === 'dislike' && findLike.status === 'like') {
     await article.updateLike({ status: req.params.status }, like);
     await updateArticleLikes(req);
     message = 'You disliked the article';
-    return res.status(statusCode.OK).json({ message: { message } });
+    return res.status(statusCode.OK).json({ message, createLike: { userId } });
   }
   await article.deleteLike(like);
   await updateArticleLikes(req);
-  return res.status(statusCode.OK).json({
-    errors: { message }
-  });
+  return res.status(statusCode.OK).json({ message, createLike: { userId } });
 };
 export default checkArticleLike;
