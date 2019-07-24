@@ -14,16 +14,16 @@ module.exports = (sequelize, DataTypes) => {
       },
       userId: {
         type: DataTypes.INTEGER,
-        allowNull: true,
+        allowNull: false,
         references: {
           model: 'Users',
           key: 'id'
         },
         onUpdate: 'CASCADE',
-        onDelete: 'SET NULL'
+        onDelete: 'CASCADE'
       },
       highlightedText: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
         field: 'highlightedText'
       },
@@ -38,7 +38,12 @@ module.exports = (sequelize, DataTypes) => {
         field: 'stopIndex'
       },
       comment: {
-        type: DataTypes.TEXT
+        type: DataTypes.TEXT,
+        allowNull: true
+      },
+      anchorKey: {
+        type: DataTypes.STRING,
+        allowNull: true
       },
       createdAt: {
         allowNull: false,
@@ -52,10 +57,7 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
   Highlight.associate = (models) => {
-    Highlight.belongsTo(models.User, {
-      foreignKey: 'userId',
-      onDelete: 'CASCADE'
-    });
+    Highlight.belongsTo(models.User, { foreignKey: 'userId', as: 'commentAuthor' });
   };
   return Highlight;
 };

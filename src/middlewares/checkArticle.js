@@ -16,7 +16,7 @@ const checkArticle = async (req, res, next) => {
   });
   if (!findArticle) {
     return res.status(status.NOT_FOUND).send({
-      message: 'That article does not exist'
+      message: 'This article does not exist'
     });
   }
   next();

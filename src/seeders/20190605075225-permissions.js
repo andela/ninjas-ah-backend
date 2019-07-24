@@ -2,10 +2,10 @@ import * as Factory from '../helpers/factory';
 
 const permissionsNormal = Factory.permissionsNormal.build();
 const permissionsAdmin = Factory.permissionsAdmin.build();
-permissionsNormal.createdAt = '2019-05-12T22:00:00';
-permissionsNormal.updatedAt = '2019-05-12T22:00:00';
-permissionsAdmin.createdAt = '2019-05-12T22:00:00';
-permissionsAdmin.updatedAt = '2019-05-12T22:00:00';
+permissionsNormal.createdAt = new Date();
+permissionsNormal.updatedAt = new Date();
+permissionsAdmin.createdAt = new Date();
+permissionsAdmin.updatedAt = new Date();
 
 export default {
   up: queryInterface => queryInterface.bulkInsert('Permissions', [permissionsNormal, permissionsAdmin], {}),
