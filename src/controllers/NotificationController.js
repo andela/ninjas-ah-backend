@@ -8,7 +8,6 @@ export default class NotificationController {
   /**
    * @param  {object} req
    * @param  {object} res
-   * @return {object} return an object containing the updated profile
    * @return {object} return an object containing set configuration
    */
   static async setConfig(req, res) {

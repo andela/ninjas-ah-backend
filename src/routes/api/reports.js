@@ -27,6 +27,15 @@ router.get(
   asyncHandler(ReportController.getAll)
 );
 router.get(
+  '/reports',
+  verifyToken,
+  checkPermissions({
+    route: 'articles',
+    action: 'read'
+  }),
+  asyncHandler(ReportController.getAll)
+);
+router.get(
   '/:articleSlug/report/:reportId',
   verifyToken,
   checkArticle,

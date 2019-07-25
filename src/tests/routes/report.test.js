@@ -62,7 +62,7 @@ describe('Reports', () => {
       .set('access-token', accessToken)
       .send(newReport)
       .end((err, res) => {
-        reportId = res.body.Report.id;
+        reportId = res.body.report.id;
         res.should.have.status(status.CREATED);
         done();
       });

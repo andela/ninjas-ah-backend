@@ -69,5 +69,27 @@ describe('Permission tests', () => {
           done();
         });
     });
+
+    it('Should return all permissions', (done) => {
+      chai
+        .request(app)
+        .get('/api/v1/permissions')
+        .set('access-token', token)
+        .end((err, res) => {
+          res.status.should.equal(status.OK);
+          done();
+        });
+    });
+
+    it('Should return all permissions', (done) => {
+      chai
+        .request(app)
+        .get('/api/v1/permissions/normal')
+        .set('access-token', token)
+        .end((err, res) => {
+          res.status.should.equal(status.OK);
+          done();
+        });
+    });
   });
 });

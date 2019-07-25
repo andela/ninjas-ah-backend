@@ -32,4 +32,25 @@ export default class PermissionController {
         permissions: newPermissions
       });
   }
+
+  /**
+   * @param  {object} req
+   * @param  {object} res
+   * @return {object} return an object containing set configuration
+   */
+  static async findAll(req, res) {
+    const { userType } = req.params;
+    const permissions = (userType && (await User.permissions.findAll({ userType })))
+      || (await User.permissions.findAll());
+
+    return (
+      (permissions.length
+        && res.status(status.OK).json({
+          permissions
+        }))
+      || res.status(status.NOT_FOUND).json({
+        message: 'No permission found'
+      })
+    );
+  }
 }

@@ -4,6 +4,7 @@ import PermissionController from '../../controllers/PermissionController';
 import validatePermissions from '../../middlewares/validation/permissions';
 import checkPermissions from '../../middlewares/checkPermissions';
 import asyncHandler from '../../middlewares/asyncHandler';
+import verifyAdmin from '../../middlewares/verifyAdmin';
 
 const router = Router();
 
@@ -18,5 +19,8 @@ router.post(
   }),
   asyncHandler(PermissionController.create)
 );
+
+router.get('/', verifyToken, verifyAdmin, asyncHandler(PermissionController.findAll));
+router.get('/:userType', verifyToken, verifyAdmin, asyncHandler(PermissionController.findAll));
 
 export default router;

@@ -9,6 +9,9 @@ export default async (req, res, next) => {
   if (req.body.password) {
     req.body.password = helper.password.hash(req.body.password);
   }
+  if (req.body.permissions) {
+    req.body.permissions = JSON.stringify(req.body.permissions);
+  }
   if (req.body.email && req.user.role !== 'admin') {
     const findUser = await User.findOne({ email: req.body.email });
     if (!findUser.errors && Object.keys(findUser).length > 0) {

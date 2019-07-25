@@ -1,4 +1,4 @@
 import create from './createPermission';
+import findAll from './findAllPermission';
 
-// eslint-disable-next-line import/prefer-default-export
-export { create };
+export { create, findAll };

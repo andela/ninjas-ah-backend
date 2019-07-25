@@ -35,10 +35,7 @@ export default (input) => {
       .max(10)
       .regex(/^[a-zA-Z]{2,10}$/)
       .optional(),
-    permissions: Joi.string()
-      .min(5)
-      .max(255)
-      .optional(),
+    permissions: Joi.object().optional(),
     isActive: Joi.boolean().optional()
   });
 
