@@ -23,7 +23,9 @@ export default class ArticleController {
       body: req.body.body.trim(),
       coverUrl,
       tagList,
-      readTime: helpers.generator.readtime(req.body.body)
+      readTime: helpers.generator.readtime(req.body.body),
+      likes: 0,
+      dislikes: 0
     });
     return res.status(status.CREATED).send({
       article: newArticle
