@@ -201,6 +201,8 @@ export default class ArticleController {
         errors: { [resourceAction]: `article not removed from ${resourceAction}s` }
       })
       : res.status(status.OK).json({
+        slug,
+        userId: req.user.id,
         message: `article successfully removed from ${resourceAction}s `
       });
   }
