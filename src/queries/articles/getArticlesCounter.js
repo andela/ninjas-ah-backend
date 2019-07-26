@@ -9,10 +9,9 @@ import db from '../../models';
  */
 export default async (status) => {
   let response = [];
-  response = await db.Article.findAll({
+  response = await db.Article.count({
     where: { status },
-    logging: false,
-    attributes: ['id']
+    logging: false
   });
   return response;
 };

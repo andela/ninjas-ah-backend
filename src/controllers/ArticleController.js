@@ -49,7 +49,7 @@ export default class ArticleController {
     if (articles.length >= 1 && !!articles) {
       return res.status(status.OK).send({
         articles,
-        articlesCount: 3 // helpers.articles.counter('published')
+        articlesCount: await helpers.articles.counter('published')
       });
     }
     return res.status(status.NOT_FOUND).send({ message: 'No articles found' });
