@@ -81,14 +81,13 @@ describe('Reports', () => {
   });
 
   it('should not let user create report more than once', (done) => {
-    newReport.title = 'new title';
     chai
       .request(app)
       .post(`/api/v1/article/${createdArticle.slug}/report`)
       .set('access-token', accessToken)
-      .send(newReport)
+      .send({ ...newReport, title: 'new title' })
       .end((err, res) => {
-        res.should.have.status(status.OK);
+        res.should.have.status(status.EXIST);
         done();
       });
   });
