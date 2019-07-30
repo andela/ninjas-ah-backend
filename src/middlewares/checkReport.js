@@ -16,7 +16,7 @@ const checkUserReport = async (req, res, next) => {
   const newreport = { userId, articleSlug };
   const findReport = await report.getSingle(newreport);
   if (findReport) {
-    return res.status(status.OK).json({ message: 'You already reported the article' });
+    return res.status(status.EXIST).json({ message: 'You already reported the article' });
   }
   next();
 };

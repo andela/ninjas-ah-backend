@@ -20,6 +20,9 @@ export default (input) => {
       .min(5)
       .max(100)
       .required(),
+    bio: Joi.string()
+      .min(5)
+      .optional(),
     password: Joi.string()
       .min(8)
       .max(100)
@@ -28,10 +31,7 @@ export default (input) => {
       .min(2)
       .max(100)
       .optional(),
-    permissions: Joi.string()
-      .min(2)
-      .max(255)
-      .optional()
+    permissions: Joi.object().optional()
   });
 
   return Joi.validate(input, schema, { abortEarly: false });

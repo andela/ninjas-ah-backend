@@ -42,7 +42,7 @@ export default class AuthLocalController {
     const { email, password } = req.body;
     const checkUser = await User.findOne({ email });
     if (Object.keys(checkUser).length > 0) {
-      const comparePassword = helper.password.compare(password, checkUser.password);
+      const comparePassword = helper.password.compare(password, checkUser.password || '');
       if (!comparePassword) {
         return res.status(status.UNAUTHORIZED).json({
           errors: { credentials: 'The credentials you provided are incorrect' }
@@ -73,7 +73,7 @@ export default class AuthLocalController {
     const { id } = req.params;
     const deactivateAccount = await User.update({ isActive: false }, { id });
     return deactivateAccount
-      ? res.status(status.OK).json({ message: 'User account deleted successfully' })
+      ? res.status(status.OK).json({ message: 'User account deleted successfully', userId: id })
       : res.status(status.UNAUTHORIZED).json({ errors: 'Unauthorized access' });
   }
 
@@ -101,9 +101,7 @@ export default class AuthLocalController {
    * @returns {object} return true if user created or flase when was not
    */
   static async create(req, res) {
-    const {
-      password, email, firstName, lastName
-    } = req.body;
+    const { email, firstName, lastName } = req.body;
     req.body.password = helper.password.hash(req.body.password);
     const newUser = await User.create(req.body);
     if (newUser.errors) {
@@ -113,7 +111,7 @@ export default class AuthLocalController {
       return res.status(code).json(errors);
     }
     if (newUser) {
-      await helper.sendMail(email, 'resetPassword', { firstName, lastName, password });
+      await helper.sendMail(email, 'signup', { email, firstName, lastName });
       return res.status(status.CREATED).json({
         message: `activation message sent to ${req.body.email}`
       });

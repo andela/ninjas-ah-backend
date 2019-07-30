@@ -150,7 +150,7 @@ describe('Users routes', () => {
     chai
       .request(app)
       .put(`/api/v1/users/${createdUserOne.id}`)
-      .send({ password: 'Abcd1234!!' })
+      .send({ password: 'Abcd1234!!', permissions: JSON.parse(createdUserOne.permissions) })
       .set('access-token', accessTokenAdmin)
       .end((err, res) => {
         expect(res.status).to.be.equal(status.OK);
@@ -175,7 +175,7 @@ describe('Users routes', () => {
     chai
       .request(app)
       .put(`/api/v1/users/${createdUserTwo.id}`)
-      .send({ role: 'admin', permissions: 'create' })
+      .send({ role: 'admin', permissions: {} })
       .set('access-token', accessTokenNormalUser)
       .end((err, res) => {
         expect(res.status).to.be.equal(status.UNAUTHORIZED);
