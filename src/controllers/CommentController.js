@@ -35,7 +35,7 @@ export default class CommentController {
     const allComments = await comment.getAll({ articleSlug });
     return res
       .status(status.OK)
-      .json({ message: 'Comments fetched successfully', Comments: allComments });
+      .json({ message: 'Comments fetched successfully', comments: allComments });
   }
 
   /**
