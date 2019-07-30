@@ -1,5 +1,12 @@
 import db from '../../models';
 import { dbFindAll } from '../../helpers/queryHelper';
 
-const getAll = async condition => dbFindAll(db.Comment, condition);
+const getAll = async (data = {}) => dbFindAll(db.Comment, data, null, null, [
+  {
+    model: db.User,
+    attributes: ['firstName', 'lastName', 'username', 'email', 'image'],
+    as: 'commentAuthor',
+  }
+]);
+
 export default getAll;
