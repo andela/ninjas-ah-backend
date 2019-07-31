@@ -31,9 +31,10 @@ export default class CommentLikeController {
    * @returns {object} the return after liking a particular article
    */
   static async getAll(req, res) {
-    const { articleSlug } = req.params;
-    const findAllLikes = await comment.getAllLikes({ articleSlug });
+    const { articleSlug, commentId } = req.params;
+    const findAllLikes = await comment.getAllLikes({ articleSlug, commentId });
     return res.status(status.OK).json({
+      commentId,
       likes: findAllLikes.length,
       whoLiked: { userId: findAllLikes.map(value => value.userId) }
     });
