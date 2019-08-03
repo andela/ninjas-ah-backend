@@ -207,6 +207,7 @@ describe('user tests', () => {
   describe('admin test', () => {
     const Adminuser = Factory.user.build();
     it('admin can create user', (done) => {
+      Adminuser.permissions = JSON.parse(Adminuser.permissions);
       Adminuser.username = 'prince';
       Adminuser.email = 'princesengayire@andela.com';
       delete Adminuser.id;

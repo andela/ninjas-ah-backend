@@ -8,6 +8,7 @@ import AuthLocalController from '../../controllers/AuthLocalController';
 import isActiveUser from '../../middlewares/isActiveUser';
 import verifyAdmin from '../../middlewares/verifyAdmin';
 import checkUpdateUser from '../../middlewares/checkUpdateUser';
+import checkSignUpPermission from '../../middlewares/checkSignUpPermission';
 
 const router = Router();
 
@@ -47,6 +48,13 @@ router.delete(
 router.patch('/:username/unfollow', verifyToken, UserController.unfollow);
 
 router.get('/:id', verifyToken, verifyAdmin, checkUpdateUserPermission, AuthLocalController.getOne);
-router.post('/', verifyToken, verifyAdmin, validateUser, AuthLocalController.create);
+router.post(
+  '/',
+  verifyToken,
+  verifyAdmin,
+  validateUser,
+  checkSignUpPermission,
+  AuthLocalController.create
+);
 router.patch('/:username/follow', verifyToken, isActiveUser, UserController.follow);
 export default router;

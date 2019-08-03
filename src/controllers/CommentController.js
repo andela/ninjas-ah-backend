@@ -17,7 +17,8 @@ export default class CommentController {
     const userId = req.user.id;
     const { articleSlug } = req.params;
     const { body } = req.body;
-    const createdComment = await comment.create({ articleSlug, userId, body });
+    const response = await comment.create({ articleSlug, userId, body });
+    const createdComment = await comment.getSingle(response.id);
     return res.status(status.CREATED).json({
       message: 'Comment successfully created',
       comment: createdComment

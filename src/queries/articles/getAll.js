@@ -21,7 +21,7 @@ export default async (limit, offset, condition = {}) => {
       {
         model: db.User,
         as: 'author',
-        attributes: ['username', 'bio', 'image']
+        attributes: ['firstName', 'lastName', 'username', 'bio', 'image']
       }
     ]
   });
