@@ -142,7 +142,7 @@ describe('Passport Authentication controller', () => {
     chai
       .request(app)
       .post('/api/v1/auth')
-      .send({ ...userFacebook, provider: 'another' })
+      .send({ ...userFacebook, provider: 'another', username: 'username' })
       .end((err, res) => {
         expect(res).to.redirect;
         expect(res.redirects[0].indexOf('email=409')).to.be.above(0);

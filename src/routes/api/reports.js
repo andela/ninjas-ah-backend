@@ -45,7 +45,6 @@ router.get(
 router.delete(
   '/:articleSlug/report/:reportId',
   verifyToken,
-  checkArticle,
   checkReportExist,
   asyncHandler(ReportController.deleteSingle)
 );

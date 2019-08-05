@@ -78,7 +78,7 @@ export default class AuthLocalController {
   }
 
   /**
-   * @description methode to find one user
+   * @description method to find one user
    * @param {object} req user request object
    * @param {object} res response object from server
    * @returns {object} return all users
