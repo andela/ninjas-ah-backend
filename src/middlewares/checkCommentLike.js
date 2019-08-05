@@ -16,7 +16,8 @@ const checkArticleLike = async (req, res, next) => {
   await comment.deleteLike(like);
   await updateCommentLikes(req);
   res.status(statusCode.OK).json({
-    errors: { message }
+    message,
+    createLike: findLike
   });
 };
 export default checkArticleLike;

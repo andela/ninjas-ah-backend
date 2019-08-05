@@ -20,7 +20,7 @@ export default class CommentLikeController {
     await updateCommentLikes(req);
     return res.status(status.CREATED).send({
       message: 'You liked the comment',
-      like: likeComment
+      createLike: likeComment
     });
   }
 
