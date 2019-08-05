@@ -15,6 +15,11 @@ export default async (condition = {}) => db.ReadingStat.findAndCountAll({
       attributes: {
         exclude: ['createdAt', 'updatedAt']
       }
+    },
+    {
+      model: db.Article,
+      as: 'article',
+      attributes: ['id', 'title', 'description', 'coverUrl', 'readTime']
     }
   ],
   order: [['createdAt', 'DESC']]

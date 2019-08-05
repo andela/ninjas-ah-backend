@@ -21,7 +21,7 @@ export default class ReadingStat {
     });
 
     return res.status(status.OK).json({
-      saveStat
+      message: saveStat
     });
   }
 

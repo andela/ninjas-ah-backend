@@ -40,6 +40,7 @@ module.exports = (sequelize, DataTypes) => {
     });
     ReadingStat.belongsTo(models.Article, {
       foreignKey: 'articleSlug',
+      targetKey: 'slug',
       as: 'article'
     });
   };
