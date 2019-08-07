@@ -65,8 +65,8 @@ export default class ReportController {
    * @returns {object} a response to the client
    */
   static async deleteSingle(req, res) {
-    const { articleSlug, reportId } = req.params;
-    const deleteSingle = await report.remove({ articleSlug, id: reportId });
+    const { reportId } = req.params;
+    const deleteSingle = await report.remove({ id: reportId });
     return res
       .status(status.OK)
       .json({ message: 'Report deleted Successfully', report: deleteSingle, reportId });

@@ -27,9 +27,7 @@ export default class AuthPassportController {
     if (profile.emails) {
       user.email = profile.emails[0].value;
     }
-    if (profile.username) {
-      user.username = profile.username;
-    }
+    user.username = profile.username || `${user.firstName}.${user.lastName}`;
     return Object.keys(profile).length
       ? {
         ...user,
