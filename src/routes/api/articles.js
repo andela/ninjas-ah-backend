@@ -54,11 +54,11 @@ articles.get(
   '/articles/:slug',
   checkArticleBySlug,
   (req, res, next) => (req.article.status !== 'published'
-      && res.status(404).json({
-        errors: {
-          article: 'article not found'
-        }
-      }))
+    && res.status(404).json({
+      errors: {
+        article: 'article not found'
+      }
+    }))
     || next(),
   asyncHandler(ArticleController.getSpecificArticle)
 );

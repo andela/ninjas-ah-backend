@@ -82,12 +82,8 @@ export default class CommentController {
     const userId = req.user.id;
     const { articleSlug, commentId } = req.params;
     const newComment = { articleSlug, commentId, userId };
-    const findComment = await comment.getSingle({ articleSlug, id: commentId, userId });
     const findAllEdit = await editcomment.getAll(newComment);
-    if (findAllEdit.length === 0) {
-      return res.status(status.OK).json({ message: 'All previous', Comments: findComment });
-    }
-    return res.status(status.OK).json({ message: 'All previous comments', Comments: findAllEdit });
+    return res.status(status.OK).json({ message: 'All previous comments', history: findAllEdit });
   }
 
   /**
