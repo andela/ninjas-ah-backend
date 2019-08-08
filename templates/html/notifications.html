@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="/socket.io/socket.io.js"></script>
+  <link rel="stylesheet" href="../css/style.css">
+  <title>Notifications</title>
+</head>
+
+<body>
+  <div class="container shadow-2 radius-3">
+    <div class="center">
+      <h1 class="primary text-white radius-2 uppercase large-padding center-align">
+        Notifications
+      </h1>
+      <div class="large-padding">
+        <div class="bold loggedInUser"></div>
+        <div class="radius-2 medium-padding card">
+          <input type="url" id="url" class="shadow-4 radius-2 medium-padding card medium-text large-screen-3">
+          <br>
+          <select id="verb" class="shadow-4 radius-4 large-padding large-text right">
+            <option value="GET">GET</option>
+            <option value="POST">POST</option>
+            <option value="PUT">PUT</option>
+            <option value="DELETE">DELETE</option>
+          </select>
+        </div>
+        <br>
+        <div class="card">
+          <hr>
+        </div>
+        <div id="preference" class="card light">
+          <label>Preference</label>
+          <select name="preference" class="shadow-4 radius-2 medium-padding card medium-text">
+            <option value=""></option>
+            <option value="inApp">In App</option>
+            <option value="email">email</option>
+          </select>
+        </div>
+        <fieldset class="card light">
+          <legend class="primary text-white large-h-padding large-text">
+            Configuration
+          </legend>
+          <fieldset class="card light">
+            <legend class="primary text-white large-h-padding medium-text">
+              In App notification
+            </legend>
+            <input type="checkbox" name="showInApp" id="showInApp" value="true"> Show<br>
+            <fieldset class="card light" id="articleInApp">
+              <legend class="primary text-white large-h-padding">
+                Articles
+              </legend>
+              <input type="checkbox" name="articleInApp" value="publish"> Publish<br>
+              <input type="checkbox" name="articleInApp" value="comment"> Comment<br>
+              <input type="checkbox" name="articleInApp" value="like"> Like<br>
+            </fieldset>
+          </fieldset>
+          <hr>
+          <fieldset class="card light">
+            <legend class="primary text-white large-h-padding medium-text">
+              Email notification
+            </legend>
+            <input type="checkbox" name="showEmail" id="showEmail" value="true"> Show<br>
+            <fieldset class="card light" id="articleEmail">
+              <legend class="primary text-white large-h-padding">
+                Articles
+              </legend>
+              <input type="checkbox" name="articleEmail" value="publish"> Publish<br>
+              <input type="checkbox" name="articleEmail" value="comment"> Comment<br>
+              <input type="checkbox" name="articleEmail" value="like"> Like<br>
+            </fieldset>
+          </fieldset>
+        </fieldset>
+        <div class="radius-2 medium-padding card">
+          <button type="submit" id="submit" class="radius-4 primary text-white center-align large-h-padding large-text">
+            Submit
+          </button>
+        </div>
+      </div>
+      <div class="primary large-padding">
+        <span class="small-h-padding large-text white radius-2">Response</span>
+        <pre id="response" class="white shadow-4 radius-2 medium-padding card" rows="50"></pre>
+      </div>
+    </div>
+  </div>
+  <script>
+    async function getNotifications(URL) {
+      let result = await getData(URL, 'json', localStorage.token);
+
+      if (result) {
+        document.querySelector('#response').innerHTML = JSON.stringify(result, null, 4);
+        if (result.config) {
+          const { inApp, email } = result.config;
+
+          if (inApp.articles.show) {
+            document.querySelector(`#showInApp`).setAttribute('checked', inApp.articles.show);
+          }
+          if (email.articles.show) {
+            document.querySelector(`#showEmail`).setAttribute('checked', email.articles.show);
+          }
+          for (let i = 0; i < inApp.articles.on.length; i++) {
+            document.querySelector(`#articleInApp [value="${inApp.articles.on[i]}"]`).setAttribute('checked', true);
+          }
+
+          for (let i = 0; i < email.articles.on.length; i++) {
+            document.querySelector(`#articleEmail [value="${email.articles.on[i]}"]`).setAttribute('checked', true);
+          }
+        }
+
+      }
+    }
+
+    async function setNotificationConfig(URL, config) {
+      let result = await sendData('POST', URL, config, 'json', localStorage.token);
+
+      if (result) {
+        document.querySelector('#response').innerHTML = JSON.stringify(result, null, 4);
+      }
+    }
+
+    async function updateNotificationConfig(URL, config) {
+      let result = await sendData('PUT', URL, config, 'json', localStorage.token);
+
+      if (result) {
+        document.querySelector('#response').innerHTML = JSON.stringify(result, null, 4)
+      }
+    }
+
+    async function updateNotifications(URL, data) {
+      let result = await sendData('PUT', URL, data, 'json', localStorage.token);
+
+      if (result) {
+        document.querySelector('#response').innerHTML = JSON.stringify(result, null, 4)
+      }
+    }
+
+    async function deleteNotifications(URL) {
+      let result = await sendData('DELETE', URL, {}, 'json', localStorage.token);
+
+      if (result) {
+        document.querySelector('#response').innerHTML = JSON.stringify(result, null, 4)
+      }
+    }
+
+    window.document.addEventListener('DOMContentLoaded', () => {
+      if (document.querySelector("#url")) {
+        document.querySelector("#url").value = `${HOST}/api/v1/notifications`;
+      }
+      document.querySelector('#submit').onclick = async (e) => {
+        startLoadingButton();
+        document.querySelector('#response').innerHTML = '';
+        const URL = document.querySelector("#url").value;
+        const verb = document.querySelector("#verb").value;
+        let articleInApp = [];
+        let articleEmail = [];
+        document.querySelectorAll('[name="articleInApp"]').forEach(checkbox => {
+          if (checkbox.checked) {
+            articleInApp = [...articleInApp, checkbox.value];
+          }
+        });
+
+        document.querySelectorAll('[name="articleEmail"]').forEach(checkbox => {
+          if (checkbox.checked) {
+            articleEmail = [...articleEmail, checkbox.value];
+          }
+        });
+        const config = {
+          inApp: {
+            articles: {
+              show: document.querySelector('#showInApp').checked,
+              on: articleInApp
+            }
+          },
+          email: {
+            articles: {
+              show: document.querySelector('#showEmail').checked,
+              on: articleEmail
+            }
+          }
+        };
+
+        const data = {
+          preference: document.querySelector('select[name="preference"]').value
+        }
+
+        switch (verb) {
+          case 'GET':
+            await getNotifications(URL)
+            break;
+          case 'POST':
+            await setNotificationConfig(URL, { config })
+            break;
+          case 'PUT':
+            if (URL.search(/\/configuration/g) >= 0) {
+              await updateNotificationConfig(URL, { config })
+            } else {
+              Object.keys(data).forEach(key => data[key] || delete data[key])
+              await updateNotifications(URL, data)
+            }
+            break;
+          case 'DELETE':
+            await deleteNotifications(URL)
+            break;
+          default:
+            await getNotifications(URL)
+            break;
+        }
+        endLoadingButton();
+      }
+    });
+  </script>
+  <script src="../js/index.js"></script>
+</body>
+
+</html>

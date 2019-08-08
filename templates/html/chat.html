@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="../css/style.css" />
+    <title>Chat</title>
+  </head>
+
+  <body>
+    <div class="container shadow-2 radius-3">
+      <div class="center">
+        <div id="message"></div>
+        <h1
+          class="primary text-white radius-2 uppercase large-padding center-align"
+        >
+          Chat
+        </h1>
+        <div class="large-padding">
+          <div class="bold loggedInUser"></div>
+          <div class="radius-2 medium-padding card">
+            <input
+              type="url"
+              id="url"
+              class="shadow-4 radius-2 medium-padding card medium-text large-screen-3"
+            />
+            <br />
+            <select
+              id="verb"
+              class="shadow-4 radius-4 large-padding large-text right"
+            >
+              <option value="GET">GET</option>
+              <option value="POST">POST</option>
+              <option value="DELETE">DELETE</option>
+            </select>
+          </div>
+          <br />
+          <div class="card">
+            <hr />
+          </div>
+          <textarea
+            id="chat"
+            class="shadow-4 radius-2 medium-padding card"
+            rows="5"
+            placeholder="Type something"
+          ></textarea>
+          <div class="radius-2 medium-padding card">
+            <button
+              type="button"
+              id="submit"
+              class="radius-4 primary text-white center-align large-h-padding large-text"
+            >
+              Submit
+            </button>
+          </div>
+        </div>
+        <div class="primary large-padding">
+          <span class="small-h-padding large-text white radius-2"
+            >Response</span
+          >
+          <pre
+            id="response"
+            class="white shadow-4 radius-2 medium-padding card"
+          ></pre>
+        </div>
+      </div>
+    </div>
+    <br />
+    <div class="container shadow-2 radius-3 large-padding">
+      <div id="chats" class="container primary card radius-2"></div>
+    </div>
+    <script>
+      async function sendChat(message) {
+        const URL = document.querySelector('#url').value;
+        let result = await sendData(
+          'POST',
+          URL,
+          message,
+          'json',
+          localStorage.token
+        );
+
+        if (result) {
+          console.log(result);
+          if (typeof result === 'object' && result.errors) {
+            document.querySelector('#message').innerHTML = `
+          <div class="danger text-white radius-2 uppercase large-padding center-align">
+            ${result.errors.authentication ||
+              result.errors.token ||
+              result.errors.account ||
+              result.errors.message}
+          </div>`;
+          } else {
+            document.querySelector('#message').innerHTML = '';
+            document.querySelector('#response').innerHTML = JSON.stringify(
+              result,
+              null,
+              4
+            );
+          }
+        }
+      }
+
+      async function getChats(URL) {
+        let result = await getData(URL, 'json', localStorage.token);
+
+        if (result) {
+          if (result.errors) {
+            document.querySelector('#message').innerHTML = `
+          <div class="danger text-white radius-2 uppercase large-padding center-align">
+            ${result.errors.authentication ||
+              result.errors.token ||
+              result.errors}
+          </div>`;
+          } else {
+            document.querySelector('#message').innerHTML = '';
+            document.querySelector('#response').innerHTML = JSON.stringify(
+              result,
+              null,
+              4
+            );
+            displayChats(result.chats);
+          }
+        }
+      }
+      function displayChats(chats) {
+        let name = '';
+        const user = localStorage.user ? JSON.parse(localStorage.user) : null;
+        for (let i = 0; i < chats.length; i++) {
+          if (
+            user &&
+            user.firstName === chats[i].user.firstName &&
+            user.lastName === chats[i].user.lastName
+          ) {
+            name = 'Me';
+          } else {
+            name = `${chats[i].user.firstName} ${chats[i].user.lastName}`;
+          }
+          document.querySelector('#chats').innerHTML += `
+        <div id="chat${chats[i].id}" class="white card radius-2 small-padding ${
+            name !== 'Me' ? 'right-align' : 'left-align'
+          }">
+          <b><u>${name}</u></b>
+          <p>${chats[i].message}</p>
+          <hr>
+          ${displayDeleteChatButton(chats[i].userId, chats[i].id)}
+          <small>
+            <i>
+              ${new Date(chats[i].createdAt).toDateString()} ||
+              ${new Date(chats[i].createdAt).getHours()}:
+              ${new Date(chats[i].createdAt).getMinutes()}
+            </i>
+          </small>
+        </div>`;
+        }
+      }
+
+      function addChat(chat) {
+        let name = '';
+        const user = localStorage.user ? JSON.parse(localStorage.user) : null;
+        if (
+          user &&
+          user.firstName === chat.user.firstName &&
+          user.lastName === chat.user.lastName
+        ) {
+          name = 'Me';
+        } else {
+          name = `${chat.user.firstName} ${chat.user.lastName}`;
+        }
+        document.querySelector('#chats').innerHTML =
+          `
+      <div id="chat${chat.id}" class="white card radius-2 small-padding ${
+            name !== 'Me' ? 'right-align' : 'left-align'
+          }">
+        <b><u>${name}</u></b>
+        <p>${chat.message}</p>
+        <hr>
+        ${displayDeleteChatButton(chat.userId, chat.id)}
+        <small>
+          <i>
+            ${new Date(chat.createdAt).toDateString()} ||
+            ${new Date(chat.createdAt).getHours()}:
+            ${new Date(chat.createdAt).getMinutes()}
+          </i>
+        </small>
+      </div>` + document.querySelector('#chats').innerHTML;
+      }
+
+      function displayDeleteChatButton(userId, chatId) {
+        const user = localStorage.user ? JSON.parse(localStorage.user) : null;
+
+        if (user && user.id === userId) {
+          return `<button class="danger radius-2 small-padding text-white" onclick="deleteChat(${chatId})">delete</button>`;
+        }
+
+        return '';
+      }
+
+      async function deleteChat(chatId, URL) {
+        const endpoint = URL || `${HOST}/api/v1/chats/${chatId}`;
+        let result = await sendData(
+          'DELETE',
+          endpoint,
+          {},
+          'json',
+          localStorage.token
+        );
+        console.log(result);
+
+        if (result) {
+          if (typeof result === 'object' && result.errors) {
+            document.querySelector('#message').innerHTML = `
+          <div class="danger text-white radius-2 uppercase large-padding center-align">
+            ${result.errors.authentication ||
+              result.errors.token ||
+              result.errors.account ||
+              result.errors.chat}
+          </div>`;
+          } else {
+            document.querySelector('#message').innerHTML = '';
+            document.querySelector('#response').innerHTML = JSON.stringify(
+              result,
+              null,
+              4
+            );
+
+            if (chatId) {
+              document.querySelector(`#chat${chatId}`).remove();
+            }
+          }
+        }
+      }
+
+      window.document.addEventListener('DOMContentLoaded', () => {
+        displayUser();
+        const socket = io();
+        socket.on('message', addChat);
+
+        if (document.querySelector('#url')) {
+          document.querySelector('#url').value = `${HOST}/api/v1/chats`;
+        }
+
+        document.querySelector('#submit').onclick = async e => {
+          startLoadingButton();
+          document.querySelector('#response').innerHTML = '';
+          const URL = document.querySelector('#url').value;
+          const verb = document.querySelector('#verb').value;
+
+          if (document.querySelector('#chat').value) {
+            await sendChat({
+              message: document.querySelector('#chat').value
+            });
+            document.querySelector('#chat').value = ''; // clear text area
+          }
+
+          switch (verb) {
+            case 'GET':
+              document.querySelector('#chats').innerHTML = '';
+              await getChats(URL);
+              break;
+            case 'POST':
+              if (document.querySelector('#chat').value) {
+                await sendChat({
+                  message: document.querySelector('#chat').value
+                });
+                document.querySelector('#chat').value = ''; // clear text area
+              }
+              break;
+            case 'DELETE':
+              await deleteChat(null, URL);
+              break;
+            default:
+              await getArticles(URL);
+              break;
+          }
+          endLoadingButton();
+        };
+      });
+    </script>
+    <script src="../js/index.js"></script>
+  </body>
+</html>

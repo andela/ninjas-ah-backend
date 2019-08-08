@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="/socket.io/socket.io.js"></script>
+  <link rel="stylesheet" href="../css/style.css">
+  <title>Articles</title>
+</head>
+
+<body>
+  <div class="container shadow-2 radius-3">
+    <div class="center">
+      <h1 class="primary text-white radius-2 uppercase large-padding center-align">
+        Articles
+      </h1>
+      <div class="large-padding">
+        <div class="bold loggedInUser"></div>
+        <div class="radius-2 medium-padding card">
+          <input type="url" id="url" class="shadow-4 radius-2 medium-padding card medium-text large-screen-3">
+          <br>
+          <select id="verb" class="shadow-4 radius-4 large-padding large-text right">
+            <option value="GET">GET</option>
+            <option value="POST">POST</option>
+            <option value="PUT">PUT</option>
+            <option value="DELETE">DELETE</option>
+          </select>
+        </div>
+        <br>
+        <div class="card">
+          <hr>
+        </div>
+        <input type="text" id="title" class="shadow-4 radius-2 medium-padding card medium-text" placeholder="Title">
+        <textarea id="description" class="shadow-4 radius-2 medium-padding card medium-text"
+          placeholder="Description"></textarea>
+        <textarea id="body" class="shadow-4 radius-2 medium-padding card medium-text" placeholder="Body"
+          rows="5"></textarea>
+        <input type="text" id="coverUrl" class="shadow-4 radius-2 medium-padding card medium-text"
+          placeholder="Cover image">
+        <button type="button" id="submit" class="radius-4 primary text-white center-align large-h-padding large-text">
+          Submit
+        </button>
+      </div>
+    </div>
+    <div class="primary large-padding">
+      <span class="small-h-padding large-text white radius-2">Response</span>
+      <pre id="response" class="white shadow-4 radius-2 medium-padding card"></pre>
+    </div>
+  </div>
+  </div>
+  <script>
+    async function getArticles(URL) {
+      let result = await getData(URL, 'json', localStorage.token);
+
+      if (result) {
+        document.querySelector('#response').innerHTML = JSON.stringify(result, null, 4)
+      }
+    }
+
+    async function createArticle(URL, data = {}) {
+      let result = await sendData('POST', URL, data, 'json', localStorage.token);
+
+      if (result) {
+        document.querySelector('#response').innerHTML = JSON.stringify(result, null, 4)
+      }
+    }
+
+    async function deleteArticle(URL) {
+      let result = await sendData('DELETE', URL, {}, 'json', localStorage.token);
+
+      if (result) {
+        document.querySelector('#response').innerHTML = JSON.stringify(result, null, 4)
+      }
+    }
+
+    async function updateArticle(URL, data = {}) {
+      let result = await sendData('PUT', URL, data, 'json', localStorage.token);
+
+      if (result) {
+        document.querySelector('#response').innerHTML = JSON.stringify(result, null, 4)
+      }
+    }
+
+    window.document.addEventListener('DOMContentLoaded', () => {
+      if (document.querySelector("#url")) {
+        document.querySelector("#url").value = `${HOST}/api/v1/articles`;
+      }
+      document.querySelector('#submit').onclick = async (e) => {
+        startLoadingButton();
+        document.querySelector('#response').innerHTML = '';
+        const URL = document.querySelector("#url").value;
+        const verb = document.querySelector("#verb").value;
+
+        switch (verb) {
+          case 'GET':
+            await getArticles(URL)
+            break;
+          case 'POST':
+            const title = document.querySelector("#title").value;
+            const description = document.querySelector("#description").value;
+            const body = document.querySelector("#body").value;
+            const coverUrl = document.querySelector("#coverUrl").value || 'placeholder.png';
+            await createArticle(URL, { title, description, body, coverUrl })
+            break;
+          case 'DELETE':
+            await deleteArticle(URL)
+            break;
+          case 'PUT':
+            await updateArticle(URL)
+            break;
+          default:
+            await getArticles(URL)
+            break;
+        }
+        endLoadingButton();
+      }
+    });
+  </script>
+  <script src="../js/index.js"></script>
+</body>
+
+</html>

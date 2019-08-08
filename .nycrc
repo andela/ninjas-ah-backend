@@ -1,0 +1,10 @@
+{
+  "reporter": [
+    "lcov",
+    "text"
+  ],
+  "exclude": [
+    "src/tests", 
+    "swagger.json"
+  ]
+}

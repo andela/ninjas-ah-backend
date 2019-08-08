@@ -1,0 +1,21 @@
+
+/* Padding Formatting */
+.xxlarge-padding{padding:($xsmall * 12)}
+.xlarge-padding{padding:($xsmall * 6)}
+.large-padding{padding:($xsmall * 3)}
+.medium-padding{padding:($xsmall * 2)}
+.small-padding{padding:$xsmall}
+
+// PADDING. Horizontal 
+.xxlarge-h-padding{padding-left:($xsmall * 6);padding-right:($xsmall * 6)}
+.xlarge-h-padding{padding-left:($xsmall * 4);padding-right:($xsmall * 4)}
+.large-h-padding{padding-left:($xsmall * 3);padding-right:($xsmall * 3)}
+.medium-h-padding{padding-left:($xsmall * 2);padding-right:($xsmall * 2)}
+.small-h-padding{padding-left:$xsmall;padding-right:$xsmall}
+
+// PADING. veritical
+.xxlarge-v-padding{padding-top:($xsmall * 6);padding-bottom:($xsmall * 6)}
+.xlarge-v-padding{padding-top:($xsmall * 4);padding-bottom:($xsmall * 4)}
+.large-v-padding{padding-top:($xsmall * 3);padding-bottom:($xsmall * 3)}
+.medium-v-padding{padding-top:($xsmall * 2);padding-bottom:($xsmall * 2)}
+.small-v-padding{padding-top:$xsmall;padding-bottom:$xsmall}
