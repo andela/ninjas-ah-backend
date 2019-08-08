@@ -34,7 +34,8 @@ export default class AuthPassportController {
         permissions: profile.permissions,
         image: profile.photos[0].value,
         accountProvider: profile.provider,
-        accountProviderUserId: profile.id
+        accountProviderUserId: profile.id,
+        isActive: true
       }
       : {};
   }
