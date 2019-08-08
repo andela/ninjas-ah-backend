@@ -150,7 +150,8 @@ export default class UserController {
         : res.status(status.SERVER_ERROR).json({ errors: 'oops, something went wrong' });
     }
     return res.status(status.CREATED).json({
-      message: `now you are following ${checkUser.username}`
+      message: `now you are following ${checkUser.username}`,
+      follow: { ...follow, followedUser: checkUser }
     });
   }
 
@@ -168,13 +169,13 @@ export default class UserController {
     const hasUnfollowed = Object.keys(checkUser).length
       ? await User.follow.remove({ userId: user.id, followed: checkUser.id })
       : null;
-
     if (hasUnfollowed && hasUnfollowed.errors) {
       return res.status(status.SERVER_ERROR).json({ errors: 'oops, something went wrong!!' });
     }
     return hasUnfollowed
       ? res.status(status.OK).json({
-        message: `you unfollowed ${username}`
+        message: `you unfollowed ${username}`,
+        followed: checkUser.id
       })
       : res
         .status(status.BAD_REQUEST)
