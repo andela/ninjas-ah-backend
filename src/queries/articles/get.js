@@ -14,7 +14,7 @@ export default async (condition = {}) => db.Article.findOne({
     {
       model: db.User,
       as: 'author',
-      attributes: ['username', 'bio', 'image']
+      attributes: ['username', 'firstName', 'lastName', 'bio', 'image']
     }
   ]
 });

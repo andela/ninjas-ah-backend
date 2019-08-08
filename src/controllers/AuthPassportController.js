@@ -30,15 +30,14 @@ export default class AuthPassportController {
     if (profile.username) {
       user.username = profile.username;
     }
-    return Object.keys(profile).length
-      ? {
-        ...user,
-        permissions: profile.permissions,
-        image: profile.photos[0].value,
-        accountProvider: profile.provider,
-        accountProviderUserId: profile.id
-      }
-      : {};
+    return Object.keys(profile).length ? {
+      ...user,
+      permissions: profile.permissions,
+      image: profile.photos[0].value,
+      accountProvider: profile.provider,
+      accountProviderUserId: profile.id,
+      isActive: true
+    } : {};
   }
 
   /**
