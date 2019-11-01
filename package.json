@@ -65,7 +65,7 @@
     "pg": "^7.11.0",
     "pg-hstore": "^2.3.2",
     "rosie": "^2.0.1",
-    "sequelize": "^5.8.7",
+    "sequelize": "^5.15.1",
     "sequelize-cli": "^5.4.0",
     "sequelize-easy-query": "^1.1.0",
     "sequelize-test-helpers": "^1.1.1",
