@@ -74,7 +74,7 @@
     "swagger": "^0.7.5",
     "swagger-jsdoc": "^3.2.9",
     "swagger-ui-express": "^4.0.5",
-    "underscore": "^1.9.1",
+    "underscore": "^1.12.1",
     "uniqid": "^5.0.3"
   },
   "devDependencies": {
