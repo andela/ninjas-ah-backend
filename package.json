@@ -70,7 +70,7 @@
     "sequelize-easy-query": "^1.1.0",
     "sequelize-test-helpers": "^1.1.1",
     "slug": "^1.1.0",
-    "socket.io": "^2.2.0",
+    "socket.io": "^2.5.0",
     "swagger": "^0.7.5",
     "swagger-jsdoc": "^3.2.9",
     "swagger-ui-express": "^4.0.5",
